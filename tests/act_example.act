@@ -1,3 +1,42 @@
 state life {
 
+    entry() {
+        int time = 0;
+        int stamina = 100;
+    }
+
+    exit() {
+        time = 0;
+        stamina = 0;
+    }
+
+    state work {
+        on TIRED {
+            if(time == 23) moveto rest {
+                stamina = 0;
+            }
+        }
+
+        on BORED {
+            if(true) moveto fun {}
+        }
+    }
+
+    state fun {
+        on BORED {
+            if(true) moveto work {}
+        }
+
+        on TIRED {
+            if(true) moveto rest {}
+        }
+    }
+
+    state rest {
+        on AWAKE {
+            if(time == 6) moveto work {
+                stamina = 100;
+            }
+        }
+    }
 }

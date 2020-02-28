@@ -10,6 +10,8 @@
 "exit"                  return EXIT_KEYWORD;
 "on"                    return ON_KEYWORD;
 "moveto"                return MOVETO_KEYWORD;
+"lambda"                return LAMBDA_KEYWORD;
+"defevent"              return DEFEVENT_TOKEN;
 "+"                     return PLUS_TOKEN;
 "="                     return ASSING_TOKEN;
 "<"                     return LESS_TOKEN;
@@ -27,7 +29,7 @@
 "string"                return STRING_TYPE_TOKEN;
 [a-zA-Z_][a-zA-Z0-9_]*  return NAME_TOKEN;
 [0-9]+                  return INTEGER_TOKEN;
-\"([^\\"]|\\")*\"       return STRING_TOKEN;
+\"([^\\\"]|\\\")*\"     return STRING_TOKEN;
 "false"                 return FALSE_TOKEN;
 "true"                  return TRUE_TOKEN;
 [ \t\r\n]               /* no action: ignore all white space */
