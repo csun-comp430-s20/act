@@ -17,3 +17,5 @@ make
 make test
 make install
 ```
+
+sudo apt install autoconf
