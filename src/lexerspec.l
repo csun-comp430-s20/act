@@ -3,8 +3,6 @@
     #include <fstream>
     #include <string>
     #include <vector>
-
-    // (\+|=|<|>|==|=<|=>|;|{|}|\(|\)|,|int|bool|string|true|false)
 %}
 
 %class{
@@ -33,14 +31,18 @@
 %}
 
 keywords    \<(if|elif|else|while|return|state|entry|exit|on|moveto|lambda|defevent)\>
-symbols     \<(\+|=|==|=<|=>|;|\{|\}|\(|\)|,|int|bool|string|true|false)\>
+symbols     \<(\+|=|;|\{|\}|\(|\)|,)\>
+conditions  \<(==|=<|=>)\>
+types       \<(int|bool|string|true|false)
 regexs      \<([a-zA-Z_][a-zA-Z0-9_]*|[0-9]+|\"([^\\\"]|\\\")*\")\>
 
 %%
 /* PATTERN */           /* ACTION */
-{keywords}              tokens.push_back(Token(text()));
-{symbols}               tokens.push_back(Token(text()));
-{regexs}                tokens.push_back(Token(text()));
+{keywords}              tokens.push_back(Token(str()));
+{symbols}               tokens.push_back(Token(str()));
+{conditions}            tokens.push_back(Token(str()));
+{types}                 tokens.push_back(Token(str()));
+{regexs}                tokens.push_back(Token(str()));
 "/*"(.|\n)*?"*/"        /* no action: ignore multiline comments */
 [ \t\r\n]               /* no action: ignore all white space */
 
