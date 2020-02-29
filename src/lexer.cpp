@@ -65,7 +65,7 @@ class Lexer : public reflex::AbstractLexer<reflex::Matcher> {
     };
 
     public:
-    std::vector<Token> tokens;  // lexer class member variable (private by default)
+    std::vector<Token> tokens;  // lexer class member variable
 
     void printTokens() {
         for (std::vector<Token>::iterator i = tokens.begin(); i != tokens.end(); ++i)
@@ -102,13 +102,13 @@ class Lexer : public reflex::AbstractLexer<reflex::Matcher> {
 
 int Lexer::lex()
 {
-  static const char *REGEX_INITIAL = "(?m)((?:\\<(?:if|elif|else|while|return|state|entry|exit|on|moveto|lambda|defevent)\\>))|((?:\\<(?:\\+|=|;|\\{|\\}|\\(|\\)|,)\\>))|((?:\\<(?:==|=<|=>)\\>))|((?:\\<(?:int|bool|string|true|false)))|((?:\\<(?:[A-Z_a-z][0-9A-Z_a-z]*|[0-9]+|\"(?:[^\"\\x5c]|\\\\\")*\")\\>))|((?:\\Q/*\\E)(?:.|\\n)*?(?:\\Q*/\\E))|([\\x09\\x0a\\x0d\\x20])";
+  static const char *REGEX_INITIAL = "(?m)((?:\\<(?:if|elif|else|while|return|state|entry|exit|on|moveto|lambda|defevent)\\>))|((?:\\Q+\\E))|((?:\\Q;\\E))|((?:\\Q{\\E))|((?:\\Q}\\E))|((?:\\Q(\\E))|((?:\\Q)\\E))|((?:\\Q,\\E))|((?:\\Q=<\\E))|((?:\\Q=>\\E))|((?:\\Q==\\E))|((?:\\Q=\\E))|((?:\\<(?:int|bool|string|true|false)\\>))|((?:\\<(?:[A-Z_a-z][0-9A-Z_a-z]*|[0-9]+|\"(?:[^\"\\x5c]|\\\\\")*\")\\>))|((?:\\Q/*\\E)(?:.|\\n)*?(?:\\Q*/\\E))|([\\x09\\x0a\\x0d\\x20])";
   static const reflex::Pattern PATTERN_INITIAL(REGEX_INITIAL);
   if (!has_matcher())
   {
     matcher(new Matcher(PATTERN_INITIAL, stdinit(), this));
   }
-#line 41 "lexerspec.l"
+#line 39 "lexerspec.l"
 /* PATTERN */           /* ACTION */
   while (true)
   {
@@ -121,36 +121,71 @@ int Lexer::lex()
             }
             else
             {
-              // std::cout << "This is str " << matcher().input() << std::endl;
               out().put(matcher().input());
             }
             break;
-          case 1: // rule at line 41: (?:\<(?:if|elif|else|while|return|state|entry|exit|on|moveto|lambda|defevent)\>)
+          case 1: // rule at line 39: (?:\<(?:if|elif|else|while|return|state|entry|exit|on|moveto|lambda|defevent)\>)
+#line 39 "lexerspec.l"
+tokens.push_back(Token(str()));
+            break;
+          case 2: // rule at line 40: (?:\Q+\E)
+#line 40 "lexerspec.l"
+tokens.push_back(Token(str()));
+            break;
+          case 3: // rule at line 41: (?:\Q;\E)
 #line 41 "lexerspec.l"
 tokens.push_back(Token(str()));
             break;
-          case 2: // rule at line 42: (?:\<(?:\+|=|;|\{|\}|\(|\)|,)\>)
+          case 4: // rule at line 42: (?:\Q{\E)
 #line 42 "lexerspec.l"
 tokens.push_back(Token(str()));
             break;
-          case 3: // rule at line 43: (?:\<(?:==|=<|=>)\>)
+          case 5: // rule at line 43: (?:\Q}\E)
 #line 43 "lexerspec.l"
 tokens.push_back(Token(str()));
             break;
-          case 4: // rule at line 44: (?:\<(?:int|bool|string|true|false))
+          case 6: // rule at line 44: (?:\Q(\E)
 #line 44 "lexerspec.l"
 tokens.push_back(Token(str()));
             break;
-          case 5: // rule at line 45: (?:\<(?:[A-Z_a-z][0-9A-Z_a-z]*|[0-9]+|"(?:[^"\x5c]|\\")*")\>)
+          case 7: // rule at line 45: (?:\Q)\E)
 #line 45 "lexerspec.l"
 tokens.push_back(Token(str()));
             break;
-          case 6: // rule at line 46: (?:\Q/*\E)(?:.|\n)*?(?:\Q*/\E)
+          case 8: // rule at line 46: (?:\Q,\E)
 #line 46 "lexerspec.l"
+tokens.push_back(Token(str()));
+            break;
+          case 9: // rule at line 47: (?:\Q=<\E)
+#line 47 "lexerspec.l"
+tokens.push_back(Token(str()));
+            break;
+          case 10: // rule at line 48: (?:\Q=>\E)
+#line 48 "lexerspec.l"
+tokens.push_back(Token(str()));
+            break;
+          case 11: // rule at line 49: (?:\Q==\E)
+#line 49 "lexerspec.l"
+tokens.push_back(Token(str()));
+            break;
+          case 12: // rule at line 50: (?:\Q=\E)
+#line 50 "lexerspec.l"
+tokens.push_back(Token(str()));
+            break;
+          case 13: // rule at line 51: (?:\<(?:int|bool|string|true|false)\>)
+#line 51 "lexerspec.l"
+tokens.push_back(Token(str()));
+            break;
+          case 14: // rule at line 52: (?:\<(?:[A-Z_a-z][0-9A-Z_a-z]*|[0-9]+|"(?:[^"\x5c]|\\")*")\>)
+#line 52 "lexerspec.l"
+tokens.push_back(Token(str()));
+            break;
+          case 15: // rule at line 53: (?:\Q/*\E)(?:.|\n)*?(?:\Q*/\E)
+#line 53 "lexerspec.l"
 /* no action: ignore multiline comments */
             break;
-          case 7: // rule at line 47: [\x09\x0a\x0d\x20]
-#line 47 "lexerspec.l"
+          case 16: // rule at line 54: [\x09\x0a\x0d\x20]
+#line 54 "lexerspec.l"
 /* no action: ignore all white space */
 
             break;
@@ -164,7 +199,7 @@ tokens.push_back(Token(str()));
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-#line 50 "lexerspec.l"
+#line 57 "lexerspec.l"
 int main(int argc, char **argv)
 {
     FILE *fd = stdin;

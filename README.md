@@ -1,9 +1,18 @@
 # act
-The Act Language utilizes the Actor Model paradigm.
+The Act Language in the future will utilize the concept of an Actor Model paradigm.
+Currently it is only planned to support a single actor that supports the creation
+of an HSM.
 
-## Setup
+## Setup for RE/flex
 
-Clone CAF repo from in one directory above act repo:
+Clone RE/flex repo one directory above act repo:
+```sh
+git clone https://github.com/Genivia/RE-flex.git
+```
+
+## Setup for CAF
+
+Clone CAF repo one directory above act repo:
 ```sh
 git clone https://github.com/DanielTellier/actor-framework.git
 ```

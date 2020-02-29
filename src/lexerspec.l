@@ -22,7 +22,7 @@
     };
 
     public:
-    std::vector<Token> tokens;  // lexer class member variable (private by default)
+    std::vector<Token> tokens;  // lexer class member variable
 
     void printTokens() {
         for (std::vector<Token>::iterator i = tokens.begin(); i != tokens.end(); ++i)
@@ -31,16 +31,23 @@
 %}
 
 keywords    \<(if|elif|else|while|return|state|entry|exit|on|moveto|lambda|defevent)\>
-symbols     \<(\+|=|;|\{|\}|\(|\)|,)\>
-conditions  \<(==|=<|=>)\>
-types       \<(int|bool|string|true|false)
+types       \<(int|bool|string|true|false)\>
 regexs      \<([a-zA-Z_][a-zA-Z0-9_]*|[0-9]+|\"([^\\\"]|\\\")*\")\>
 
 %%
 /* PATTERN */           /* ACTION */
 {keywords}              tokens.push_back(Token(str()));
-{symbols}               tokens.push_back(Token(str()));
-{conditions}            tokens.push_back(Token(str()));
+"+"                     tokens.push_back(Token(str()));
+";"                     tokens.push_back(Token(str()));
+"{"                     tokens.push_back(Token(str()));
+"}"                     tokens.push_back(Token(str()));
+"("                     tokens.push_back(Token(str()));
+")"                     tokens.push_back(Token(str()));
+","                     tokens.push_back(Token(str()));
+"=<"                    tokens.push_back(Token(str()));
+"=>"                    tokens.push_back(Token(str()));
+"=="                    tokens.push_back(Token(str()));
+"="                     tokens.push_back(Token(str()));
 {types}                 tokens.push_back(Token(str()));
 {regexs}                tokens.push_back(Token(str()));
 "/*"(.|\n)*?"*/"        /* no action: ignore multiline comments */
