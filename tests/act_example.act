@@ -1,11 +1,11 @@
 state life {
 
-    entry() {
+    entry {
         int time = 0;
         int stamina = 100;
     }
 
-    exit() {
+    exit {
         time = 0;
         stamina = 0;
     }
