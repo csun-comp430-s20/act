@@ -10,6 +10,17 @@ Clone RE/flex repo one directory above act repo:
 git clone https://github.com/Genivia/RE-flex.git
 ```
 
+For now run these commands to test the lexer:
+```sh
+./configure --prefix=".../libs/re-flex"
+```
+Then cd into the src directory and run these commands:
+```sh
+../libs/re-flex/bin/reflex lexerspec.l
+c++ -I ../libs/re-flex/include/ lex.yy.cpp -L ../libs/re-flex/lib/ -lreflex
+./a.out ../tests/act_example.act
+```
+
 ## Setup for CAF
 
 Clone CAF repo one directory above act repo:
@@ -18,9 +29,9 @@ git clone https://github.com/DanielTellier/actor-framework.git
 ```
 
 Run configure script in actor-framework folder and direct install to caf_lib folder.
-This will will place include files in .../caf_lib:
+This will will place include files in .../libs/caf_lib:
 ```sh
-./configure --prefix="..../caf_lib"
+./configure --prefix=".../libs/caf_lib"
 cd build
 make
 make test
