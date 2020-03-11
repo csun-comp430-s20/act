@@ -12,8 +12,12 @@ git clone https://github.com/Genivia/RE-flex.git
 
 For now run these commands to test the lexer:
 ```sh
-./configure --prefix=".../libs/re-flex"
+sudo apt update
+sudo apt install bison autoconf
+autoreconf -fi
+./configure --prefix=".../libs/re-flex" && make
 ```
+
 Then cd into the src directory and run these commands:
 ```sh
 ../libs/re-flex/bin/reflex lexerspec.l
@@ -38,4 +42,4 @@ make test
 make install
 ```
 
-sudo apt install autoconf
+
