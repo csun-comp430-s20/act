@@ -13,7 +13,9 @@ git clone https://github.com/Genivia/RE-flex.git
 For now run these commands to test the lexer:
 ```sh
 sudo apt update
-sudo apt install bison autoconf
+wget https://ftp.gnu.org/gnu/bison/bison-3.2.tar.gz
+tar xvzf bison-3.2.tar.gz
+sudo apt install autoconf
 autoreconf -fi
 ./configure --prefix=".../libs/re-flex" && make
 ```
