@@ -46,11 +46,13 @@
 %token <std::string> STRING "string"
 %token <std::string> PLUS "+"
 %token <std::string> SEMI ";"
-%token <std::string> RIGHT_BRACE "{"
-%token <std::string> LEFT_BRACE "}"
-%token <std::string> RIGHT_PAREN "("
-%token <std::string> LEFT_PAREN ")"
+%token <std::string> LEFT_BRACE "{"
+%token <std::string> RIGHT_BRACE "}"
+%token <std::string> LEFT_PAREN "("
+%token <std::string> RIGHT_PAREN ")"
 %token <std::string> COMMA ","
+%token <std::string> LESS "<"
+%token <std::string> GREATER ">"
 %token <std::string> LESS_EQUAL "=<"
 %token <std::string> GREATER_EQUAL "=>"
 %token <std::string> EQUAL "=="
@@ -59,7 +61,16 @@
 
 %%
 
-// grammar rules
+types: INT | BOOL | STRING;
+op: PLUS;
+cond: LESS | GREATER | LESS_EQUAL | GREATER_EQUAL | EQUAL;
+dec_stmt: types IDENTIFIER ASSIGN expr SEMI | lambda_meth;
+if_term: IF LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE stmt_block RIGHT_BRACE
+elif_term: ELIF LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE stmt_block RIGHT_BRACE
+else_term: ELSE LEFT_BRACE stmt_block RIGHT_BRACE
+elif_block: elif_term | elif_block elif_term;
+if_stmt: if_term | if_term elif_block | if_term elif_block else_term
+
 
 %%
 
