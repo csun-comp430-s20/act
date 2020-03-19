@@ -1,0 +1,180 @@
+Terminals unused in grammar
+
+   "identifier"
+   "number"
+   "true"
+   "false"
+   "if"
+   "elif"
+   "else"
+   "while"
+   "return"
+   "state"
+   "entry"
+   "exit"
+   "on"
+   "moveto"
+   "lambda"
+   "defevent"
+   "+"
+   ";"
+   "{"
+   "}"
+   "("
+   ")"
+   "=<"
+   "=>"
+   "<"
+   ">"
+   "=="
+   "="
+
+
+Grammar
+
+    0 $accept: program "end of file"
+
+    1 program: %empty
+    2        | args_term
+
+    3 args_term: types
+    4          | args_term "," types
+
+    5 types: "int"
+    6      | "bool"
+    7      | "string"
+
+
+Terminals, with rules where they appear
+
+"end of file" (0) 0
+error (256)
+"identifier" <std::string> (258)
+"number" <int> (259)
+"true" <std::string> (260)
+"false" <std::string> (261)
+"if" <std::string> (262)
+"elif" <std::string> (263)
+"else" <std::string> (264)
+"while" <std::string> (265)
+"return" <std::string> (266)
+"state" <std::string> (267)
+"entry" <std::string> (268)
+"exit" <std::string> (269)
+"on" <std::string> (270)
+"moveto" <std::string> (271)
+"lambda" <std::string> (272)
+"defevent" <std::string> (273)
+"int" <std::string> (274) 5
+"bool" <std::string> (275) 6
+"string" <std::string> (276) 7
+"+" <std::string> (277)
+";" <std::string> (278)
+"{" <std::string> (279)
+"}" <std::string> (280)
+"(" <std::string> (281)
+")" <std::string> (282)
+"," <std::string> (283) 4
+"=<" <std::string> (284)
+"=>" <std::string> (285)
+"<" <std::string> (286)
+">" <std::string> (287)
+"==" <std::string> (288)
+"=" <std::string> (289)
+
+
+Nonterminals, with rules where they appear
+
+$accept (35)
+    on left: 0
+program (36)
+    on left: 1 2, on right: 0
+args_term (37)
+    on left: 3 4, on right: 2 4
+types (38)
+    on left: 5 6 7, on right: 3 4
+
+
+State 0
+
+    0 $accept: . program "end of file"
+
+    "int"     shift, and go to state 1
+    "bool"    shift, and go to state 2
+    "string"  shift, and go to state 3
+
+    $default  reduce using rule 1 (program)
+
+    program    go to state 4
+    args_term  go to state 5
+    types      go to state 6
+
+
+State 1
+
+    5 types: "int" .
+
+    $default  reduce using rule 5 (types)
+
+
+State 2
+
+    6 types: "bool" .
+
+    $default  reduce using rule 6 (types)
+
+
+State 3
+
+    7 types: "string" .
+
+    $default  reduce using rule 7 (types)
+
+
+State 4
+
+    0 $accept: program . "end of file"
+
+    "end of file"  shift, and go to state 7
+
+
+State 5
+
+    2 program: args_term .
+    4 args_term: args_term . "," types
+
+    ","  shift, and go to state 8
+
+    $default  reduce using rule 2 (program)
+
+
+State 6
+
+    3 args_term: types .
+
+    $default  reduce using rule 3 (args_term)
+
+
+State 7
+
+    0 $accept: program "end of file" .
+
+    $default  accept
+
+
+State 8
+
+    4 args_term: args_term "," . types
+
+    "int"     shift, and go to state 1
+    "bool"    shift, and go to state 2
+    "string"  shift, and go to state 3
+
+    types  go to state 9
+
+
+State 9
+
+    4 args_term: args_term "," types .
+
+    $default  reduce using rule 4 (args_term)
