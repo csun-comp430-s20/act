@@ -12,7 +12,7 @@ fi
 
 ### Include cxxtestgen to PATH
 if [ -d "$HOME/Projects/Compilers/act/cxxtest-4.3/bin" ] ; then
-        PATH="$HOME/{Path to act folder}/act/cxxtest-4.3/bin:$PATH"
+    PATH="$HOME/{Path to cxxtest folder}/cxxtest-4.3/bin:$PATH"
 fi
 
 
@@ -69,7 +69,13 @@ c++ lex.yy.cpp parser.cpp -lreflex
 The above produces an out file that takes a file as an argument from the tests folder
 and turns the file stream into a string and tests if the string is valid.
 
-## Running Unit Tests
+## Running Unit Tests with CxxTest
 
 Downloaded header files for CxxTest here:
 https://sourceforge.net/projects/cxxtest/files/cxxtest/
+
+```sh
+cxxtestgen --error-printer -o runner.cpp {test-header-file}
+g++ -o runner -I g++ -o runner -I "path-to-cxxtest/cxxtest-4.3/" runner.cpp
+./runner
+```
