@@ -482,6 +482,8 @@ namespace yy {
       // "("
       // ")"
       // ","
+      // "&&"
+      // "||"
       // "=<"
       // "=>"
       // "<"
@@ -535,12 +537,14 @@ namespace yy {
         TOK_LEFT_PAREN = 281,
         TOK_RIGHT_PAREN = 282,
         TOK_COMMA = 283,
-        TOK_LESS_EQUAL = 284,
-        TOK_GREATER_EQUAL = 285,
-        TOK_LESS = 286,
-        TOK_GREATER = 287,
-        TOK_EQUAL = 288,
-        TOK_ASSIGN = 289
+        TOK_AND_OP = 284,
+        TOK_OR_OP = 285,
+        TOK_LESS_EQUAL = 286,
+        TOK_GREATER_EQUAL = 287,
+        TOK_LESS = 288,
+        TOK_GREATER = 289,
+        TOK_EQUAL = 290,
+        TOK_ASSIGN = 291
       };
     };
 
@@ -784,6 +788,14 @@ namespace yy {
 
     static
     symbol_type
+    make_AND_OP (YY_COPY (std::string) v);
+
+    static
+    symbol_type
+    make_OR_OP (YY_COPY (std::string) v);
+
+    static
+    symbol_type
     make_LESS_EQUAL (YY_COPY (std::string) v);
 
     static
@@ -989,7 +1001,7 @@ namespace yy {
       yyfinal_ = 7, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
-      yyntokens_ = 35  ///< Number of tokens.
+      yyntokens_ = 37  ///< Number of tokens.
     };
 
 
@@ -1034,9 +1046,10 @@ namespace yy {
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
-      25,    26,    27,    28,    29,    30,    31,    32,    33,    34
+      25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    36
     };
-    const unsigned user_token_number_max_ = 289;
+    const unsigned user_token_number_max_ = 291;
     const token_number_type undef_token_ = 2;
 
     if (static_cast<int> (t) <= yyeof_)
@@ -1094,12 +1107,14 @@ namespace yy {
       case 26: // "("
       case 27: // ")"
       case 28: // ","
-      case 29: // "=<"
-      case 30: // "=>"
-      case 31: // "<"
-      case 32: // ">"
-      case 33: // "=="
-      case 34: // "="
+      case 29: // "&&"
+      case 30: // "||"
+      case 31: // "=<"
+      case 32: // "=>"
+      case 33: // "<"
+      case 34: // ">"
+      case 35: // "=="
+      case 36: // "="
         value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (other.value));
         break;
 
@@ -1182,12 +1197,14 @@ namespace yy {
       case 26: // "("
       case 27: // ")"
       case 28: // ","
-      case 29: // "=<"
-      case 30: // "=>"
-      case 31: // "<"
-      case 32: // ">"
-      case 33: // "=="
-      case 34: // "="
+      case 29: // "&&"
+      case 30: // "||"
+      case 31: // "=<"
+      case 32: // "=>"
+      case 33: // "<"
+      case 34: // ">"
+      case 35: // "=="
+      case 36: // "="
         value.template destroy< std::string > ();
         break;
 
@@ -1241,12 +1258,14 @@ namespace yy {
       case 26: // "("
       case 27: // ")"
       case 28: // ","
-      case 29: // "=<"
-      case 30: // "=>"
-      case 31: // "<"
-      case 32: // ">"
-      case 33: // "=="
-      case 34: // "="
+      case 29: // "&&"
+      case 30: // "||"
+      case 31: // "=<"
+      case 32: // "=>"
+      case 33: // "<"
+      case 34: // ">"
+      case 35: // "=="
+      case 36: // "="
         value.move< std::string > (YY_MOVE (s.value));
         break;
 
@@ -1307,7 +1326,7 @@ namespace yy {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288,   289
+     285,   286,   287,   288,   289,   290,   291
     };
     return static_cast<token_type> (yytoken_number_[type]);
   }
@@ -1504,6 +1523,20 @@ namespace yy {
 
   inline
   parser::symbol_type
+  parser::make_AND_OP (YY_COPY (std::string) v)
+  {
+    return symbol_type (token::TOK_AND_OP, YY_MOVE (v));
+  }
+
+  inline
+  parser::symbol_type
+  parser::make_OR_OP (YY_COPY (std::string) v)
+  {
+    return symbol_type (token::TOK_OR_OP, YY_MOVE (v));
+  }
+
+  inline
+  parser::symbol_type
   parser::make_LESS_EQUAL (YY_COPY (std::string) v)
   {
     return symbol_type (token::TOK_LESS_EQUAL, YY_MOVE (v));
@@ -1547,7 +1580,7 @@ namespace yy {
 
 
 } // yy
-#line 1551 "parser.hpp" // lalr1.cc:403
+#line 1584 "parser.hpp" // lalr1.cc:403
 
 
 

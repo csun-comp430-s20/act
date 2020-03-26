@@ -217,12 +217,14 @@ namespace yy {
       case 26: // "("
       case 27: // ")"
       case 28: // ","
-      case 29: // "=<"
-      case 30: // "=>"
-      case 31: // "<"
-      case 32: // ">"
-      case 33: // "=="
-      case 34: // "="
+      case 29: // "&&"
+      case 30: // "||"
+      case 31: // "=<"
+      case 32: // "=>"
+      case 33: // "<"
+      case 34: // ">"
+      case 35: // "=="
+      case 36: // "="
         value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (that.value));
         break;
 
@@ -270,12 +272,14 @@ namespace yy {
       case 26: // "("
       case 27: // ")"
       case 28: // ","
-      case 29: // "=<"
-      case 30: // "=>"
-      case 31: // "<"
-      case 32: // ">"
-      case 33: // "=="
-      case 34: // "="
+      case 29: // "&&"
+      case 30: // "||"
+      case 31: // "=<"
+      case 32: // "=>"
+      case 33: // "<"
+      case 34: // ">"
+      case 35: // "=="
+      case 36: // "="
         value.move< std::string > (YY_MOVE (that.value));
         break;
 
@@ -323,12 +327,14 @@ namespace yy {
       case 26: // "("
       case 27: // ")"
       case 28: // ","
-      case 29: // "=<"
-      case 30: // "=>"
-      case 31: // "<"
-      case 32: // ">"
-      case 33: // "=="
-      case 34: // "="
+      case 29: // "&&"
+      case 30: // "||"
+      case 31: // "=<"
+      case 32: // "=>"
+      case 33: // "<"
+      case 34: // ">"
+      case 35: // "=="
+      case 36: // "="
         value.move< std::string > (that.value);
         break;
 
@@ -595,12 +601,14 @@ namespace yy {
       case 26: // "("
       case 27: // ")"
       case 28: // ","
-      case 29: // "=<"
-      case 30: // "=>"
-      case 31: // "<"
-      case 32: // ">"
-      case 33: // "=="
-      case 34: // "="
+      case 29: // "&&"
+      case 30: // "||"
+      case 31: // "=<"
+      case 32: // "=>"
+      case 33: // "<"
+      case 34: // ">"
+      case 35: // "=="
+      case 36: // "="
         yylhs.value.emplace< std::string > ();
         break;
 
@@ -619,7 +627,7 @@ namespace yy {
           switch (yyn)
             {
 
-#line 623 "parser.cpp" // lalr1.cc:906
+#line 631 "parser.cpp" // lalr1.cc:906
             default:
               break;
             }
@@ -826,13 +834,13 @@ namespace yy {
   const unsigned char
   parser::yystos_[] =
   {
-       0,    19,    20,    21,    36,    37,    38,     0,    28,    38
+       0,    19,    20,    21,    38,    39,    40,     0,    28,    40
   };
 
   const unsigned char
   parser::yyr1_[] =
   {
-       0,    35,    36,    36,    37,    37,    38,    38,    38
+       0,    37,    38,    38,    39,    39,    40,    40,    40
   };
 
   const unsigned char
@@ -853,15 +861,15 @@ namespace yy {
   "\"while\"", "\"return\"", "\"state\"", "\"entry\"", "\"exit\"",
   "\"on\"", "\"moveto\"", "\"lambda\"", "\"defevent\"", "\"int\"",
   "\"bool\"", "\"string\"", "\"+\"", "\";\"", "\"{\"", "\"}\"", "\"(\"",
-  "\")\"", "\",\"", "\"=<\"", "\"=>\"", "\"<\"", "\">\"", "\"==\"",
-  "\"=\"", "$accept", "program", "args_term", "types", YY_NULLPTR
+  "\")\"", "\",\"", "\"&&\"", "\"||\"", "\"=<\"", "\"=>\"", "\"<\"",
+  "\">\"", "\"==\"", "\"=\"", "$accept", "program", "args_term", "types", YY_NULLPTR
   };
 
 
   const unsigned char
   parser::yyrline_[] =
   {
-       0,    62,    62,    62,    63,    63,    64,    64,    64
+       0,    65,    65,    65,    66,    66,    67,    67,    67
   };
 
   // Print the state stack on the debug stream.
@@ -896,8 +904,8 @@ namespace yy {
 
 
 } // yy
-#line 900 "parser.cpp" // lalr1.cc:1217
-#line 77 "parserspec.yxx" // lalr1.cc:1218
+#line 908 "parser.cpp" // lalr1.cc:1217
+#line 112 "parserspec.yxx" // lalr1.cc:1218
 
 
 void yy::parser::error(const std::string& msg)
