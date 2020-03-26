@@ -3,6 +3,19 @@ The Act Language in the future will utilize the concept of an Actor Model paradi
 Currently it is only planned to support a single actor that supports the creation
 of an HSM.
 
+## Setup
+
+### Include /usr/local/bin to PATH
+if [ -d "/usr/local/bin" ] ; then
+    PATH="/usr/local/bin:$PATH"
+fi
+
+### Include cxxtestgen to PATH
+if [ -d "$HOME/Projects/Compilers/act/cxxtest-4.3/bin" ] ; then
+        PATH="$HOME/{Path to act folder}/act/cxxtest-4.3/bin:$PATH"
+fi
+
+
 ## Setup for RE/flex
 
 Clone RE/flex repo one directory above act repo:
@@ -44,4 +57,19 @@ make test
 make install
 ```
 
+## Compiling and running Lexer and Parser
 
+```sh
+bison -v --defines=parser.hpp --output=parser.cpp parserspec.yxx
+reflex --header-file lexerspec.l
+c++ lex.yy.cpp parser.cpp -lreflex
+./a.out ../tests/{file}
+```
+
+The above produces an out file that takes a file as an argument from the tests folder
+and turns the file stream into a string and tests if the string is valid.
+
+## Running Unit Tests
+
+Downloaded header files for CxxTest here:
+https://sourceforge.net/projects/cxxtest/files/cxxtest/
