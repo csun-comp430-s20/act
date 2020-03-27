@@ -117,7 +117,7 @@ class ActTestSuite : public CxxTest::TestSuite {
 
     void testIfStmt() {
         std::string args_str = "if(\"hello\" == \"hey\") {\n"
-                               "while(true) {}}";
+                               "\twhile(true) {}}";
 
         yy::Lexer lexer(args_str);
         yy::parser parser(lexer);
@@ -134,7 +134,19 @@ class ActTestSuite : public CxxTest::TestSuite {
 
     void testWhileStmt() {
         std::string args_str = "while(true) {\n"
-                               "if(\"hello\" == \"hey\") {}}";
+                               "\tif(\"hello\" == \"hey\") {}}";
+
+        yy::Lexer lexer(args_str);
+        yy::parser parser(lexer);
+        TS_ASSERT(parser.parse() == 0);
+    }
+
+    void testOnBlock() {
+        std::string args_str = "on TIRED {\n"
+            "\tmoveif(time == 23) rest {"
+                "\t\tstamina = 0;"
+            "\t}"
+            "}";
 
         yy::Lexer lexer(args_str);
         yy::parser parser(lexer);

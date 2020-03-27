@@ -25,7 +25,7 @@
 "entry"                     return yy::parser::make_ENTRY(str());
 "exit"                      return yy::parser::make_EXIT(str());
 "on"                        return yy::parser::make_ON(str());
-"moveto"                    return yy::parser::make_MOVETO(str());
+"moveif"                    return yy::parser::make_MOVEIF(str());
 "break"                     return yy::parser::make_BREAK(str());
 "lambda"                    return yy::parser::make_LAMBDA(str());
 "defevent"                  return yy::parser::make_DEFEVENT(str());

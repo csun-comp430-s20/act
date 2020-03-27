@@ -470,7 +470,7 @@ namespace yy {
       // "entry"
       // "exit"
       // "on"
-      // "moveto"
+      // "moveif"
       // "break"
       // "lambda"
       // "defevent"
@@ -527,7 +527,7 @@ namespace yy {
         TOK_ENTRY = 269,
         TOK_EXIT = 270,
         TOK_ON = 271,
-        TOK_MOVETO = 272,
+        TOK_MOVEIF = 272,
         TOK_BREAK = 273,
         TOK_LAMBDA = 274,
         TOK_DEFEVENT = 275,
@@ -744,7 +744,7 @@ namespace yy {
 
     static
     symbol_type
-    make_MOVETO (YY_COPY (std::string) v);
+    make_MOVEIF (YY_COPY (std::string) v);
 
     static
     symbol_type
@@ -884,9 +884,9 @@ namespace yy {
   // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
   // positive, shift that token.  If negative, reduce the rule whose
   // number is the opposite.  If YYTABLE_NINF, syntax error.
-  static const signed char yytable_[];
+  static const short yytable_[];
 
-  static const signed char yycheck_[];
+  static const short yycheck_[];
 
   // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
   // symbol of state STATE-NUM.
@@ -1008,9 +1008,9 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 116,     ///< Last index in yytable_.
-      yynnts_ = 29,  ///< Number of nonterminal symbols.
-      yyfinal_ = 26, ///< Termination state number.
+      yylast_ = 146,     ///< Last index in yytable_.
+      yynnts_ = 35,  ///< Number of nonterminal symbols.
+      yyfinal_ = 30, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
       yyntokens_ = 39  ///< Number of tokens.
@@ -1107,7 +1107,7 @@ namespace yy {
       case 14: // "entry"
       case 15: // "exit"
       case 16: // "on"
-      case 17: // "moveto"
+      case 17: // "moveif"
       case 18: // "break"
       case 19: // "lambda"
       case 20: // "defevent"
@@ -1199,7 +1199,7 @@ namespace yy {
       case 14: // "entry"
       case 15: // "exit"
       case 16: // "on"
-      case 17: // "moveto"
+      case 17: // "moveif"
       case 18: // "break"
       case 19: // "lambda"
       case 20: // "defevent"
@@ -1262,7 +1262,7 @@ namespace yy {
       case 14: // "entry"
       case 15: // "exit"
       case 16: // "on"
-      case 17: // "moveto"
+      case 17: // "moveif"
       case 18: // "break"
       case 19: // "lambda"
       case 20: // "defevent"
@@ -1457,9 +1457,9 @@ namespace yy {
 
   inline
   parser::symbol_type
-  parser::make_MOVETO (YY_COPY (std::string) v)
+  parser::make_MOVEIF (YY_COPY (std::string) v)
   {
-    return symbol_type (token::TOK_MOVETO, YY_MOVE (v));
+    return symbol_type (token::TOK_MOVEIF, YY_MOVE (v));
   }
 
   inline

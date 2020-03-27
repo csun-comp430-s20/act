@@ -89,7 +89,7 @@ class Lexer : public reflex::AbstractLexer<reflex::Matcher> {
 
 yy::parser::symbol_type yy::Lexer::lex()
 {
-  static const char *REGEX_INITIAL = "(?m)((?:\\Qtrue\\E))|((?:\\Qfalse\\E))|((?:\\Qif\\E))|((?:\\Qelif\\E))|((?:\\Qelse\\E))|((?:\\Qwhile\\E))|((?:\\Qreturn\\E))|((?:\\Qstate\\E))|((?:\\Qentry\\E))|((?:\\Qexit\\E))|((?:\\Qon\\E))|((?:\\Qmoveto\\E))|((?:\\Qbreak\\E))|((?:\\Qlambda\\E))|((?:\\Qdefevent\\E))|((?:\\Qint\\E))|((?:\\Qbool\\E))|((?:\\Qstring\\E))|((?:\\Q+\\E))|((?:\\Q;\\E))|((?:\\Q{\\E))|((?:\\Q}\\E))|((?:\\Q(\\E))|((?:\\Q)\\E))|((?:\\Q,\\E))|((?:\\Q&&\\E))|((?:\\Q||\\E))|((?:\\Q=<\\E))|((?:\\Q=>\\E))|((?:\\Q<\\E))|((?:\\Q>\\E))|((?:\\Q==\\E))|((?:\\Q=\\E))|([A-Z_a-z][0-9A-Z_a-z]*)|([0-9]+)|(\"(?:[^\"\\x5c]|\\\\\")*\")|((?:\\Q/*\\E)(?:.|\\n)*?(?:\\Q*/\\E))|([\\x09\\x0a\\x0d\\x20])";
+  static const char *REGEX_INITIAL = "(?m)((?:\\Qtrue\\E))|((?:\\Qfalse\\E))|((?:\\Qif\\E))|((?:\\Qelif\\E))|((?:\\Qelse\\E))|((?:\\Qwhile\\E))|((?:\\Qreturn\\E))|((?:\\Qstate\\E))|((?:\\Qentry\\E))|((?:\\Qexit\\E))|((?:\\Qon\\E))|((?:\\Qmoveif\\E))|((?:\\Qbreak\\E))|((?:\\Qlambda\\E))|((?:\\Qdefevent\\E))|((?:\\Qint\\E))|((?:\\Qbool\\E))|((?:\\Qstring\\E))|((?:\\Q+\\E))|((?:\\Q;\\E))|((?:\\Q{\\E))|((?:\\Q}\\E))|((?:\\Q(\\E))|((?:\\Q)\\E))|((?:\\Q,\\E))|((?:\\Q&&\\E))|((?:\\Q||\\E))|((?:\\Q=<\\E))|((?:\\Q=>\\E))|((?:\\Q<\\E))|((?:\\Q>\\E))|((?:\\Q==\\E))|((?:\\Q=\\E))|([A-Z_a-z][0-9A-Z_a-z]*)|([0-9]+)|(\"(?:[^\"\\x5c]|\\\\\")*\")|((?:\\Q/*\\E)(?:.|\\n)*?(?:\\Q*/\\E))|([\\x09\\x0a\\x0d\\x20])";
   static const reflex::Pattern PATTERN_INITIAL(REGEX_INITIAL);
   if (!has_matcher())
   {
@@ -154,9 +154,9 @@ return yy::parser::make_EXIT(str());
 #line 27 "lexerspec.l"
 return yy::parser::make_ON(str());
             break;
-          case 12: // rule at line 28: (?:\Qmoveto\E)
+          case 12: // rule at line 28: (?:\Qmoveif\E)
 #line 28 "lexerspec.l"
-return yy::parser::make_MOVETO(str());
+return yy::parser::make_MOVEIF(str());
             break;
           case 13: // rule at line 29: (?:\Qbreak\E)
 #line 29 "lexerspec.l"

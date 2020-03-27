@@ -123,5 +123,11 @@ public:
  void runTest() { suite_ActTestSuite.testWhileStmt(); }
 } testDescription_suite_ActTestSuite_testWhileStmt;
 
+static class TestDescription_suite_ActTestSuite_testOnBlock : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_ActTestSuite_testOnBlock() : CxxTest::RealTestDescription( Tests_ActTestSuite, suiteDescription_ActTestSuite, 144, "testOnBlock" ) {}
+ void runTest() { suite_ActTestSuite.testOnBlock(); }
+} testDescription_suite_ActTestSuite_testOnBlock;
+
 #include <cxxtest/Root.cpp>
 const char* CxxTest::RealWorldDescription::_worldName = "cxxtest";
