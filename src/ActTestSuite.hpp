@@ -7,10 +7,14 @@
 
 class ActTestSuite : public CxxTest::TestSuite {
     public:
-    // void testAddition(void) {
-    //     TS_ASSERT(1 + 1 > 1);
-    //     TS_ASSERT_EQUALS(1 + 1, 2);
-    // }
+
+    void testEventDef() {
+        std::string args_str = "defevent myevent(int, string, bool);";
+
+        yy::Lexer lexer(args_str);
+        yy::parser parser(lexer);
+        TS_ASSERT(parser.parse() == 0)
+    }
 
     void testArgs() {
         std::string args_str = "int, bool, string";

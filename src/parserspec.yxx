@@ -62,7 +62,9 @@
 %%
 
 // Test arg types
-program: /* empty */ | args_term
+program: /* empty */ | event_def_header | args_term;
+event_def_header: event_def_term | event_def_header event_def_term;
+event_def_term: DEFEVENT IDENTIFIER LEFT_PAREN args_term RIGHT_PAREN SEMI;
 args_term: types | args_term COMMA types;
 types: INT | BOOL | STRING;
 
