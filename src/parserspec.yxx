@@ -24,7 +24,8 @@
 
 %define api.token.prefix {TOK_}
 %token <std::string> IDENTIFIER "identifier"  // This defines TOK_IDENTIFIER
-%token <int> NUMBER "number"                  // This defines TOK_NUMBER
+%token <int> INT_NUMBER "number"              // This defines TOK_INT_NUMBER
+%token <std::string> CONST_STRING "hello"
 %token <std::string> TRUE "true"
 %token <std::string> FALSE "false"
 %token <std::string> IF "if"
@@ -37,6 +38,7 @@
 %token <std::string> EXIT "exit"
 %token <std::string> ON "on"
 %token <std::string> MOVETO "moveto"
+%token <std::string> BREAK "break"
 %token <std::string> LAMBDA "lambda"
 %token <std::string> DEFEVENT "defevent"
 %token <std::string> INT "int"
@@ -61,48 +63,44 @@
 
 %%
 
-program: /* empty */ | event_def_header | dec_stmt | assign_stmt;
-//stmts: dec_stmt | if_stmt
-
-//if_stmt: if_term | if_term elif_block | if_term elif_block else_term
-//elif_block: elif_term | elif_block elif_term;
-//if_term: IF LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE stmts RIGHT_BRACE
-//elif_term: ELIF LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE stmts RIGHT_BRACE
-//else_term: ELSE LEFT_BRACE stmts RIGHT_BRACE
-
+program: event_def_header | stmts;
+// Statements
+stmts: /* empty */ | dec_stmt | assign_stmt | if_stmt | while_stmt;
+// While Statement
+while_stmt: while_term | while_stmt while_term
+while_term: WHILE LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE stmts RIGHT_BRACE
+// If-Else Statement
+if_stmt: if_terms | if_stmt if_terms;
+if_terms: if_term | if_term elif_block | if_term elif_block else_term;
+elif_block: elif_term | elif_block elif_term;
+if_term: IF LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE stmts RIGHT_BRACE;
+elif_term: ELIF LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE stmts RIGHT_BRACE;
+else_term: ELSE LEFT_BRACE stmts RIGHT_BRACE;
+// Assignment
 assign_stmt: assign_term | assign_stmt assign_term;
 assign_term: IDENTIFIER ASSIGN exprs SEMI;
-
+// Declarations
 dec_stmt: dec_term | dec_stmt dec_term;
 dec_term: types IDENTIFIER SEMI | types IDENTIFIER ASSIGN exprs SEMI;
-
+// Expressions
 exprs: cond_expr | add_expr;
-add_expr: NUMBER | add_expr op NUMBER;
+// Arithmetic Cases
+add_expr: add_vals | add_expr plus_op add_vals;
+add_vals: INT_NUMBER | IDENTIFIER
+plus_op: PLUS;
+// Condition Cases
 cond_expr: cond_term | cond_expr logic_op cond_term;
 cond_term: logic_vals | logic_terms cond logic_terms | 
            LEFT_PAREN logic_terms cond logic_terms RIGHT_PAREN;
-logic_terms: NUMBER | logic_vals;
+logic_terms: INT_NUMBER | CONST_STRING | IDENTIFIER | logic_vals;
 logic_vals: TRUE | FALSE;
 logic_op: AND_OP | OR_OP;
 cond: LESS | GREATER | LESS_EQUAL | GREATER_EQUAL | EQUAL;
-
+// Arg Cases
 event_def_header: event_def_term | event_def_header event_def_term;
 event_def_term: DEFEVENT IDENTIFIER LEFT_PAREN args_term RIGHT_PAREN SEMI;
-
-op: PLUS;
-
 args_term: types | args_term COMMA types;
 types: INT | BOOL | STRING;
-
-/*
-types: INT | BOOL | STRING;
-
-op: PLUS;
-
-cond: LESS | GREATER | LESS_EQUAL | GREATER_EQUAL | EQUAL;
-
-dec_stmt: types IDENTIFIER ASSIGN expr SEMI | lambda_meth;
-*/
 
 /*
 if_term: IF LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE ... RIGHT_BRACE

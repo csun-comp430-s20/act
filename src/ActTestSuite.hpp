@@ -3,6 +3,7 @@
 
 #include "parser.hpp"
 #include "lex.yy.h"
+#include <iostream>
 
 // NOTE: Create Test Suite for Lexer also. Call this ActTestParserSuite
 class ActTestSuite : public CxxTest::TestSuite {
@@ -75,7 +76,7 @@ class ActTestSuite : public CxxTest::TestSuite {
     }
 
     void testDecStmtLogicAndOr() {
-        std::string args_str = "bool myvar = 5 > 4;";
+        std::string args_str = "bool myvar = (5 > 4) && (2 > 1);";
 
         yy::Lexer lexer(args_str);
         yy::parser parser(lexer);
@@ -106,12 +107,38 @@ class ActTestSuite : public CxxTest::TestSuite {
         TS_ASSERT(parser.parse() == 0);
     }
     
-    // void testIfStmt() {
-    //     std::string args_str = "bool myvar = (5 > 4) || (4 == 4);";
+    void testIfStmtEmpty() {
+        std::string args_str = "if(\"hello\" == \"hey\") {}";
 
-    //     yy::Lexer lexer(args_str);
-    //     yy::parser parser(lexer);
-    //     TS_ASSERT(parser.parse() == 0)
-    // }
+        yy::Lexer lexer(args_str);
+        yy::parser parser(lexer);
+        TS_ASSERT(parser.parse() == 0);
+    }
+
+    void testIfStmt() {
+        std::string args_str = "if(\"hello\" == \"hey\") {\n"
+                               "while(true) {}}";
+
+        yy::Lexer lexer(args_str);
+        yy::parser parser(lexer);
+        TS_ASSERT(parser.parse() == 0);
+    }
+
+    void testWhileStmtEmpty() {
+        std::string args_str = "while(true) {}";
+
+        yy::Lexer lexer(args_str);
+        yy::parser parser(lexer);
+        TS_ASSERT(parser.parse() == 0);
+    }
+
+    void testWhileStmt() {
+        std::string args_str = "while(true) {\n"
+                               "if(\"hello\" == \"hey\") {}}";
+
+        yy::Lexer lexer(args_str);
+        yy::parser parser(lexer);
+        TS_ASSERT(parser.parse() == 0);
+    }
 
 };

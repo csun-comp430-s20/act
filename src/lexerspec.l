@@ -26,6 +26,7 @@
 "exit"                      return yy::parser::make_EXIT(str());
 "on"                        return yy::parser::make_ON(str());
 "moveto"                    return yy::parser::make_MOVETO(str());
+"break"                     return yy::parser::make_BREAK(str());
 "lambda"                    return yy::parser::make_LAMBDA(str());
 "defevent"                  return yy::parser::make_DEFEVENT(str());
 "int"                       return yy::parser::make_INT(str());
@@ -48,7 +49,8 @@
 "="                         return yy::parser::make_ASSIGN(str());
 <<EOF>>                     return yy::parser::make_EOF();
 [a-zA-Z_][a-zA-Z0-9_]*      return yy::parser::make_IDENTIFIER(str());
-[0-9]+                      return yy::parser::make_NUMBER(atoi(text()));
+[0-9]+                      return yy::parser::make_INT_NUMBER(atoi(text()));
+\"([^\\\"]|\\\")*\"         return yy::parser::make_CONST_STRING(str());
 "/*"(.|\n)*?"*/"            /* no action: ignore multiline comments */
 [ \t\r\n]                   /* no action: ignore all white space */
 
