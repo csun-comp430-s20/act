@@ -4,7 +4,7 @@
 #include "parser.hpp"
 #include "lex.yy.h"
 
-
+// NOTE: Create Test Suite for Lexer also. Call this ActTestParserSuite
 class ActTestSuite : public CxxTest::TestSuite {
     public:
 
@@ -13,7 +13,7 @@ class ActTestSuite : public CxxTest::TestSuite {
 
         yy::Lexer lexer(args_str);
         yy::parser parser(lexer);
-        TS_ASSERT(parser.parse() == 0)
+        TS_ASSERT(parser.parse() == 0);
     }
 
     void testEventDef() {
@@ -21,7 +21,7 @@ class ActTestSuite : public CxxTest::TestSuite {
 
         yy::Lexer lexer(args_str);
         yy::parser parser(lexer);
-        TS_ASSERT(parser.parse() == 0)
+        TS_ASSERT(parser.parse() == 0);
     }
 
     void testEventDefMultiLine() {
@@ -30,7 +30,7 @@ class ActTestSuite : public CxxTest::TestSuite {
 
         yy::Lexer lexer(args_str);
         yy::parser parser(lexer);
-        TS_ASSERT(parser.parse() == 0)
+        TS_ASSERT(parser.parse() == 0);
     }
 
     void testDecStmtAdd() {
@@ -38,7 +38,7 @@ class ActTestSuite : public CxxTest::TestSuite {
 
         yy::Lexer lexer(args_str);
         yy::parser parser(lexer);
-        TS_ASSERT(parser.parse() == 0)
+        TS_ASSERT(parser.parse() == 0);
     }
 
     void testDecStmtAddMulti() {
@@ -46,7 +46,7 @@ class ActTestSuite : public CxxTest::TestSuite {
 
         yy::Lexer lexer(args_str);
         yy::parser parser(lexer);
-        TS_ASSERT(parser.parse() == 0)
+        TS_ASSERT(parser.parse() == 0);
     }
 
     void testDecStmtAddMultiLine() {
@@ -55,7 +55,7 @@ class ActTestSuite : public CxxTest::TestSuite {
 
         yy::Lexer lexer(args_str);
         yy::parser parser(lexer);
-        TS_ASSERT(parser.parse() == 0)
+        TS_ASSERT(parser.parse() == 0);
     }
 
     void testDecStmtLogicBase() {
@@ -63,7 +63,7 @@ class ActTestSuite : public CxxTest::TestSuite {
 
         yy::Lexer lexer(args_str);
         yy::parser parser(lexer);
-        TS_ASSERT(parser.parse() == 0)
+        TS_ASSERT(parser.parse() == 0);
     }
 
     void testDecStmtLogicValues() {
@@ -71,7 +71,7 @@ class ActTestSuite : public CxxTest::TestSuite {
 
         yy::Lexer lexer(args_str);
         yy::parser parser(lexer);
-        TS_ASSERT(parser.parse() == 0)
+        TS_ASSERT(parser.parse() == 0);
     }
 
     void testDecStmtLogicAndOr() {
@@ -79,7 +79,7 @@ class ActTestSuite : public CxxTest::TestSuite {
 
         yy::Lexer lexer(args_str);
         yy::parser parser(lexer);
-        TS_ASSERT(parser.parse() == 0)
+        TS_ASSERT(parser.parse() == 0);
     }
 
     void testDecStmtLogicParens() {
@@ -87,7 +87,31 @@ class ActTestSuite : public CxxTest::TestSuite {
 
         yy::Lexer lexer(args_str);
         yy::parser parser(lexer);
-        TS_ASSERT(parser.parse() == 0)
+        TS_ASSERT(parser.parse() == 0);
+    }
+
+    void testAssignStmtLogic() {
+        std::string args_str = "myvar = (5 > 4) || (4 == 4);";
+
+        yy::Lexer lexer(args_str);
+        yy::parser parser(lexer);
+        TS_ASSERT(parser.parse() == 0);
+    }
+
+    void testAssignStmtAdd() {
+        std::string args_str = "myvar = 5 + 4;";
+
+        yy::Lexer lexer(args_str);
+        yy::parser parser(lexer);
+        TS_ASSERT(parser.parse() == 0);
     }
     
+    // void testIfStmt() {
+    //     std::string args_str = "bool myvar = (5 > 4) || (4 == 4);";
+
+    //     yy::Lexer lexer(args_str);
+    //     yy::parser parser(lexer);
+    //     TS_ASSERT(parser.parse() == 0)
+    // }
+
 };
