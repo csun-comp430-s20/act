@@ -1,3 +1,11 @@
+# Out Files
 *.out
 *.output
 output.txt
+
+# Auto Generated Files
+lex.yy.cpp 
+lex.yy.h 
+parser.cpp
+parser.hpp 
+runner.cpp

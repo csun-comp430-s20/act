@@ -61,11 +61,22 @@
 
 %%
 
-// Test arg types
-program: /* empty */ | event_def_header | args_term;
+program: /* empty */ | event_def_header | dec_stmt;
+dec_stmt: dec_term | dec_stmt dec_term;
+dec_term: types IDENTIFIER ASSIGN exprs SEMI;
+exprs: cond_expr | add_expr;
+add_expr: NUMBER | add_expr op NUMBER;
+cond_expr: cond_term | cond_expr logic_op cond_term;
+cond_term: logic_vals | logic_terms cond logic_terms | 
+           LEFT_PAREN logic_terms cond logic_terms RIGHT_PAREN;
+logic_terms: NUMBER | logic_vals;
+logic_vals: TRUE | FALSE;
+logic_op: AND_OP | OR_OP;
+cond: LESS | GREATER | LESS_EQUAL | GREATER_EQUAL | EQUAL;
 event_def_header: event_def_term | event_def_header event_def_term;
 event_def_term: DEFEVENT IDENTIFIER LEFT_PAREN args_term RIGHT_PAREN SEMI;
 args_term: types | args_term COMMA types;
+op: PLUS;
 types: INT | BOOL | STRING;
 
 
