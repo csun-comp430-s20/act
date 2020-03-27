@@ -265,21 +265,3 @@ return yy::parser::make_NUMBER(atoi(text()));
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-#line 56 "lexerspec.l"
-
-int main(int argc, char **argv)
-{
-    FILE *fd = stdin;
-    if (argc > 1 && (fd = fopen(argv[1], "r")) == NULL)
-        exit(EXIT_FAILURE);
-    std::ofstream of("output.txt", std::ofstream::out);
-    if (!of)
-        exit(EXIT_FAILURE);
-    yy::Lexer lexer(fd, of);
-    yy::parser parser(lexer);
-    if (parser.parse() != 0) {}
-    of.close();
-    if (fd != stdin)
-        fclose(fd);
-    return 0;
-}

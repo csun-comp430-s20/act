@@ -76,6 +76,6 @@ https://sourceforge.net/projects/cxxtest/files/cxxtest/
 
 ```sh
 cxxtestgen --error-printer -o runner.cpp {test-header-file}
-g++ -o runner -I g++ -o runner -I "path-to-cxxtest/cxxtest-4.3/" runner.cpp
-./runner
+g++ -o runner.out -I "{path-to-cxxtest}/cxxtest-4.3/" runner.cpp lex.yy.cpp parser.cpp -lreflex
+./runner.out
 ```

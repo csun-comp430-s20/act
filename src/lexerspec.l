@@ -54,6 +54,7 @@
 
 %%
 
+/*
 int main(int argc, char **argv)
 {
     FILE *fd = stdin;
@@ -70,3 +71,4 @@ int main(int argc, char **argv)
         fclose(fd);
     return 0;
 }
+*/
