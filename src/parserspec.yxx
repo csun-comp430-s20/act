@@ -64,7 +64,7 @@
 
 %%
 
-program: event_def_header | state_block;
+program: /* empty */ | event_def_header | state_block;
 // State Block
 state_block: STATE LEFT_BRACE entry_meth exit_meth state_stmts RIGHT_BRACE |
              STATE LEFT_BRACE entry_meth state_stmts RIGHT_BRACE |

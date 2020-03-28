@@ -4,78 +4,73 @@ Currently it is only planned to support a single actor that supports the creatio
 of an HSM.
 
 ## Setup
-
-### Include /usr/local/bin to PATH
-if [ -d "/usr/local/bin" ] ; then
-    PATH="/usr/local/bin:$PATH"
-fi
-
-### Include cxxtestgen to PATH
-if [ -d "$HOME/Projects/Compilers/act/cxxtest-4.3/bin" ] ; then
-    PATH="$HOME/{Path to cxxtest folder}/cxxtest-4.3/bin:$PATH"
-fi
-
-
-## Setup for RE/flex
-
+### 1) Setup for RE/flex
 Clone RE/flex repo one directory above act repo:
 ```sh
 git clone https://github.com/Genivia/RE-flex.git
 ```
 
-For now run these commands to test the lexer:
+Run configure script in RE-flex directory:
 ```sh
 sudo apt update
-wget https://ftp.gnu.org/gnu/bison/bison-3.2.tar.gz
-tar xvzf bison-3.2.tar.gz
 sudo apt install autoconf
 autoreconf -fi
-./configure --prefix=".../libs/re-flex" && make
+./configure && make
+sudo make install
 ```
 
-Then cd into the src directory and run these commands:
+The above command adds a reflex binary file to /usr/local/bin.
+
+### 2) Setup for Bison
+Download and unzip Bison directory one directory above act repo:
 ```sh
-../libs/re-flex/bin/reflex lexerspec.l
-c++ -I ../libs/re-flex/include/ lex.yy.cpp -L ../libs/re-flex/lib/ -lreflex
-./a.out ../tests/act_example.act
+wget https://ftp.gnu.org/gnu/bison/bison-3.2.tar.gz
+tar xvzf bison-3.2.tar.gz
+./configure && make
+sudo make install
 ```
 
-## Setup for CAF
+The above command adds a bison binary file to /usr/local/bin.
 
-Clone CAF repo one directory above act repo:
+### 3) Setup for CxxTest
+Download CxxTest here one directory above act repo:
+https://sourceforge.net/projects/cxxtest/files/cxxtest/
+
+### 4) Include binaries to system profile
+Add these lines to ~/.profile (Change {Path to cxxtest folder}):
 ```sh
-git clone https://github.com/DanielTellier/actor-framework.git
+if [ -d "/usr/local/bin" ] ; then
+    PATH="/usr/local/bin:$PATH"
+fi
+
+if [ -d "$HOME/{Path to cxxtest folder}/cxxtest-4.3/bin" ] ; then
+    PATH="$HOME/{Path to cxxtest folder}/cxxtest-4.3/bin:$PATH"
+fi
 ```
 
-Run configure script in actor-framework folder and direct install to caf_lib folder.
-This will will place include files in .../libs/caf_lib:
+The above lines allow you to directly call the binaries from your terminal
+such as:
 ```sh
-./configure --prefix=".../libs/caf_lib"
-cd build
-make
-make test
-make install
+bison --version
 ```
 
-## Compiling and running Lexer and Parser
-
+## Compiling Bison and RE/flex
+The following lines create auto generated files for the parser and the lexer:
 ```sh
 bison -v --defines=parser.hpp --output=parser.cpp parserspec.yxx
 reflex --header-file lexerspec.l
-c++ lex.yy.cpp parser.cpp -lreflex
-./a.out ../tests/{file}
 ```
-
-The above produces an out file that takes a file as an argument from the tests folder
-and turns the file stream into a string and tests if the string is valid.
 
 ## Running Unit Tests with CxxTest
-
-Downloaded header files for CxxTest here:
-https://sourceforge.net/projects/cxxtest/files/cxxtest/
-
+To run tests call the following commands after compiling (Change {Path to cxxtest folder})
+currently one of the test-header-files is called ActTestSuite.hpp:
 ```sh
 cxxtestgen --error-printer -o runner.cpp {test-header-file}
-g++ -o runner.out -I "{path-to-cxxtest}/cxxtest-4.3/" runner.cpp lex.yy.cpp parser.cpp -lreflex
+g++ -o runner.out -I "~/{Path to cxxtest folder}/cxxtest-4.3/" runner.cpp lex.yy.cpp parser.cpp -lreflex
 ./runner.out
 ```
+
+## Resources/Links
+https://github.com/Genivia/RE-flex
+https://www.genivia.com/doc/reflex/html/
+
