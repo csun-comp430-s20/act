@@ -48,6 +48,11 @@ if [ -d "$HOME/{Path to cxxtest folder}/cxxtest-4.3/bin" ] ; then
 fi
 ```
 
+Now source the .profile file in the terminal:
+```sh
+source ~/.profile
+```
+
 The above lines allow you to directly call the binaries from your terminal
 such as:
 ```sh
