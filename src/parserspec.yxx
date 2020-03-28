@@ -69,11 +69,16 @@ state_block: STATE LEFT_BRACE entry_meth exit_meth state_stmts RIGHT_BRACE |
              STATE LEFT_BRACE entry_meth state_stmts RIGHT_BRACE |
              STATE LEFT_BRACE exit_meth state_stmts RIGHT_BRACE |
              STATE LEFT_BRACE state_stmts RIGHT_BRACE;
-state_stmts: stmts | on_event_block | state_block;
+state_stmts: stmts | on_event_block | method_def | state_block;
 // Entry Method
 entry_meth: ENTRY LEFT_BRACE stmts RIGHT_BRACE;
 // Exit Method
 exit_meth: EXIT LEFT_BRACE stmts RIGHT_BRACE;
+// Method Definition
+method_def: types IDENTIFIER LEFT_PAREN args_type_iden RIGHT_PAREN
+            LEFT_BRACE method_stmts RIGHT_BRACE;
+method_stmts: /* empty */ | dec_stmt | assign_stmt | if_stmt |
+              while_stmt | return_stmt;
 // Statements
 stmts: /* empty */ | dec_stmt | assign_stmt | if_stmt | while_stmt;
 // On Event Block
@@ -88,9 +93,13 @@ if_event_term: MOVEIF LEFT_PAREN cond_expr RIGHT_PAREN IDENTIFIER
 elif_event_block: elif_event_term | elif_event_block elif_event_term;
 elif_event_term: MOVEIF LEFT_PAREN cond_expr RIGHT_PAREN IDENTIFIER 
                  LEFT_BRACE stmts RIGHT_BRACE;
+// Return Statement
+return_stmt: RETURN exprs SEMI;
 // While Statement
 while_stmt: while_term | while_stmt while_term;
-while_term: WHILE LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE stmts RIGHT_BRACE;
+while_term: WHILE LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE while_stmts RIGHT_BRACE;
+while_stmts: /* empty */ | dec_stmt | assign_stmt | if_stmt | while_stmt | break_stmt;
+break_stmt: BREAK SEMI;
 // If-Else Statement
 if_stmt: if_terms | if_stmt if_terms;
 if_terms: if_term | if_term elif_block | if_term elif_block else_term;
@@ -118,11 +127,13 @@ logic_terms: INT_NUMBER | CONST_STRING | IDENTIFIER | logic_vals;
 logic_vals: TRUE | FALSE;
 logic_op: AND_OP | OR_OP;
 cond: LESS | GREATER | LESS_EQUAL | GREATER_EQUAL | EQUAL;
-// Arg Cases
+// Event Def Cases
 event_def_header: event_def_term | event_def_header event_def_term;
-event_def_term: DEFEVENT IDENTIFIER LEFT_PAREN args_term RIGHT_PAREN SEMI;
-args_iden: IDENTIFIER | args_term COMMA IDENTIFIER;
-args_term: types | args_term COMMA types;
+event_def_term: DEFEVENT IDENTIFIER LEFT_PAREN args_types RIGHT_PAREN SEMI;
+// Args Cases
+args_type_iden: /* empty */ | types IDENTIFIER | args_type_iden COMMA types IDENTIFIER;
+args_iden: /* empty */ | IDENTIFIER | args_iden COMMA IDENTIFIER;
+args_types: /* empty */ | types | args_types COMMA types;
 types: INT | BOOL | STRING;
 
 /*
