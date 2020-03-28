@@ -11,7 +11,7 @@ state life {
     }
 
     state work {
-        on TIRED {
+        on TIRED(myval, myval2) {
             if(time == 23) moveto rest {
                 stamina = 0;
             }

@@ -63,12 +63,23 @@
 
 %%
 
-program: event_def_header | stmts | on_event_block;
+program: event_def_header | state_block;
+// State Block
+state_block: STATE LEFT_BRACE entry_meth exit_meth state_stmts RIGHT_BRACE |
+             STATE LEFT_BRACE entry_meth state_stmts RIGHT_BRACE |
+             STATE LEFT_BRACE exit_meth state_stmts RIGHT_BRACE |
+             STATE LEFT_BRACE state_stmts RIGHT_BRACE;
+state_stmts: stmts | on_event_block | state_block;
+// Entry Method
+entry_meth: ENTRY LEFT_BRACE stmts RIGHT_BRACE;
+// Exit Method
+exit_meth: EXIT LEFT_BRACE stmts RIGHT_BRACE;
 // Statements
 stmts: /* empty */ | dec_stmt | assign_stmt | if_stmt | while_stmt;
 // On Event Block
 on_event_block: on_event_term | on_event_block on_event_term;
-on_event_term: ON IDENTIFIER LEFT_BRACE if_event_terms RIGHT_BRACE;
+on_event_term: ON IDENTIFIER LEFT_PAREN args_iden RIGHT_PAREN 
+               LEFT_BRACE if_event_terms RIGHT_BRACE;
 // If Event Block
 if_event_terms: if_event_term | if_event_term elif_event_block | 
                 if_event_term elif_event_block else_term;
@@ -110,38 +121,20 @@ cond: LESS | GREATER | LESS_EQUAL | GREATER_EQUAL | EQUAL;
 // Arg Cases
 event_def_header: event_def_term | event_def_header event_def_term;
 event_def_term: DEFEVENT IDENTIFIER LEFT_PAREN args_term RIGHT_PAREN SEMI;
+args_iden: IDENTIFIER | args_term COMMA IDENTIFIER;
 args_term: types | args_term COMMA types;
 types: INT | BOOL | STRING;
 
 /*
-if_term: IF LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE ... RIGHT_BRACE
-elif_term: ELIF LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE ... RIGHT_BRACE
-else_term: ELSE LEFT_BRACE ... RIGHT_BRACE
-elif_block: elif_term | elif_block elif_term;
-if_stmt: if_term | if_term elif_block | if_term elif_block else_term
-
-logic_term: NUMBER | TRUE | FALSE
-logic_op: AND_OP | OR_OP
-cond_expr: cond_term | cond_expr logic_op cond_term
-cond_term: logic_term | logic_term cond logic_term
-
 args_term: types | args_term COMMA types
 args_iden_term: types IDENTIFIER | args_iden_term COMMA types IDENTIFIER
 
 event_def_header: DEFEVENT IDENTIFIER LEFT_PAREN args_term RIGHT_PAREN SEMI
 
-if_event_stmt: IF LEFT_PAREN cond_expr RIGHT_PAREN MOVETO IDENTIFIER LEFT_BRACE ...
-on_event_stmt: ON IDENTIFIER LEFT_BRACE if_event RIGHT_BRACE
-while_stmt: WHILE LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE ... RIGHT_BRACE
 return_term: RETURN ...
 method_term: types IDENTIFIER LEFT_PAREN args_iden_term RIGHT_PAREN LEFT_BRACE ... RIGHT_BRACE
-entry_meth: ENTRY LEFT_BRACE ... RIGHT_BRACE
-exit_meth: EXIT LEFT_BRACE ... RIGHT_BRACE
 lambda_meth: LAMBDA LEFT_PAREN args_iden_term RIGHT_PAREN LEFT_BRACE ... RIGHT_BRACE
-add_expr: NUMBER | add_expr op NUMBER
-state_term: STATE IDENTIFIER LEFT_BRACE entry_meth exit_meth ... RIGHT_BRACE
 
-stmts_list: dec_stmt | if_stmt | on_event_stmt | while_stmt
 */
 
 %%
