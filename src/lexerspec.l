@@ -34,6 +34,7 @@
 "string"                    return yy::parser::make_STRING(str());
 "+"                         return yy::parser::make_PLUS(str());
 ";"                         return yy::parser::make_SEMI(str());
+":"                         return yy::parser::make_COLON(str());
 "{"                         return yy::parser::make_LEFT_BRACE(str());
 "}"                         return yy::parser::make_RIGHT_BRACE(str());
 "("                         return yy::parser::make_LEFT_PAREN(str());

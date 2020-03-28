@@ -46,6 +46,7 @@
 %token <std::string> STRING "string"
 %token <std::string> PLUS "+"
 %token <std::string> SEMI ";"
+%token <std::string> COLON ":"
 %token <std::string> LEFT_BRACE "{"
 %token <std::string> RIGHT_BRACE "}"
 %token <std::string> LEFT_PAREN "("
@@ -94,7 +95,7 @@ elif_event_block: elif_event_term | elif_event_block elif_event_term;
 elif_event_term: MOVEIF LEFT_PAREN cond_expr RIGHT_PAREN IDENTIFIER 
                  LEFT_BRACE stmts RIGHT_BRACE;
 // Return Statement
-return_stmt: RETURN exprs SEMI;
+return_stmt: RETURN simple_exprs SEMI;
 // While Statement
 while_stmt: while_term | while_stmt while_term;
 while_term: WHILE LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE while_stmts RIGHT_BRACE;
@@ -113,8 +114,11 @@ assign_term: IDENTIFIER ASSIGN exprs SEMI;
 // Declarations
 dec_stmt: dec_term | dec_stmt dec_term;
 dec_term: types IDENTIFIER SEMI | types IDENTIFIER ASSIGN exprs SEMI;
+// Lambda Definition
+lambda_def: LAMBDA LEFT_PAREN args_iden_term RIGHT_PAREN COLON simple_exprs COLON
 // Expressions
-exprs: cond_expr | add_expr;
+exprs: lambda_def | cond_expr | add_expr;
+simple_exprs: cond_expr | add_expr;
 // Arithmetic Cases
 add_expr: add_vals | add_expr plus_op add_vals;
 add_vals: INT_NUMBER | IDENTIFIER
@@ -135,18 +139,6 @@ args_type_iden: /* empty */ | types IDENTIFIER | args_type_iden COMMA types IDEN
 args_iden: /* empty */ | IDENTIFIER | args_iden COMMA IDENTIFIER;
 args_types: /* empty */ | types | args_types COMMA types;
 types: INT | BOOL | STRING;
-
-/*
-args_term: types | args_term COMMA types
-args_iden_term: types IDENTIFIER | args_iden_term COMMA types IDENTIFIER
-
-event_def_header: DEFEVENT IDENTIFIER LEFT_PAREN args_term RIGHT_PAREN SEMI
-
-return_term: RETURN ...
-method_term: types IDENTIFIER LEFT_PAREN args_iden_term RIGHT_PAREN LEFT_BRACE ... RIGHT_BRACE
-lambda_meth: LAMBDA LEFT_PAREN args_iden_term RIGHT_PAREN LEFT_BRACE ... RIGHT_BRACE
-
-*/
 
 %%
 
