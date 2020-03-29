@@ -479,6 +479,7 @@ namespace yy {
       // "string"
       // "+"
       // ";"
+      // ":"
       // "{"
       // "}"
       // "("
@@ -536,19 +537,20 @@ namespace yy {
         TOK_STRING = 278,
         TOK_PLUS = 279,
         TOK_SEMI = 280,
-        TOK_LEFT_BRACE = 281,
-        TOK_RIGHT_BRACE = 282,
-        TOK_LEFT_PAREN = 283,
-        TOK_RIGHT_PAREN = 284,
-        TOK_COMMA = 285,
-        TOK_AND_OP = 286,
-        TOK_OR_OP = 287,
-        TOK_LESS_EQUAL = 288,
-        TOK_GREATER_EQUAL = 289,
-        TOK_LESS = 290,
-        TOK_GREATER = 291,
-        TOK_EQUAL = 292,
-        TOK_ASSIGN = 293
+        TOK_COLON = 281,
+        TOK_LEFT_BRACE = 282,
+        TOK_RIGHT_BRACE = 283,
+        TOK_LEFT_PAREN = 284,
+        TOK_RIGHT_PAREN = 285,
+        TOK_COMMA = 286,
+        TOK_AND_OP = 287,
+        TOK_OR_OP = 288,
+        TOK_LESS_EQUAL = 289,
+        TOK_GREATER_EQUAL = 290,
+        TOK_LESS = 291,
+        TOK_GREATER = 292,
+        TOK_EQUAL = 293,
+        TOK_ASSIGN = 294
       };
     };
 
@@ -780,6 +782,10 @@ namespace yy {
 
     static
     symbol_type
+    make_COLON (YY_COPY (std::string) v);
+
+    static
+    symbol_type
     make_LEFT_BRACE (YY_COPY (std::string) v);
 
     static
@@ -1008,12 +1014,12 @@ namespace yy {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 250,     ///< Last index in yytable_.
-      yynnts_ = 46,  ///< Number of nonterminal symbols.
-      yyfinal_ = 14, ///< Termination state number.
+      yylast_ = 257,     ///< Last index in yytable_.
+      yynnts_ = 48,  ///< Number of nonterminal symbols.
+      yyfinal_ = 9, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
-      yyntokens_ = 39  ///< Number of tokens.
+      yyntokens_ = 40  ///< Number of tokens.
     };
 
 
@@ -1059,9 +1065,9 @@ namespace yy {
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36,    37,    38
+      35,    36,    37,    38,    39
     };
-    const unsigned user_token_number_max_ = 293;
+    const unsigned user_token_number_max_ = 294;
     const token_number_type undef_token_ = 2;
 
     if (static_cast<int> (t) <= yyeof_)
@@ -1116,19 +1122,20 @@ namespace yy {
       case 23: // "string"
       case 24: // "+"
       case 25: // ";"
-      case 26: // "{"
-      case 27: // "}"
-      case 28: // "("
-      case 29: // ")"
-      case 30: // ","
-      case 31: // "&&"
-      case 32: // "||"
-      case 33: // "=<"
-      case 34: // "=>"
-      case 35: // "<"
-      case 36: // ">"
-      case 37: // "=="
-      case 38: // "="
+      case 26: // ":"
+      case 27: // "{"
+      case 28: // "}"
+      case 29: // "("
+      case 30: // ")"
+      case 31: // ","
+      case 32: // "&&"
+      case 33: // "||"
+      case 34: // "=<"
+      case 35: // "=>"
+      case 36: // "<"
+      case 37: // ">"
+      case 38: // "=="
+      case 39: // "="
         value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (other.value));
         break;
 
@@ -1208,19 +1215,20 @@ namespace yy {
       case 23: // "string"
       case 24: // "+"
       case 25: // ";"
-      case 26: // "{"
-      case 27: // "}"
-      case 28: // "("
-      case 29: // ")"
-      case 30: // ","
-      case 31: // "&&"
-      case 32: // "||"
-      case 33: // "=<"
-      case 34: // "=>"
-      case 35: // "<"
-      case 36: // ">"
-      case 37: // "=="
-      case 38: // "="
+      case 26: // ":"
+      case 27: // "{"
+      case 28: // "}"
+      case 29: // "("
+      case 30: // ")"
+      case 31: // ","
+      case 32: // "&&"
+      case 33: // "||"
+      case 34: // "=<"
+      case 35: // "=>"
+      case 36: // "<"
+      case 37: // ">"
+      case 38: // "=="
+      case 39: // "="
         value.template destroy< std::string > ();
         break;
 
@@ -1271,19 +1279,20 @@ namespace yy {
       case 23: // "string"
       case 24: // "+"
       case 25: // ";"
-      case 26: // "{"
-      case 27: // "}"
-      case 28: // "("
-      case 29: // ")"
-      case 30: // ","
-      case 31: // "&&"
-      case 32: // "||"
-      case 33: // "=<"
-      case 34: // "=>"
-      case 35: // "<"
-      case 36: // ">"
-      case 37: // "=="
-      case 38: // "="
+      case 26: // ":"
+      case 27: // "{"
+      case 28: // "}"
+      case 29: // "("
+      case 30: // ")"
+      case 31: // ","
+      case 32: // "&&"
+      case 33: // "||"
+      case 34: // "=<"
+      case 35: // "=>"
+      case 36: // "<"
+      case 37: // ">"
+      case 38: // "=="
+      case 39: // "="
         value.move< std::string > (YY_MOVE (s.value));
         break;
 
@@ -1344,7 +1353,7 @@ namespace yy {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288,   289,   290,   291,   292,   293
+     285,   286,   287,   288,   289,   290,   291,   292,   293,   294
     };
     return static_cast<token_type> (yytoken_number_[type]);
   }
@@ -1520,6 +1529,13 @@ namespace yy {
 
   inline
   parser::symbol_type
+  parser::make_COLON (YY_COPY (std::string) v)
+  {
+    return symbol_type (token::TOK_COLON, YY_MOVE (v));
+  }
+
+  inline
+  parser::symbol_type
   parser::make_LEFT_BRACE (YY_COPY (std::string) v)
   {
     return symbol_type (token::TOK_LEFT_BRACE, YY_MOVE (v));
@@ -1612,7 +1628,7 @@ namespace yy {
 
 
 } // yy
-#line 1616 "parser.hpp" // lalr1.cc:403
+#line 1632 "parser.hpp" // lalr1.cc:403
 
 
 

@@ -115,7 +115,7 @@ assign_term: IDENTIFIER ASSIGN exprs SEMI;
 dec_stmt: dec_term | dec_stmt dec_term;
 dec_term: types IDENTIFIER SEMI | types IDENTIFIER ASSIGN exprs SEMI;
 // Lambda Definition
-lambda_def: LAMBDA LEFT_PAREN args_iden_term RIGHT_PAREN COLON simple_exprs COLON
+lambda_def: LAMBDA LEFT_PAREN args_type_iden RIGHT_PAREN COLON simple_exprs COLON
 // Expressions
 exprs: lambda_def | cond_expr | add_expr;
 simple_exprs: cond_expr | add_expr;

@@ -89,7 +89,7 @@ class Lexer : public reflex::AbstractLexer<reflex::Matcher> {
 
 yy::parser::symbol_type yy::Lexer::lex()
 {
-  static const char *REGEX_INITIAL = "(?m)((?:\\Qtrue\\E))|((?:\\Qfalse\\E))|((?:\\Qif\\E))|((?:\\Qelif\\E))|((?:\\Qelse\\E))|((?:\\Qwhile\\E))|((?:\\Qreturn\\E))|((?:\\Qstate\\E))|((?:\\Qentry\\E))|((?:\\Qexit\\E))|((?:\\Qon\\E))|((?:\\Qmoveif\\E))|((?:\\Qbreak\\E))|((?:\\Qlambda\\E))|((?:\\Qdefevent\\E))|((?:\\Qint\\E))|((?:\\Qbool\\E))|((?:\\Qstring\\E))|((?:\\Q+\\E))|((?:\\Q;\\E))|((?:\\Q{\\E))|((?:\\Q}\\E))|((?:\\Q(\\E))|((?:\\Q)\\E))|((?:\\Q,\\E))|((?:\\Q&&\\E))|((?:\\Q||\\E))|((?:\\Q=<\\E))|((?:\\Q=>\\E))|((?:\\Q<\\E))|((?:\\Q>\\E))|((?:\\Q==\\E))|((?:\\Q=\\E))|([A-Z_a-z][0-9A-Z_a-z]*)|([0-9]+)|(\"(?:[^\"\\x5c]|\\\\\")*\")|((?:\\Q/*\\E)(?:.|\\n)*?(?:\\Q*/\\E))|([\\x09\\x0a\\x0d\\x20])";
+  static const char *REGEX_INITIAL = "(?m)((?:\\Qtrue\\E))|((?:\\Qfalse\\E))|((?:\\Qif\\E))|((?:\\Qelif\\E))|((?:\\Qelse\\E))|((?:\\Qwhile\\E))|((?:\\Qreturn\\E))|((?:\\Qstate\\E))|((?:\\Qentry\\E))|((?:\\Qexit\\E))|((?:\\Qon\\E))|((?:\\Qmoveif\\E))|((?:\\Qbreak\\E))|((?:\\Qlambda\\E))|((?:\\Qdefevent\\E))|((?:\\Qint\\E))|((?:\\Qbool\\E))|((?:\\Qstring\\E))|((?:\\Q+\\E))|((?:\\Q;\\E))|((?:\\Q:\\E))|((?:\\Q{\\E))|((?:\\Q}\\E))|((?:\\Q(\\E))|((?:\\Q)\\E))|((?:\\Q,\\E))|((?:\\Q&&\\E))|((?:\\Q||\\E))|((?:\\Q=<\\E))|((?:\\Q=>\\E))|((?:\\Q<\\E))|((?:\\Q>\\E))|((?:\\Q==\\E))|((?:\\Q=\\E))|([A-Z_a-z][0-9A-Z_a-z]*)|([0-9]+)|(\"(?:[^\"\\x5c]|\\\\\")*\")|((?:\\Q/*\\E)(?:.|\\n)*?(?:\\Q*/\\E))|([\\x09\\x0a\\x0d\\x20])";
   static const reflex::Pattern PATTERN_INITIAL(REGEX_INITIAL);
   if (!has_matcher())
   {
@@ -102,7 +102,7 @@ yy::parser::symbol_type yy::Lexer::lex()
           case 0:
             if (matcher().at_end())
             {
-#line 50 "lexerspec.l"
+#line 51 "lexerspec.l"
 return yy::parser::make_EOF();
             }
             else
@@ -190,76 +190,80 @@ return yy::parser::make_PLUS(str());
 #line 36 "lexerspec.l"
 return yy::parser::make_SEMI(str());
             break;
-          case 21: // rule at line 37: (?:\Q{\E)
+          case 21: // rule at line 37: (?:\Q:\E)
 #line 37 "lexerspec.l"
+return yy::parser::make_COLON(str());
+            break;
+          case 22: // rule at line 38: (?:\Q{\E)
+#line 38 "lexerspec.l"
 return yy::parser::make_LEFT_BRACE(str());
             break;
-          case 22: // rule at line 38: (?:\Q}\E)
-#line 38 "lexerspec.l"
+          case 23: // rule at line 39: (?:\Q}\E)
+#line 39 "lexerspec.l"
 return yy::parser::make_RIGHT_BRACE(str());
             break;
-          case 23: // rule at line 39: (?:\Q(\E)
-#line 39 "lexerspec.l"
+          case 24: // rule at line 40: (?:\Q(\E)
+#line 40 "lexerspec.l"
 return yy::parser::make_LEFT_PAREN(str());
             break;
-          case 24: // rule at line 40: (?:\Q)\E)
-#line 40 "lexerspec.l"
+          case 25: // rule at line 41: (?:\Q)\E)
+#line 41 "lexerspec.l"
 return yy::parser::make_RIGHT_PAREN(str());
             break;
-          case 25: // rule at line 41: (?:\Q,\E)
-#line 41 "lexerspec.l"
+          case 26: // rule at line 42: (?:\Q,\E)
+#line 42 "lexerspec.l"
 return yy::parser::make_COMMA(str());
             break;
-          case 26: // rule at line 42: (?:\Q&&\E)
-#line 42 "lexerspec.l"
+          case 27: // rule at line 43: (?:\Q&&\E)
+#line 43 "lexerspec.l"
 return yy::parser::make_AND_OP(str());
             break;
-          case 27: // rule at line 43: (?:\Q||\E)
-#line 43 "lexerspec.l"
+          case 28: // rule at line 44: (?:\Q||\E)
+#line 44 "lexerspec.l"
 return yy::parser::make_OR_OP(str());
             break;
-          case 28: // rule at line 44: (?:\Q=<\E)
-#line 44 "lexerspec.l"
+          case 29: // rule at line 45: (?:\Q=<\E)
+#line 45 "lexerspec.l"
 return yy::parser::make_LESS_EQUAL(str());
             break;
-          case 29: // rule at line 45: (?:\Q=>\E)
-#line 45 "lexerspec.l"
+          case 30: // rule at line 46: (?:\Q=>\E)
+#line 46 "lexerspec.l"
 return yy::parser::make_GREATER_EQUAL(str());
             break;
-          case 30: // rule at line 46: (?:\Q<\E)
-#line 46 "lexerspec.l"
+          case 31: // rule at line 47: (?:\Q<\E)
+#line 47 "lexerspec.l"
 return yy::parser::make_LESS(str());
             break;
-          case 31: // rule at line 47: (?:\Q>\E)
-#line 47 "lexerspec.l"
+          case 32: // rule at line 48: (?:\Q>\E)
+#line 48 "lexerspec.l"
 return yy::parser::make_GREATER(str());
             break;
-          case 32: // rule at line 48: (?:\Q==\E)
-#line 48 "lexerspec.l"
+          case 33: // rule at line 49: (?:\Q==\E)
+#line 49 "lexerspec.l"
 return yy::parser::make_EQUAL(str());
             break;
-          case 33: // rule at line 49: (?:\Q=\E)
-#line 49 "lexerspec.l"
+          case 34: // rule at line 50: (?:\Q=\E)
+#line 50 "lexerspec.l"
 return yy::parser::make_ASSIGN(str());
             break;
-          case 34: // rule at line 51: [A-Z_a-z][0-9A-Z_a-z]*
-#line 51 "lexerspec.l"
+          case 35: // rule at line 52: [A-Z_a-z][0-9A-Z_a-z]*
+#line 52 "lexerspec.l"
 return yy::parser::make_IDENTIFIER(str());
             break;
-          case 35: // rule at line 52: [0-9]+
-#line 52 "lexerspec.l"
+          case 36: // rule at line 53: [0-9]+
+#line 53 "lexerspec.l"
 return yy::parser::make_INT_NUMBER(atoi(text()));
             break;
-          case 36: // rule at line 53: "(?:[^"\x5c]|\\")*"
-#line 53 "lexerspec.l"
+          case 37: // rule at line 54: "(?:[^"\x5c]|\\")*"
+#line 54 "lexerspec.l"
 return yy::parser::make_CONST_STRING(str());
             break;
-          case 37: // rule at line 54: (?:\Q/*\E)(?:.|\n)*?(?:\Q*/\E)
-#line 54 "lexerspec.l"
+          case 38: // rule at line 55: (?:\Q/*\E)(?:.|\n)*?(?:\Q*/\E)
+#line 55 "lexerspec.l"
 /* no action: ignore multiline comments */
             break;
-          case 38: // rule at line 55: [\x09\x0a\x0d\x20]
-#line 55 "lexerspec.l"
+          case 39: // rule at line 56: [\x09\x0a\x0d\x20]
+#line 56 "lexerspec.l"
 /* no action: ignore all white space */
 
             break;
@@ -273,7 +277,7 @@ return yy::parser::make_CONST_STRING(str());
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-#line 58 "lexerspec.l"
+#line 59 "lexerspec.l"
 
 /*
 int main(int argc, char **argv)
