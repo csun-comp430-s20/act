@@ -62,6 +62,7 @@
 %token <std::string> STRING "string"
 %left <std::string> PLUS "+"
 %token <std::string> SEMI ";"
+%token <std::string> COLON ":"
 %token <std::string> LEFT_BRACE "{"
 %token <std::string> RIGHT_BRACE "}"
 %left <std::string> LEFT_PAREN "("
@@ -79,7 +80,6 @@
 
 %%
 
-/*
 program: /* empty */ | event_def_header | state_block;
 // State Block
 state_block: STATE LEFT_BRACE entry_meth exit_meth state_stmts RIGHT_BRACE |
@@ -130,41 +130,10 @@ assign_term: IDENTIFIER ASSIGN exprs SEMI;
 // Declarations
 dec_stmt: dec_term | dec_stmt dec_term;
 dec_term: types IDENTIFIER SEMI | types IDENTIFIER ASSIGN exprs SEMI;
+// Lambda Definition
+lambda_def: LAMBDA LEFT_PAREN args_type_iden RIGHT_PAREN COLON simple_exprs COLON
 // Expressions
 exprs: lambda_def | cond_expr | add_expr;
-// Lambda Definition
-lambda_def: LAMBDA LEFT_PAREN args_type_iden RIGHT_PAREN LEFT_BRACE simple_exprs RIGHT_BRACE
-simple_exprs: cond_expr | add_expr;
-// Arithmetic Cases
-add_expr: add_vals | add_expr plus_op add_vals;
-add_vals: INT_NUMBER | IDENTIFIER
-plus_op: PLUS;
-// Condition Cases
-cond_expr: cond_term | cond_expr logic_op cond_term;
-cond_term: logic_vals | logic_terms cond logic_terms | 
-           LEFT_PAREN logic_terms cond logic_terms RIGHT_PAREN;
-logic_terms: INT_NUMBER | CONST_STRING | IDENTIFIER | logic_vals;
-logic_vals: TRUE | FALSE;
-logic_op: AND_OP | OR_OP;
-cond: LESS | GREATER | LESS_EQUAL | GREATER_EQUAL | EQUAL;
-*/
-
-program: /* empty */ | event_def_header | stmt;
-stmt: print_stmt | assign_stmt;
-print_stmt: print_term | print_stmt print_term;
-print_term: PRINT LEFT_PAREN IDENTIFIER RIGHT_PAREN SEMI {
-    $$ = new print_stmt($3);
-}
-// Assignment
-assign_stmt: assign_term | assign_stmt assign_term;
-assign_term: IDENTIFIER ASSIGN exprs SEMI;
-// Declarations
-dec_stmt: dec_term | dec_stmt dec_term;
-dec_term: types IDENTIFIER SEMI | types IDENTIFIER ASSIGN exprs SEMI;
-// Expressions
-exprs: lambda_def | cond_expr | add_expr;
-// Lambda Definition
-lambda_def: LAMBDA LEFT_PAREN args_type_iden RIGHT_PAREN LEFT_BRACE simple_exprs RIGHT_BRACE
 simple_exprs: cond_expr | add_expr;
 // Arithmetic Cases
 add_expr: add_vals | add_expr plus_op add_vals;
@@ -182,8 +151,8 @@ cond: LESS | GREATER | LESS_EQUAL | GREATER_EQUAL | EQUAL;
 event_def_header: event_def_term | event_def_header event_def_term;
 event_def_term: DEFEVENT IDENTIFIER LEFT_PAREN args_types RIGHT_PAREN SEMI;
 // Args Cases
-//args_type_iden: /* empty */ | types IDENTIFIER | args_type_iden COMMA types IDENTIFIER;
-//args_iden: /* empty */ | IDENTIFIER | args_iden COMMA IDENTIFIER;
+args_type_iden: /* empty */ | types IDENTIFIER | args_type_iden COMMA types IDENTIFIER;
+args_iden: /* empty */ | IDENTIFIER | args_iden COMMA IDENTIFIER;
 args_types: /* empty */ | types | args_types COMMA types;
 types: INT | BOOL | STRING;
 

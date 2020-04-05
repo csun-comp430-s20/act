@@ -1,4 +1,4 @@
-# act
+# Act
 The Act Language in the future will utilize the concept of an Actor Model paradigm.
 Currently it is only planned to support a single actor that supports the creation
 of an HSM.
@@ -36,6 +36,13 @@ The above command adds a bison binary file to /usr/local/bin.
 Download CxxTest here one directory above act repo:
 https://sourceforge.net/projects/cxxtest/files/cxxtest/
 
+Create a virtual python environment with python 3.5+:
+```sh
+python3 -m venv /path/to/new/virtual/environment
+source /path/to/new/virtual/environment/bin/activate
+pip install ply
+```
+
 ### 4) Include binaries to system profile
 Add these lines to ~/.profile (Change {Path to cxxtest folder}):
 ```sh
@@ -71,11 +78,12 @@ To run tests call the following commands after compiling (Change {Path to cxxtes
 currently one of the test-header-files is called ActTestSuite.hpp:
 ```sh
 cxxtestgen --error-printer -o runner.cpp {test-header-file}
-g++ -o runner.out -I "~/{Path to cxxtest folder}/cxxtest-4.3/" runner.cpp lex.yy.cpp parser.cpp -lreflex
+g++ -std=c++17 -o runner.out -I "~/{Path to cxxtest folder}/cxxtest-4.3/" runner.cpp lex.yy.cpp parser.cpp -lreflex
 ./runner.out
 ```
 
 ## Resources/Links
-https://github.com/Genivia/RE-flex
-https://www.genivia.com/doc/reflex/html/
+https://github.com/Genivia/RE-flex <br />
+https://www.genivia.com/doc/reflex/html/ <br />
+https://web.eecs.utk.edu/~bvanderz/teaching/cs461Sp11/notes/parse_tree/
 
