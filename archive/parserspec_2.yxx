@@ -67,6 +67,10 @@
 %left <std::string> LEFT_PAREN "("
 %left <std::string> RIGHT_PAREN ")"
 %token <std::string> COMMA ","
+%token <std::string> AND_OP "&&"
+%token <std::string> OR_OP "||"
+%token <std::string> LESS_EQUAL "=<"
+%token <std::string> GREATER_EQUAL "=>"
 %token <std::string> LESS "<"
 %token <std::string> GREATER ">"
 %token <std::string> EQUAL "=="
@@ -167,12 +171,13 @@ add_expr: add_vals | add_expr plus_op add_vals;
 add_vals: INT_NUMBER | IDENTIFIER
 plus_op: PLUS;
 // Condition Cases
-cond_expr: cond_term | cond_expr cond cond_term;
+cond_expr: cond_term | cond_expr logic_op cond_term;
 cond_term: logic_vals | logic_terms cond logic_terms | 
            LEFT_PAREN logic_terms cond logic_terms RIGHT_PAREN;
 logic_terms: INT_NUMBER | CONST_STRING | IDENTIFIER | logic_vals;
 logic_vals: TRUE | FALSE;
-cond: LESS | GREATER | EQUAL;
+logic_op: AND_OP | OR_OP;
+cond: LESS | GREATER | LESS_EQUAL | GREATER_EQUAL | EQUAL;
 // Event Def Cases
 event_def_header: event_def_term | event_def_header event_def_term;
 event_def_term: DEFEVENT IDENTIFIER LEFT_PAREN args_types RIGHT_PAREN SEMI;

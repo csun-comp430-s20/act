@@ -39,10 +39,6 @@
 "("                         return yy::parser::make_LEFT_PAREN(str());
 ")"                         return yy::parser::make_RIGHT_PAREN(str());
 ","                         return yy::parser::make_COMMA(str());
-"&&"                        return yy::parser::make_AND_OP(str());
-"||"                        return yy::parser::make_OR_OP(str());
-"=<"                        return yy::parser::make_LESS_EQUAL(str());
-"=>"                        return yy::parser::make_GREATER_EQUAL(str());
 "<"                         return yy::parser::make_LESS(str()); 
 ">"                         return yy::parser::make_GREATER(str()); 
 "=="                        return yy::parser::make_EQUAL(str());
