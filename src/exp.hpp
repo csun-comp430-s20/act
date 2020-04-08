@@ -14,10 +14,10 @@ class exp_node {
 
 class operator_node : public exp_node {
     public:
-    exp_int_node *left;
-    exp_int_node *right;
+    exp_node *left;
+    exp_node *right;
 
-    operator_int_node(exp_int_node *L, exp_int_node *R);
+    operator_node(exp_node *L, exp_node *R);
 };
 
 class number_node : public exp_node {
@@ -27,12 +27,43 @@ class number_node : public exp_node {
     int evaluate();
 };
 
+class bool_node : public exp_node {
+    public:
+    number_node(bool val);
+    void print();
+    bool evaluate();
+};
+
+class string_node : public exp_node {
+    public:
+    number_node(std::string val);
+    void print();
+    std::string evaluate();
+};
+
 class id_node : public exp_node {
     protected:
-    string id;
+    std::string id;
 
     public:
-    id_node(string value);
+    id_node(std::string value);
     void print();
-    float evaluate();
+    std::variant<std::string, int, bool> evaluate();
 };
+
+class plus_node : public operator_node {
+  public:
+
+  plus_node(exp_node *L, exp_node *R);
+  void print();
+  int evaluate();
+};
+
+class cat_node : public operator_node {
+  public:
+
+  cat_node(exp_node *L, exp_node *R);
+  void print();
+  std::string evaluate();
+};
+

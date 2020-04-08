@@ -17,6 +17,7 @@ void declaration_stmt::evaluate() {
     exp_val result = exp->evaluate();
     std::cout << "assignment_node: " << type << " " << id << " = " << result << std::endl;
     idTable[id] = result;
+    typeTable[id] = type;
 }
 
 assignment_stmt::assignment_stmt(std::string dec_type, std::string name, exp_node *expression)
@@ -32,6 +33,7 @@ void assignment_stmt::evaluate() {
     exp_val result = exp->evaluate();
     std::cout << "assignment_node: " << type << " " << id << " = " << result << std::endl;
     idTable[id] = result;
+    typeTable[id] = type;
 }
 
 std::map<std::string, std::string> typeTable;
