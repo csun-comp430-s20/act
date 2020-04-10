@@ -39,6 +39,3 @@ class declaration_stmt : public statement {
     void print();
     void evaluate();
 };
-
-extern std::map<std::string, std::string> typeTable;
-extern std::map<std::string, exp> idTable;

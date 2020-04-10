@@ -26,7 +26,6 @@ assignment_stmt::assignment_stmt(std::string dec_type, std::string name, exp_nod
 void assignment_stmt::print() {
     std::cout << type << " " << id << " = ";
     exp->print();
-    std::cout << endl;
 }
 
 void assignment_stmt::evaluate() {
@@ -36,5 +35,5 @@ void assignment_stmt::evaluate() {
     typeTable[id] = type;
 }
 
-std::map<std::string, std::string> typeTable;
-std::map<std::string, exp> idTable;
+// std::map<std::string, std::string> typeTable;
+// std::map<std::string, exp> idTable;
