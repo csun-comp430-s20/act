@@ -107,7 +107,7 @@ elif_event_block: elif_event_term | elif_event_block elif_event_term;
 elif_event_term: MOVEIF LEFT_PAREN cond_expr RIGHT_PAREN IDENTIFIER 
                  LEFT_BRACE stmts RIGHT_BRACE;
 // Return Statement
-return_stmt: RETURN simple_exprs SEMI;
+return_stmt: RETURN exprs SEMI;
 // While Statement
 while_stmt: while_term | while_stmt while_term;
 while_term: WHILE LEFT_PAREN cond_expr RIGHT_PAREN LEFT_BRACE while_stmts RIGHT_BRACE;
@@ -127,10 +127,7 @@ assign_term: IDENTIFIER ASSIGN exprs SEMI;
 dec_stmt: dec_term | dec_stmt dec_term;
 dec_term: types IDENTIFIER SEMI | types IDENTIFIER ASSIGN exprs SEMI;
 // Expressions
-exprs: lambda_def | cond_expr | add_expr;
-// Lambda Definition
-lambda_def: LAMBDA LEFT_PAREN args_type_iden RIGHT_PAREN LEFT_BRACE simple_exprs RIGHT_BRACE
-simple_exprs: cond_expr | add_expr;
+exprs: cond_expr | add_expr;
 // Arithmetic Cases
 add_expr: add_vals | add_expr plus_op add_vals;
 add_vals: INT_NUMBER | IDENTIFIER
@@ -158,10 +155,7 @@ assign_term: IDENTIFIER ASSIGN exprs SEMI;
 dec_stmt: dec_term | dec_stmt dec_term;
 dec_term: types IDENTIFIER SEMI | types IDENTIFIER ASSIGN exprs SEMI;
 // Expressions
-exprs: lambda_def | cond_expr | add_expr;
-// Lambda Definition
-lambda_def: LAMBDA LEFT_PAREN args_type_iden RIGHT_PAREN LEFT_BRACE simple_exprs RIGHT_BRACE
-simple_exprs: cond_expr | add_expr;
+exprs: cond_expr | add_expr;
 // Arithmetic Cases
 add_expr: add_vals | add_expr plus_op add_vals;
 add_vals: INT_NUMBER | IDENTIFIER
