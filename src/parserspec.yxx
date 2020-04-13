@@ -55,7 +55,6 @@
 %token <std::string> ON "on"
 %token <std::string> MOVEIF "moveif"
 %token <std::string> BREAK "break"
-%token <std::string> LAMBDA "lambda"
 %token <std::string> DEFEVENT "defevent"
 %token <std::string> INT "int"
 %token <std::string> BOOL "bool"

@@ -27,7 +27,6 @@
 "on"                        return yy::parser::make_ON(str());
 "moveif"                    return yy::parser::make_MOVEIF(str());
 "break"                     return yy::parser::make_BREAK(str());
-"lambda"                    return yy::parser::make_LAMBDA(str());
 "defevent"                  return yy::parser::make_DEFEVENT(str());
 "int"                       return yy::parser::make_INT(str());
 "bool"                      return yy::parser::make_BOOL(str());
