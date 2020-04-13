@@ -1,124 +1,55 @@
 #include "exp.hpp"
 
-operator_node::operator_node(exp_node *L, exp_node *R) {
-    left = L;
-    right = R;
+exp_node::exp_node() { value = std::monostate(); }
+void exp_node::print() { std::cout << "Not Implemented"; }
+types exp_node::evaluate() const { return std::monostate(); }
+
+
+int_node::int_node() { value = std::monostate(); }
+int_node::int_node(const int val) { value = val; }
+void int_node::print() { std::cout << std::get<int>(value); }
+void int_node::set(const int val) { value = val; }
+types int_node::evaluate() const { return std::get<int>(value); }
+int_node int_node::operator+(const int_node& node) {
+    int_node new_node;
+    new_node.value = std::get<int>(this->value) + std::get<int>(node.value);
+    return new_node;
 }
 
-number_node::number_node(std::variant<std::string, bool, int> val) {
-    value = val;
-    type = std::string("int");
+bool_node::bool_node() { value = std::monostate(); }
+bool_node::bool_node(const bool val) { value = val; }
+void bool_node::print() { std::cout << std::get<bool>(value); }
+void bool_node::set(const bool val) { value = val; }
+types bool_node::evaluate() const { return std::get<bool>(value); }
+
+bool_node operator==(const exp_node& node1, const exp_node& node2) {
+    bool_node new_node;
+    bool temp = node1.evaluate() == node2.evaluate();
+    new_node.set(temp);
+    return new_node;
 }
 
-number_node number_node::operator+(number_node& lhs, const number_node& rhs) {
-    int new_num = lhs.evaluate() + rhs.evaluate();
-    lhs.value = new_num;
-    return lhs;
+bool_node operator<(const exp_node& node1, const exp_node& node2) {
+    bool_node new_node;
+    bool temp = node1.evaluate() < node2.evaluate();
+    new_node.set(temp);
+    return new_node;
 }
 
-void number_node::print() {
-    std::cout << std::get<int>(value);
+bool_node operator>(const exp_node& node1, const exp_node& node2) {
+    bool_node new_node;
+    bool temp = node1.evaluate() > node2.evaluate();
+    new_node.set(temp);
+    return new_node;
 }
 
-int number_node::evaluate() { 
-    std::cout << "number_node: operand = " << std::get<int>(value) << std::endl;
-    return std::get<int>(value);
+string_node::string_node() { value = std::monostate(); }
+string_node::string_node(const std::string val) { value = val; }
+void string_node::print() { std::cout << std::get<std::string>(value); }
+void string_node::set(const std::string val) { value = val; }
+types string_node::evaluate() const { return std::get<std::string>(value); }
+string_node string_node::operator+(const string_node& node) {
+    string_node new_node;
+    new_node.value = std::get<std::string>(this->value) + std::get<std::string>(node.value);
+    return new_node;
 }
-
-bool_node::bool_node(std::variant<std::string, bool, int> val) : exp_node(val, "bool") {}
-
-void bool_node::print() {
-    std::cout << std::get<bool>(value);
-}
-
-bool bool_node::evaluate() { 
-    std::cout << "number_node: operand = " << std::get<bool>(value) << std::endl;
-    return std::get<bool>(value);
-}
-
-string_node::string_node(std::variant<std::string, bool, int> val) : exp_node(val, "string") {}
-
-void string_node::print() {
-    std::cout << std::get<std::string>(value);
-}
-
-bool string_node::evaluate() { 
-    std::cout << "number_node: operand = " << std::get<std::string>(value) << std::endl;
-    return std::get<std::string>(value);
-}
-
-id_node::id_node(std::string val) : id(val) {}
-
-void id_node::print() {
-    std::cout << id;
-}
-
-exp_node id_node::evaluate() { 
-    std::cout << "id_node: " << id << " = " << idTable[id] << std::endl;
-    return idTable[id];
-}
-
-plus_node::plus_node(exp_node *L, exp_node *R) : operator_node(L,R) {}
-
-void plus_node::print() {
-    std::cout << "(";
-    left->print();
-    std::cout << " + ";
-    right->print();
-    std::cout << ")" << std::endl;
-}
-
-std::variant<std::string, int, bool> plus_node::evaluate() {
-    std::variant<std::string, int, bool> left_num, right_num;
-
-    left_num  = left->evaluate();
-    right_num = right->evaluate();
-
-    value = left_num + right_num;
-    std::cout << "plus_node: " << left_num << " + " << right_num << " = " << value << std::endl;
-    return value;
-}
-
-cat_node::cat_node(exp_node *L, exp_node *R) : operator_node(L,R) {}
-
-void cat_node::print() {
-    std::cout << "(";
-    left->print();
-    std::cout << " + ";
-    right->print();
-    std::cout << ")" << std::endl;
-}
-
-std::string cat_node::evaluate() {
-    std::string left_str, right_str;
-
-    left_str  = left->evaluate();
-    right_str = right->evaluate();
-
-    value = left_str + right_str;
-    std::cout << "string_node: " << left_str << " + " << right_str << " = " << value << std::endl;
-    return value;
-}
-
-less_node::less_node(exp_node *L, exp_node *R) : operator_node(L,R) {}
-
-void less_node::print() {
-    std::cout << "(";
-    left->print();
-    std::cout << " < ";
-    right->print();
-    std::cout << ")" << std::endl;
-}
-
-bool less_node::evaluate() {
-    int left_str, right_str;
-
-    left_str  = left->evaluate();
-    right_str = right->evaluate();
-
-    value = left_str < right_str;
-    std::cout << "string_node: " << left_str << " < " << right_str << " = " << value << std::endl;
-    return value;
-}
-
-std::map<std::string, exp_node> idTable;
