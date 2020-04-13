@@ -1,5 +1,5 @@
 /* yacc grammar for C++ */
-%require "3.2"
+%require "3.5"
 %language "c++"
 
 %define api.value.type variant
