@@ -18,5 +18,8 @@ make
 Run ```gen-coverage.sh``` from the project root. Requires gcov+lcov. <br />
 Produces a report at coverage/report/index.html.
 
-## Thanks
+## Resources
+
+
+## Acknowledgements
 Big thank you to the following github project: [dflat](https://github.com/csun-comp430-s19/dflat)
