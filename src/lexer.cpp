@@ -55,7 +55,6 @@ LexerResult Lexer::run() {
         } 
         while (isalpha(cur()) || isdigit(cur()));
 
-        // TODO: Pointer error here fixed with contains method
         if (contains(keywords, value)) {
             // Ensured keywords will find value
             return keywords.find(value)->second;
