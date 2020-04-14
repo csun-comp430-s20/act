@@ -55,9 +55,10 @@ LexerResult Lexer::run() {
         } 
         while (isalpha(cur()) || isdigit(cur()));
 
-        // TODO: Pointer error here
-        if (Optional<Token> keyword = lookup(keywords, value)) {
-            return keyword;
+        // TODO: Pointer error here fixed with contains method
+        if (contains(keywords, value)) {
+            // Ensured keywords will find value
+            return keywords.find(value)->second;
         }
     
         return TokenName(value);

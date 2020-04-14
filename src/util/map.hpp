@@ -9,6 +9,30 @@ template <typename K, typename V>
 using Map = std::unordered_map<K,V>;
 
 template <typename K, typename V>
+bool contains(Map<K,V> const& map, K const& key) {
+    auto it = map.find(key);
+
+    if (it == map.end()) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+template <typename K, typename V>
+bool contains(Map<K,V>& map, K const& key) {
+    auto it = map.find(key);
+
+    if (it == map.end()) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+template <typename K, typename V>
 V const* lookup(Map<K,V> const& map, K const& key) {
     auto it = map.find(key);
 
