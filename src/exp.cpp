@@ -1,10 +1,5 @@
 #include "exp.hpp"
 
-exp_node::exp_node() { value = std::monostate(); }
-void exp_node::print() { std::cout << "Not Implemented"; }
-types exp_node::evaluate() const { return std::monostate(); }
-
-
 int_node::int_node() { value = std::monostate(); }
 int_node::int_node(const int val) { value = val; }
 void int_node::print() { std::cout << std::get<int>(value); }
@@ -53,3 +48,5 @@ string_node string_node::operator+(const string_node& node) {
     new_node.value = std::get<std::string>(this->value) + std::get<std::string>(node.value);
     return new_node;
 }
+
+// int main() { return 0; }

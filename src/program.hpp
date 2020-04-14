@@ -1,12 +1,13 @@
+#pragma once
+
 #include <list>
 #include "statement.hpp"
 
-class pgm {
+class program {
     protected:
-    std::list<statement *> *stmts;
+    std::list<statement> stmts;
     public:
-    pgm(std::list<statement *> *stmtlist);
+    program() {}
+    program(std::list<statement> stmtlist);
     void evaluate();
 };
-
-extern pgm *root;

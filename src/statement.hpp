@@ -15,8 +15,8 @@ class id_node {
 
 class statement {
     public:
-    virtual void print() {}
-    virtual void evaluate() = 0;
+    virtual void print() { std::cout << "Not Implemented"; }
+    virtual void evaluate() { std::cout << "Not Implemented"; }
 };
 
 class print_stmt: public statement {

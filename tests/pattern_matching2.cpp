@@ -142,11 +142,14 @@ int main() {
     // std::cout << "Test equal bool 2:\n"; 
     // test_bool2.print();
 
-    // string_node str_node1 = string_node(std::string("Hello"));
-    // str_node1.print();
+    string_node str_node1 = string_node(std::string("Hello"));
+    str_node1.print();
 
-    // string_node str_node2 = str_node1 + str_node1;
-    // str_node2.print();
+    string_node str_node2 = str_node1 + str_node1;
+    str_node2.print();
+
+    string_node str_node3 = str_node1 + str_node1 + str_node2;
+    str_node3.print();
 
     // bool_node test_bool_str1 = str_node1 == str_node2;
     // test_bool_str1.print();
@@ -159,7 +162,7 @@ int main() {
     // bool_node test_str_comp = str_node1 < str_node2;
     // test_str_comp.print();
 
-    
+
 
     return 0;
 }

@@ -1,8 +1,8 @@
-// A Bison parser, made by GNU Bison 3.2.
+// A Bison parser, made by GNU Bison 3.5.
 
 // Skeleton implementation for Bison LALR(1) parsers in C++
 
-// Copyright (C) 2002-2015, 2018 Free Software Foundation, Inc.
+// Copyright (C) 2002-2015, 2018-2019 Free Software Foundation, Inc.
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -41,13 +41,15 @@
 
 
 // Unqualified %code blocks.
-#line 19 "parserspec.yxx" // lalr1.cc:437
+#line 31 "parserspec.yxx"
 
     #include "lex.yy.h"  // header file generated with reflex --header-file
     #undef yylex
     #define yylex lexer.lex
 
-#line 51 "parser.cpp" // lalr1.cc:437
+    // program root;  // the root of the abstract syntax tree
+
+#line 53 "parser.cpp"
 
 
 #ifndef YY_
@@ -71,10 +73,26 @@
 # endif
 #endif
 
+#define YYRHSLOC(Rhs, K) ((Rhs)[K].location)
+/* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].
+   If N is 0, then set CURRENT to the empty location which ends
+   the previous symbol: RHS[0] (always defined).  */
 
+# ifndef YYLLOC_DEFAULT
+#  define YYLLOC_DEFAULT(Current, Rhs, N)                               \
+    do                                                                  \
+      if (N)                                                            \
+        {                                                               \
+          (Current).begin  = YYRHSLOC (Rhs, 1).begin;                   \
+          (Current).end    = YYRHSLOC (Rhs, N).end;                     \
+        }                                                               \
+      else                                                              \
+        {                                                               \
+          (Current).begin = (Current).end = YYRHSLOC (Rhs, 0).end;      \
+        }                                                               \
+    while (false)
+# endif
 
-// Suppress unused-variable warnings by "using" E.
-#define YYUSE(E) ((void) (E))
 
 // Enable debugging if requested.
 #if YYDEBUG
@@ -121,23 +139,69 @@
 #define YYERROR         goto yyerrorlab
 #define YYRECOVERING()  (!!yyerrstatus_)
 
-
+#line 5 "parserspec.yxx"
 namespace yy {
-#line 127 "parser.cpp" // lalr1.cc:512
+#line 145 "parser.cpp"
+
+
+  /* Return YYSTR after stripping away unnecessary quotes and
+     backslashes, so that it's suitable for yyerror.  The heuristic is
+     that double-quoting is unnecessary unless the string contains an
+     apostrophe, a comma, or backslash (other than backslash-backslash).
+     YYSTR is taken from yytname.  */
+  std::string
+  parser::yytnamerr_ (const char *yystr)
+  {
+    if (*yystr == '"')
+      {
+        std::string yyr;
+        char const *yyp = yystr;
+
+        for (;;)
+          switch (*++yyp)
+            {
+            case '\'':
+            case ',':
+              goto do_not_strip_quotes;
+
+            case '\\':
+              if (*++yyp != '\\')
+                goto do_not_strip_quotes;
+              else
+                goto append;
+
+            append:
+            default:
+              yyr += *yyp;
+              break;
+
+            case '"':
+              return yyr;
+            }
+      do_not_strip_quotes: ;
+      }
+
+    return yystr;
+  }
+
 
   /// Build a parser object.
-  parser::parser (yy::Lexer& lexer_yyarg)
-    :
+  parser::parser (yy::Lexer& lexer_yyarg, program& root_yyarg)
 #if YYDEBUG
-      yydebug_ (false),
+    : yydebug_ (false),
       yycdebug_ (&std::cerr),
+#else
+    :
 #endif
-      lexer (lexer_yyarg)
+      lexer (lexer_yyarg),
+      root (root_yyarg)
   {}
 
   parser::~parser ()
   {}
 
+  parser::syntax_error::~syntax_error () YY_NOEXCEPT YY_NOTHROW
+  {}
 
   /*---------------.
   | Symbol types.  |
@@ -146,16 +210,16 @@ namespace yy {
 
 
   // by_state.
-  parser::by_state::by_state ()
+  parser::by_state::by_state () YY_NOEXCEPT
     : state (empty_state)
   {}
 
-  parser::by_state::by_state (const by_state& other)
-    : state (other.state)
+  parser::by_state::by_state (const by_state& that) YY_NOEXCEPT
+    : state (that.state)
   {}
 
   void
-  parser::by_state::clear ()
+  parser::by_state::clear () YY_NOEXCEPT
   {
     state = empty_state;
   }
@@ -167,12 +231,12 @@ namespace yy {
     that.clear ();
   }
 
-  parser::by_state::by_state (state_type s)
+  parser::by_state::by_state (state_type s) YY_NOEXCEPT
     : state (s)
   {}
 
   parser::symbol_number_type
-  parser::by_state::type_get () const
+  parser::by_state::type_get () const YY_NOEXCEPT
   {
     if (state == empty_state)
       return empty_symbol;
@@ -184,46 +248,65 @@ namespace yy {
   {}
 
   parser::stack_symbol_type::stack_symbol_type (YY_RVREF (stack_symbol_type) that)
-    : super_type (YY_MOVE (that.state))
+    : super_type (YY_MOVE (that.state), YY_MOVE (that.location))
   {
     switch (that.type_get ())
     {
-      case 4: // "number"
+      case 7: // TRUE
+      case 8: // true
+      case 9: // FALSE
+      case 10: // false
+        value.YY_MOVE_OR_COPY< bool > (YY_MOVE (that.value));
+        break;
+
+      case 44: // exp
+        value.YY_MOVE_OR_COPY< exp_node > (YY_MOVE (that.value));
+        break;
+
+      case 5: // INT_NUMBER
         value.YY_MOVE_OR_COPY< int > (YY_MOVE (that.value));
         break;
 
-      case 3: // "identifier"
-      case 5: // "hello"
-      case 6: // "true"
-      case 7: // "false"
-      case 8: // "if"
-      case 9: // "elif"
-      case 10: // "else"
-      case 11: // "while"
-      case 12: // "return"
-      case 13: // "state"
-      case 14: // "entry"
-      case 15: // "exit"
-      case 16: // "on"
-      case 17: // "moveif"
-      case 18: // "break"
-      case 19: // "lambda"
-      case 20: // "defevent"
-      case 21: // "int"
-      case 22: // "bool"
-      case 23: // "string"
-      case 24: // "+"
-      case 25: // ";"
-      case 26: // ":"
-      case 27: // "{"
-      case 28: // "}"
-      case 29: // "("
-      case 30: // ")"
-      case 31: // ","
-      case 32: // "&&"
-      case 33: // "||"
-      case 34: // "=<"
-      case 35: // "=>"
+      case 41: // prog
+        value.YY_MOVE_OR_COPY< program > (YY_MOVE (that.value));
+        break;
+
+      case 43: // stmt
+        value.YY_MOVE_OR_COPY< statement > (YY_MOVE (that.value));
+        break;
+
+      case 42: // stmtlist
+        value.YY_MOVE_OR_COPY< std::list<statement> > (YY_MOVE (that.value));
+        break;
+
+      case 3: // "print"
+      case 4: // "identifier"
+      case 6: // "hello"
+      case 11: // "if"
+      case 12: // "elif"
+      case 13: // "else"
+      case 14: // "while"
+      case 15: // "return"
+      case 16: // "state"
+      case 17: // "entry"
+      case 18: // "exit"
+      case 19: // "on"
+      case 20: // "moveif"
+      case 21: // "break"
+      case 22: // "defevent"
+      case 23: // "int"
+      case 24: // "bool"
+      case 25: // "string"
+      case 26: // PLUS
+      case 27: // "+"
+      case 28: // ";"
+      case 29: // "{"
+      case 30: // "}"
+      case 31: // LEFT_PAREN
+      case 32: // "("
+      case 33: // RIGHT_PAREN
+      case 34: // ")"
+      case 35: // ","
       case 36: // "<"
       case 37: // ">"
       case 38: // "=="
@@ -235,53 +318,72 @@ namespace yy {
         break;
     }
 
-#if defined __cplusplus && 201103L <= __cplusplus
+#if 201103L <= YY_CPLUSPLUS
     // that is emptied.
     that.state = empty_state;
 #endif
   }
 
   parser::stack_symbol_type::stack_symbol_type (state_type s, YY_MOVE_REF (symbol_type) that)
-    : super_type (s)
+    : super_type (s, YY_MOVE (that.location))
   {
     switch (that.type_get ())
     {
-      case 4: // "number"
+      case 7: // TRUE
+      case 8: // true
+      case 9: // FALSE
+      case 10: // false
+        value.move< bool > (YY_MOVE (that.value));
+        break;
+
+      case 44: // exp
+        value.move< exp_node > (YY_MOVE (that.value));
+        break;
+
+      case 5: // INT_NUMBER
         value.move< int > (YY_MOVE (that.value));
         break;
 
-      case 3: // "identifier"
-      case 5: // "hello"
-      case 6: // "true"
-      case 7: // "false"
-      case 8: // "if"
-      case 9: // "elif"
-      case 10: // "else"
-      case 11: // "while"
-      case 12: // "return"
-      case 13: // "state"
-      case 14: // "entry"
-      case 15: // "exit"
-      case 16: // "on"
-      case 17: // "moveif"
-      case 18: // "break"
-      case 19: // "lambda"
-      case 20: // "defevent"
-      case 21: // "int"
-      case 22: // "bool"
-      case 23: // "string"
-      case 24: // "+"
-      case 25: // ";"
-      case 26: // ":"
-      case 27: // "{"
-      case 28: // "}"
-      case 29: // "("
-      case 30: // ")"
-      case 31: // ","
-      case 32: // "&&"
-      case 33: // "||"
-      case 34: // "=<"
-      case 35: // "=>"
+      case 41: // prog
+        value.move< program > (YY_MOVE (that.value));
+        break;
+
+      case 43: // stmt
+        value.move< statement > (YY_MOVE (that.value));
+        break;
+
+      case 42: // stmtlist
+        value.move< std::list<statement> > (YY_MOVE (that.value));
+        break;
+
+      case 3: // "print"
+      case 4: // "identifier"
+      case 6: // "hello"
+      case 11: // "if"
+      case 12: // "elif"
+      case 13: // "else"
+      case 14: // "while"
+      case 15: // "return"
+      case 16: // "state"
+      case 17: // "entry"
+      case 18: // "exit"
+      case 19: // "on"
+      case 20: // "moveif"
+      case 21: // "break"
+      case 22: // "defevent"
+      case 23: // "int"
+      case 24: // "bool"
+      case 25: // "string"
+      case 26: // PLUS
+      case 27: // "+"
+      case 28: // ";"
+      case 29: // "{"
+      case 30: // "}"
+      case 31: // LEFT_PAREN
+      case 32: // "("
+      case 33: // RIGHT_PAREN
+      case 34: // ")"
+      case 35: // ","
       case 36: // "<"
       case 37: // ">"
       case 38: // "=="
@@ -297,49 +399,144 @@ namespace yy {
     that.type = empty_symbol;
   }
 
-#if defined __cplusplus && __cplusplus < 201103L
+#if YY_CPLUSPLUS < 201103L
+  parser::stack_symbol_type&
+  parser::stack_symbol_type::operator= (const stack_symbol_type& that)
+  {
+    state = that.state;
+    switch (that.type_get ())
+    {
+      case 7: // TRUE
+      case 8: // true
+      case 9: // FALSE
+      case 10: // false
+        value.copy< bool > (that.value);
+        break;
+
+      case 44: // exp
+        value.copy< exp_node > (that.value);
+        break;
+
+      case 5: // INT_NUMBER
+        value.copy< int > (that.value);
+        break;
+
+      case 41: // prog
+        value.copy< program > (that.value);
+        break;
+
+      case 43: // stmt
+        value.copy< statement > (that.value);
+        break;
+
+      case 42: // stmtlist
+        value.copy< std::list<statement> > (that.value);
+        break;
+
+      case 3: // "print"
+      case 4: // "identifier"
+      case 6: // "hello"
+      case 11: // "if"
+      case 12: // "elif"
+      case 13: // "else"
+      case 14: // "while"
+      case 15: // "return"
+      case 16: // "state"
+      case 17: // "entry"
+      case 18: // "exit"
+      case 19: // "on"
+      case 20: // "moveif"
+      case 21: // "break"
+      case 22: // "defevent"
+      case 23: // "int"
+      case 24: // "bool"
+      case 25: // "string"
+      case 26: // PLUS
+      case 27: // "+"
+      case 28: // ";"
+      case 29: // "{"
+      case 30: // "}"
+      case 31: // LEFT_PAREN
+      case 32: // "("
+      case 33: // RIGHT_PAREN
+      case 34: // ")"
+      case 35: // ","
+      case 36: // "<"
+      case 37: // ">"
+      case 38: // "=="
+      case 39: // "="
+        value.copy< std::string > (that.value);
+        break;
+
+      default:
+        break;
+    }
+
+    location = that.location;
+    return *this;
+  }
+
   parser::stack_symbol_type&
   parser::stack_symbol_type::operator= (stack_symbol_type& that)
   {
     state = that.state;
     switch (that.type_get ())
     {
-      case 4: // "number"
+      case 7: // TRUE
+      case 8: // true
+      case 9: // FALSE
+      case 10: // false
+        value.move< bool > (that.value);
+        break;
+
+      case 44: // exp
+        value.move< exp_node > (that.value);
+        break;
+
+      case 5: // INT_NUMBER
         value.move< int > (that.value);
         break;
 
-      case 3: // "identifier"
-      case 5: // "hello"
-      case 6: // "true"
-      case 7: // "false"
-      case 8: // "if"
-      case 9: // "elif"
-      case 10: // "else"
-      case 11: // "while"
-      case 12: // "return"
-      case 13: // "state"
-      case 14: // "entry"
-      case 15: // "exit"
-      case 16: // "on"
-      case 17: // "moveif"
-      case 18: // "break"
-      case 19: // "lambda"
-      case 20: // "defevent"
-      case 21: // "int"
-      case 22: // "bool"
-      case 23: // "string"
-      case 24: // "+"
-      case 25: // ";"
-      case 26: // ":"
-      case 27: // "{"
-      case 28: // "}"
-      case 29: // "("
-      case 30: // ")"
-      case 31: // ","
-      case 32: // "&&"
-      case 33: // "||"
-      case 34: // "=<"
-      case 35: // "=>"
+      case 41: // prog
+        value.move< program > (that.value);
+        break;
+
+      case 43: // stmt
+        value.move< statement > (that.value);
+        break;
+
+      case 42: // stmtlist
+        value.move< std::list<statement> > (that.value);
+        break;
+
+      case 3: // "print"
+      case 4: // "identifier"
+      case 6: // "hello"
+      case 11: // "if"
+      case 12: // "elif"
+      case 13: // "else"
+      case 14: // "while"
+      case 15: // "return"
+      case 16: // "state"
+      case 17: // "entry"
+      case 18: // "exit"
+      case 19: // "on"
+      case 20: // "moveif"
+      case 21: // "break"
+      case 22: // "defevent"
+      case 23: // "int"
+      case 24: // "bool"
+      case 25: // "string"
+      case 26: // PLUS
+      case 27: // "+"
+      case 28: // ";"
+      case 29: // "{"
+      case 30: // "}"
+      case 31: // LEFT_PAREN
+      case 32: // "("
+      case 33: // RIGHT_PAREN
+      case 34: // ")"
+      case 35: // ","
       case 36: // "<"
       case 37: // ">"
       case 38: // "=="
@@ -351,6 +548,7 @@ namespace yy {
         break;
     }
 
+    location = that.location;
     // that is emptied.
     that.state = empty_state;
     return *this;
@@ -374,12 +572,15 @@ namespace yy {
     std::ostream& yyoutput = yyo;
     YYUSE (yyoutput);
     symbol_number_type yytype = yysym.type_get ();
+#if defined __GNUC__ && ! defined __clang__ && ! defined __ICC && __GNUC__ * 100 + __GNUC_MINOR__ <= 408
     // Avoid a (spurious) G++ 4.8 warning about "array subscript is
     // below array bounds".
     if (yysym.empty ())
       std::abort ();
+#endif
     yyo << (yytype < yyntokens_ ? "token" : "nterm")
-        << ' ' << yytname_[yytype] << " (";
+        << ' ' << yytname_[yytype] << " ("
+        << yysym.location << ": ";
     YYUSE (yytype);
     yyo << ')';
   }
@@ -396,7 +597,7 @@ namespace yy {
   void
   parser::yypush_ (const char* m, state_type s, YY_MOVE_REF (symbol_type) sym)
   {
-#if defined __cplusplus && 201103L <= __cplusplus
+#if 201103L <= YY_CPLUSPLUS
     yypush_ (m, stack_symbol_type (s, std::move (sym)));
 #else
     stack_symbol_type ss (s, sym);
@@ -468,7 +669,6 @@ namespace yy {
   int
   parser::parse ()
   {
-    // State.
     int yyn;
     /// Length of the RHS of the rule being reduced.
     int yylen = 0;
@@ -479,6 +679,9 @@ namespace yy {
 
     /// The lookahead symbol.
     symbol_type yyla;
+
+    /// The locations where the error started and ended.
+    stack_symbol_type yyerror_range[3];
 
     /// The return value of parse ().
     int yyresult;
@@ -497,17 +700,22 @@ namespace yy {
     yystack_.clear ();
     yypush_ (YY_NULLPTR, 0, YY_MOVE (yyla));
 
-    // A new symbol was pushed on the stack.
+  /*-----------------------------------------------.
+  | yynewstate -- push a new symbol on the stack.  |
+  `-----------------------------------------------*/
   yynewstate:
-    YYCDEBUG << "Entering state " << yystack_[0].state << '\n';
+    YYCDEBUG << "Entering state " << int (yystack_[0].state) << '\n';
 
     // Accept?
     if (yystack_[0].state == yyfinal_)
-      goto yyacceptlab;
+      YYACCEPT;
 
     goto yybackup;
 
-    // Backup.
+
+  /*-----------.
+  | yybackup.  |
+  `-----------*/
   yybackup:
     // Try to take a decision without lookahead.
     yyn = yypact_[yystack_[0].state];
@@ -528,6 +736,7 @@ namespace yy {
 #if YY_EXCEPTIONS
         catch (const syntax_error& yyexc)
           {
+            YYCDEBUG << "Caught exception: " << yyexc.what() << '\n';
             error (yyexc);
             goto yyerrlab1;
           }
@@ -539,7 +748,9 @@ namespace yy {
        to detect an error, take that action.  */
     yyn += yyla.type_get ();
     if (yyn < 0 || yylast_ < yyn || yycheck_[yyn] != yyla.type_get ())
-      goto yydefault;
+      {
+        goto yydefault;
+      }
 
     // Reduce or error.
     yyn = yytable_[yyn];
@@ -556,8 +767,9 @@ namespace yy {
       --yyerrstatus_;
 
     // Shift the lookahead token.
-    yypush_ ("Shifting", yyn, YY_MOVE (yyla));
+    yypush_ ("Shifting", static_cast<state_type> (yyn), YY_MOVE (yyla));
     goto yynewstate;
+
 
   /*-----------------------------------------------------------.
   | yydefault -- do the default action for the current state.  |
@@ -568,8 +780,9 @@ namespace yy {
       goto yyerrlab;
     goto yyreduce;
 
+
   /*-----------------------------.
-  | yyreduce -- Do a reduction.  |
+  | yyreduce -- do a reduction.  |
   `-----------------------------*/
   yyreduce:
     yylen = yyr2_[yyn];
@@ -581,42 +794,61 @@ namespace yy {
          when using variants.  */
       switch (yyr1_[yyn])
     {
-      case 4: // "number"
+      case 7: // TRUE
+      case 8: // true
+      case 9: // FALSE
+      case 10: // false
+        yylhs.value.emplace< bool > ();
+        break;
+
+      case 44: // exp
+        yylhs.value.emplace< exp_node > ();
+        break;
+
+      case 5: // INT_NUMBER
         yylhs.value.emplace< int > ();
         break;
 
-      case 3: // "identifier"
-      case 5: // "hello"
-      case 6: // "true"
-      case 7: // "false"
-      case 8: // "if"
-      case 9: // "elif"
-      case 10: // "else"
-      case 11: // "while"
-      case 12: // "return"
-      case 13: // "state"
-      case 14: // "entry"
-      case 15: // "exit"
-      case 16: // "on"
-      case 17: // "moveif"
-      case 18: // "break"
-      case 19: // "lambda"
-      case 20: // "defevent"
-      case 21: // "int"
-      case 22: // "bool"
-      case 23: // "string"
-      case 24: // "+"
-      case 25: // ";"
-      case 26: // ":"
-      case 27: // "{"
-      case 28: // "}"
-      case 29: // "("
-      case 30: // ")"
-      case 31: // ","
-      case 32: // "&&"
-      case 33: // "||"
-      case 34: // "=<"
-      case 35: // "=>"
+      case 41: // prog
+        yylhs.value.emplace< program > ();
+        break;
+
+      case 43: // stmt
+        yylhs.value.emplace< statement > ();
+        break;
+
+      case 42: // stmtlist
+        yylhs.value.emplace< std::list<statement> > ();
+        break;
+
+      case 3: // "print"
+      case 4: // "identifier"
+      case 6: // "hello"
+      case 11: // "if"
+      case 12: // "elif"
+      case 13: // "else"
+      case 14: // "while"
+      case 15: // "return"
+      case 16: // "state"
+      case 17: // "entry"
+      case 18: // "exit"
+      case 19: // "on"
+      case 20: // "moveif"
+      case 21: // "break"
+      case 22: // "defevent"
+      case 23: // "int"
+      case 24: // "bool"
+      case 25: // "string"
+      case 26: // PLUS
+      case 27: // "+"
+      case 28: // ";"
+      case 29: // "{"
+      case 30: // "}"
+      case 31: // LEFT_PAREN
+      case 32: // "("
+      case 33: // RIGHT_PAREN
+      case 34: // ")"
+      case 35: // ","
       case 36: // "<"
       case 37: // ">"
       case 38: // "=="
@@ -629,6 +861,12 @@ namespace yy {
     }
 
 
+      // Default location.
+      {
+        stack_type::slice range (yystack_, yylen);
+        YYLLOC_DEFAULT (yylhs.location, range, yylen);
+        yyerror_range[1].location = yylhs.location;
+      }
 
       // Perform the reduction.
       YY_REDUCE_PRINT (yyn);
@@ -638,8 +876,60 @@ namespace yy {
         {
           switch (yyn)
             {
+  case 2:
+#line 82 "parserspec.yxx"
+               { yylhs.value.as < program > () = program(yystack_[0].value.as < std::list<statement> > ()); root = yylhs.value.as < program > (); }
+#line 883 "parser.cpp"
+    break;
 
-#line 643 "parser.cpp" // lalr1.cc:906
+  case 3:
+#line 83 "parserspec.yxx"
+                        {
+        // copy up the list and add the stmt to it
+        yylhs.value.as < std::list<statement> > () = yystack_[1].value.as < std::list<statement> > ();
+        yystack_[1].value.as < std::list<statement> > ().push_back(yystack_[0].value.as < statement > ()); }
+#line 892 "parser.cpp"
+    break;
+
+  case 4:
+#line 87 "parserspec.yxx"
+             {
+        yylhs.value.as < std::list<statement> > () = std::list<statement>(); }
+#line 899 "parser.cpp"
+    break;
+
+  case 5:
+#line 89 "parserspec.yxx"
+                                     {
+        yylhs.value.as < statement > () = assignment_stmt(yystack_[4].value.as < std::string > (), yystack_[3].value.as < std::string > (), yystack_[1].value.as < exp_node > ()); }
+#line 906 "parser.cpp"
+    break;
+
+  case 6:
+#line 91 "parserspec.yxx"
+                                                   {
+        yylhs.value.as < statement > () = print_stmt(yystack_[2].value.as < std::string > ());
+    }
+#line 914 "parser.cpp"
+    break;
+
+  case 7:
+#line 104 "parserspec.yxx"
+                  {
+        yylhs.value.as < exp_node > () = yystack_[2].value.as < exp_node > () + yystack_[0].value.as < exp_node > (); }
+#line 921 "parser.cpp"
+    break;
+
+  case 8:
+#line 106 "parserspec.yxx"
+                 {
+        yylhs.value.as < exp_node > () = int_node(yystack_[0].value.as < int > ()); }
+#line 928 "parser.cpp"
+    break;
+
+
+#line 932 "parser.cpp"
+
             default:
               break;
             }
@@ -647,6 +937,7 @@ namespace yy {
 #if YY_EXCEPTIONS
       catch (const syntax_error& yyexc)
         {
+          YYCDEBUG << "Caught exception: " << yyexc.what() << '\n';
           error (yyexc);
           YYERROR;
         }
@@ -661,6 +952,7 @@ namespace yy {
     }
     goto yynewstate;
 
+
   /*--------------------------------------.
   | yyerrlab -- here on detecting error.  |
   `--------------------------------------*/
@@ -669,10 +961,11 @@ namespace yy {
     if (!yyerrstatus_)
       {
         ++yynerrs_;
-        error (yysyntax_error_ (yystack_[0].state, yyla));
+        error (yyla.location, yysyntax_error_ (yystack_[0].state, yyla));
       }
 
 
+    yyerror_range[1].location = yyla.location;
     if (yyerrstatus_ == 3)
       {
         /* If just tried and failed to reuse lookahead token after an
@@ -696,17 +989,17 @@ namespace yy {
   | yyerrorlab -- error raised explicitly by YYERROR.  |
   `---------------------------------------------------*/
   yyerrorlab:
-
-    /* Pacify compilers like GCC when the user code never invokes
-       YYERROR and the label yyerrorlab therefore never appears in user
-       code.  */
+    /* Pacify compilers when the user code never invokes YYERROR and
+       the label yyerrorlab therefore never appears in user code.  */
     if (false)
-      goto yyerrorlab;
+      YYERROR;
+
     /* Do not reclaim the symbols of the rule whose action triggered
        this YYERROR.  */
     yypop_ (yylen);
     yylen = 0;
     goto yyerrlab1;
+
 
   /*-------------------------------------------------------------.
   | yyerrlab1 -- common code for both syntax error and YYERROR.  |
@@ -720,8 +1013,8 @@ namespace yy {
           yyn = yypact_[yystack_[0].state];
           if (!yy_pact_value_is_default_ (yyn))
             {
-              yyn += yyterror_;
-              if (0 <= yyn && yyn <= yylast_ && yycheck_[yyn] == yyterror_)
+              yyn += yy_error_token_;
+              if (0 <= yyn && yyn <= yylast_ && yycheck_[yyn] == yy_error_token_)
                 {
                   yyn = yytable_[yyn];
                   if (0 < yyn)
@@ -733,28 +1026,41 @@ namespace yy {
           if (yystack_.size () == 1)
             YYABORT;
 
+          yyerror_range[1].location = yystack_[0].location;
           yy_destroy_ ("Error: popping", yystack_[0]);
           yypop_ ();
           YY_STACK_PRINT ();
         }
 
+      yyerror_range[2].location = yyla.location;
+      YYLLOC_DEFAULT (error_token.location, yyerror_range, 2);
 
       // Shift the error token.
-      error_token.state = yyn;
+      error_token.state = static_cast<state_type> (yyn);
       yypush_ ("Shifting", YY_MOVE (error_token));
     }
     goto yynewstate;
 
-    // Accept.
+
+  /*-------------------------------------.
+  | yyacceptlab -- YYACCEPT comes here.  |
+  `-------------------------------------*/
   yyacceptlab:
     yyresult = 0;
     goto yyreturn;
 
-    // Abort.
+
+  /*-----------------------------------.
+  | yyabortlab -- YYABORT comes here.  |
+  `-----------------------------------*/
   yyabortlab:
     yyresult = 1;
     goto yyreturn;
 
+
+  /*-----------------------------------------------------.
+  | yyreturn -- parsing is finished, return the result.  |
+  `-----------------------------------------------------*/
   yyreturn:
     if (!yyla.empty ())
       yy_destroy_ ("Cleanup: discarding lookahead", yyla);
@@ -792,254 +1098,194 @@ namespace yy {
   void
   parser::error (const syntax_error& yyexc)
   {
-    error (yyexc.what ());
+    error (yyexc.location, yyexc.what ());
   }
 
   // Generate an error message.
   std::string
-  parser::yysyntax_error_ (state_type, const symbol_type&) const
+  parser::yysyntax_error_ (state_type yystate, const symbol_type& yyla) const
   {
-    return YY_("syntax error");
+    // Number of reported tokens (one for the "unexpected", one per
+    // "expected").
+    std::ptrdiff_t yycount = 0;
+    // Its maximum.
+    enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
+    // Arguments of yyformat.
+    char const *yyarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
+
+    /* There are many possibilities here to consider:
+       - If this state is a consistent state with a default action, then
+         the only way this function was invoked is if the default action
+         is an error action.  In that case, don't check for expected
+         tokens because there are none.
+       - The only way there can be no lookahead present (in yyla) is
+         if this state is a consistent state with a default action.
+         Thus, detecting the absence of a lookahead is sufficient to
+         determine that there is no unexpected or expected token to
+         report.  In that case, just report a simple "syntax error".
+       - Don't assume there isn't a lookahead just because this state is
+         a consistent state with a default action.  There might have
+         been a previous inconsistent state, consistent state with a
+         non-default action, or user semantic action that manipulated
+         yyla.  (However, yyla is currently not documented for users.)
+       - Of course, the expected token list depends on states to have
+         correct lookahead information, and it depends on the parser not
+         to perform extra reductions after fetching a lookahead from the
+         scanner and before detecting a syntax error.  Thus, state merging
+         (from LALR or IELR) and default reductions corrupt the expected
+         token list.  However, the list is correct for canonical LR with
+         one exception: it will still contain any token that will not be
+         accepted due to an error action in a later state.
+    */
+    if (!yyla.empty ())
+      {
+        symbol_number_type yytoken = yyla.type_get ();
+        yyarg[yycount++] = yytname_[yytoken];
+
+        int yyn = yypact_[yystate];
+        if (!yy_pact_value_is_default_ (yyn))
+          {
+            /* Start YYX at -YYN if negative to avoid negative indexes in
+               YYCHECK.  In other words, skip the first -YYN actions for
+               this state because they are default actions.  */
+            int yyxbegin = yyn < 0 ? -yyn : 0;
+            // Stay within bounds of both yycheck and yytname.
+            int yychecklim = yylast_ - yyn + 1;
+            int yyxend = yychecklim < yyntokens_ ? yychecklim : yyntokens_;
+            for (int yyx = yyxbegin; yyx < yyxend; ++yyx)
+              if (yycheck_[yyx + yyn] == yyx && yyx != yy_error_token_
+                  && !yy_table_value_is_error_ (yytable_[yyx + yyn]))
+                {
+                  if (yycount == YYERROR_VERBOSE_ARGS_MAXIMUM)
+                    {
+                      yycount = 1;
+                      break;
+                    }
+                  else
+                    yyarg[yycount++] = yytname_[yyx];
+                }
+          }
+      }
+
+    char const* yyformat = YY_NULLPTR;
+    switch (yycount)
+      {
+#define YYCASE_(N, S)                         \
+        case N:                               \
+          yyformat = S;                       \
+        break
+      default: // Avoid compiler warnings.
+        YYCASE_ (0, YY_("syntax error"));
+        YYCASE_ (1, YY_("syntax error, unexpected %s"));
+        YYCASE_ (2, YY_("syntax error, unexpected %s, expecting %s"));
+        YYCASE_ (3, YY_("syntax error, unexpected %s, expecting %s or %s"));
+        YYCASE_ (4, YY_("syntax error, unexpected %s, expecting %s or %s or %s"));
+        YYCASE_ (5, YY_("syntax error, unexpected %s, expecting %s or %s or %s or %s"));
+#undef YYCASE_
+      }
+
+    std::string yyres;
+    // Argument number.
+    std::ptrdiff_t yyi = 0;
+    for (char const* yyp = yyformat; *yyp; ++yyp)
+      if (yyp[0] == '%' && yyp[1] == 's' && yyi < yycount)
+        {
+          yyres += yytnamerr_ (yyarg[yyi++]);
+          ++yyp;
+        }
+      else
+        yyres += *yyp;
+    return yyres;
   }
 
 
-  const signed char parser::yypact_ninf_ = -116;
+  const signed char parser::yypact_ninf_ = -34;
 
-  const signed char parser::yytable_ninf_ = -85;
+  const signed char parser::yytable_ninf_ = -1;
 
-  const short
+  const signed char
   parser::yypact_[] =
   {
-      61,    -4,    23,    44,  -116,    30,  -116,    57,    37,  -116,
-    -116,    46,    47,    60,    73,    97,    89,  -116,  -116,  -116,
-    -116,    77,    80,   148,  -116,  -116,   126,  -116,   133,  -116,
-     139,  -116,   140,   152,  -116,    41,  -116,   157,    41,     8,
-      13,    13,   171,   171,   136,  -116,   134,   148,   147,  -116,
-    -116,  -116,   160,    29,  -116,  -116,  -116,   165,    16,   122,
-    -116,   172,   175,  -116,  -116,  -116,   166,   127,  -116,   177,
-     181,  -116,    78,  -116,   101,   149,  -116,  -116,    54,    76,
-     180,   182,   206,  -116,   183,  -116,    13,   185,  -116,  -116,
-      22,  -116,    41,     8,   188,    41,    41,   101,  -116,  -116,
-    -116,   169,  -116,  -116,    13,  -116,  -116,  -116,  -116,  -116,
-     127,   187,   189,  -116,  -116,  -116,   150,  -116,    83,   171,
-     173,   212,   192,  -116,  -116,   176,   127,  -116,  -116,  -116,
-    -116,  -116,   171,    96,   191,   216,   193,   194,   196,    41,
-    -116,  -116,   195,   197,   198,   199,   133,   200,  -116,   139,
-     152,    41,   208,  -116,   171,  -116,   155,   226,    25,  -116,
-    -116,  -116,  -116,   201,   203,   215,   205,    25,   207,  -116,
-     133,   139,   152,    41,  -116,   210,   181,    78,    13,  -116,
-     209,    65,  -116,  -116,   214,  -116,  -116,    95,    13,  -116,
-    -116,  -116,   231,   158,   213,   234,   171,   217,   218,   171,
-    -116,   219,  -116
+     -34,     2,    -3,   -34,   -27,     1,   -34,     3,   -33,   -25,
+       4,   -18,   -34,   -25,   -34,     4,   -34,   -34
   };
 
-  const unsigned char
+  const signed char
   parser::yydefact_[] =
   {
-       2,     0,     0,     0,     4,     3,    94,    22,     0,     1,
-      95,     0,     0,     0,     0,     0,     0,   106,   107,   108,
-      12,     0,    22,    22,    11,     9,    10,    27,    26,    38,
-      25,    48,    50,    24,    58,    23,    61,     0,   103,     0,
-       0,     0,    22,    22,     0,     8,     0,    22,     0,    28,
-      39,    49,     0,    51,    54,    59,    62,     0,     0,     0,
-     104,    83,    81,    82,    85,    86,     0,     0,    66,     0,
-      68,    71,    67,    76,     0,    78,    83,    81,     0,     0,
-       0,     0,   100,     6,     0,     7,     0,     0,    55,    52,
-       0,    63,    97,     0,     0,     0,    97,     0,    84,    60,
-      75,     0,    87,    88,     0,    91,    92,    89,    90,    93,
-       0,     0,     0,    13,    14,   101,     0,     5,     0,    22,
-       0,     0,     0,    96,   105,     0,     0,    74,    73,    72,
-      77,    79,    22,    41,     0,     0,     0,     0,     0,     0,
-      98,    64,     0,     0,     0,     0,    45,     0,    46,    44,
-      43,    42,     0,   102,    22,    57,    16,     0,     0,    80,
-      53,    47,    40,     0,     0,    30,     0,     0,     0,    21,
-      20,    19,    18,    17,    99,     0,    70,    69,     0,    29,
-       0,    31,    34,    56,     0,    15,    65,     0,     0,    35,
-      32,    37,     0,     0,     0,     0,    22,     0,     0,    22,
-      33,     0,    36
+       4,     0,     2,     1,     0,     0,     3,     0,     0,     0,
+       0,     0,     8,     0,     6,     0,     5,     7
   };
 
-  const short
+  const signed char
   parser::yypgoto_[] =
   {
-    -116,  -116,   241,    -1,  -116,   220,  -116,  -116,   -42,  -116,
-     222,  -116,  -116,  -116,    62,  -116,  -100,   -24,  -116,  -116,
-     -99,   -23,  -116,  -116,   202,    64,   -98,   -27,   -97,   -30,
-    -116,   156,    84,  -115,   151,  -116,   -38,   146,   -59,   -57,
-    -116,   159,  -116,   248,   161,  -116,  -116,     2
+     -34,   -34,   -34,   -34,    -4
   };
 
-  const short
+  const signed char
   parser::yydefgoto_[] =
   {
-      -1,     3,    20,    21,    22,    23,    24,   168,    25,    26,
-      27,   164,   165,   181,   182,   169,    28,    29,   147,   148,
-      30,    31,    32,    53,    54,    89,    33,    34,    35,    36,
-      68,    69,   175,    70,    71,   101,    72,    73,    74,    75,
-     104,   110,     5,     6,   120,   116,    59,    57
+      -1,     1,     2,     6,    13
   };
 
-  const short
+  const signed char
   parser::yytable_[] =
   {
-      80,    81,    78,    79,    50,    56,    55,    51,    97,    37,
-      98,    61,    62,    63,    64,    65,    76,    77,    63,    64,
-      65,    46,    48,     7,    37,    37,     8,    66,    61,    62,
-      63,    64,    65,   146,   149,   150,   151,    67,    52,    87,
-      60,    91,    67,   176,     9,    92,    84,    91,   118,    37,
-       2,   131,   176,    98,    67,    93,   170,   171,   172,   173,
-      11,    93,    17,    18,    19,    12,    38,   143,    13,    98,
-       1,    14,    15,    16,     1,    87,    40,   137,    17,    18,
-      19,     2,   180,    11,   111,    39,   102,   103,    12,    41,
-     144,    13,    44,     1,   121,    15,    16,   124,   121,    11,
-      42,    17,    18,    19,    12,    45,   112,    13,   102,   103,
-     102,   103,   166,   136,   145,   102,   103,    17,    18,    19,
-     177,    56,    50,    55,    43,   192,    51,   102,   103,   177,
-      76,    77,    63,    64,    65,   105,   106,   107,   108,   109,
-     187,   157,    16,    56,    13,    55,    50,    12,    51,    52,
-     193,    11,    94,    95,   198,    11,    12,   201,    11,    13,
-      58,     1,    83,    12,    16,    82,    13,   167,    90,    17,
-      18,    19,   127,   128,    11,    85,    17,    18,    19,    12,
-     134,   135,    13,   -84,   -84,   -84,   -84,   -84,   195,    86,
-     102,   103,    17,    18,    19,    96,   -74,   -74,   -74,   -73,
-     -73,   -73,    99,   138,   139,   100,   142,   139,   113,   115,
-     114,   117,   119,   123,   132,   140,   133,   141,   152,   153,
-     154,   158,   155,   156,   161,   163,   160,   159,   162,   174,
-     178,   179,   180,   183,   194,   185,   186,   197,   188,   191,
-     196,     4,    47,   189,   199,   190,   200,   202,    49,   122,
-     130,   184,   129,    10,     0,    88,   126,   125
+       4,    15,     3,    16,     7,     8,    10,     9,    11,    12,
+      14,    17,     0,     0,     0,     0,     0,     0,     0,     0,
+       5
   };
 
-  const short
+  const signed char
   parser::yycheck_[] =
   {
-      42,    43,    40,    41,    28,    35,    33,    30,    67,     7,
-      67,     3,     4,     5,     6,     7,     3,     4,     5,     6,
-       7,    22,    23,    27,    22,    23,     3,    19,     3,     4,
-       5,     6,     7,   133,   133,   133,   133,    29,     9,    10,
-      38,    25,    29,   158,     0,    29,    47,    25,    86,    47,
-      20,   110,   167,   110,    29,    39,   156,   156,   156,   156,
-       3,    39,    21,    22,    23,     8,    29,   126,    11,   126,
-      13,    14,    15,    16,    13,    10,    29,   119,    21,    22,
-      23,    20,    17,     3,    30,    39,    32,    33,     8,    29,
-     132,    11,     3,    13,    92,    15,    16,    95,    96,     3,
-      27,    21,    22,    23,     8,    28,    30,    11,    32,    33,
-      32,    33,   154,    30,    18,    32,    33,    21,    22,    23,
-     158,   151,   146,   150,    27,    30,   149,    32,    33,   167,
-       3,     4,     5,     6,     7,    34,    35,    36,    37,    38,
-     178,   139,    16,   173,    11,   172,   170,     8,   171,     9,
-     188,     3,    30,    31,   196,     3,     8,   199,     3,    11,
-       3,    13,    28,     8,    16,    29,    11,    12,     3,    21,
-      22,    23,     3,     4,     3,    28,    21,    22,    23,     8,
-      30,    31,    11,    34,    35,    36,    37,    38,    30,    29,
-      32,    33,    21,    22,    23,    29,    24,    25,    26,    24,
-      25,    26,    25,    30,    31,    24,    30,    31,    28,     3,
-      28,    28,    27,    25,    27,     3,    27,    25,    27,     3,
-      27,    26,    28,    27,    25,    17,    28,    30,    28,     3,
-      29,    28,    17,    28,     3,    28,    26,     3,    29,    25,
-      27,     0,    22,   181,    27,   181,    28,    28,    26,    93,
-     104,   167,   101,     5,    -1,    53,    97,    96
+       3,    26,     0,    28,    31,     4,    39,     4,    33,     5,
+      28,    15,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      23
   };
 
-  const unsigned char
+  const signed char
   parser::yystos_[] =
   {
-       0,    13,    20,    41,    42,    82,    83,    27,     3,     0,
-      83,     3,     8,    11,    14,    15,    16,    21,    22,    23,
-      42,    43,    44,    45,    46,    48,    49,    50,    56,    57,
-      60,    61,    62,    66,    67,    68,    69,    87,    29,    39,
-      29,    29,    27,    27,     3,    28,    43,    45,    43,    50,
-      57,    61,     9,    63,    64,    67,    69,    87,     3,    86,
-      87,     3,     4,     5,     6,     7,    19,    29,    70,    71,
-      73,    74,    76,    77,    78,    79,     3,     4,    76,    76,
-      48,    48,    29,    28,    43,    28,    29,    10,    64,    65,
-       3,    25,    29,    39,    30,    31,    29,    78,    79,    25,
-      24,    75,    32,    33,    80,    34,    35,    36,    37,    38,
-      81,    30,    30,    28,    28,     3,    85,    28,    76,    27,
-      84,    87,    71,    25,    87,    84,    81,     3,     4,    74,
-      77,    78,    27,    27,    30,    31,    30,    48,    30,    31,
-       3,    25,    30,    78,    48,    18,    56,    58,    59,    60,
-      66,    68,    27,     3,    27,    28,    27,    87,    26,    30,
-      28,    25,    28,    17,    51,    52,    48,    12,    47,    55,
-      56,    60,    66,    68,     3,    72,    73,    76,    29,    28,
-      17,    53,    54,    28,    72,    28,    26,    76,    29,    54,
-      65,    25,    30,    76,     3,    30,    27,     3,    48,    27,
-      28,    48,    28
+       0,    41,    42,     0,     3,    23,    43,    31,     4,     4,
+      39,    33,     5,    44,    28,    26,    28,    44
   };
 
-  const unsigned char
+  const signed char
   parser::yyr1_[] =
   {
-       0,    40,    41,    41,    41,    42,    42,    42,    42,    43,
-      43,    43,    43,    44,    45,    46,    47,    47,    47,    47,
-      47,    47,    48,    48,    48,    48,    48,    49,    49,    50,
-      51,    51,    51,    52,    53,    53,    54,    55,    56,    56,
-      57,    58,    58,    58,    58,    58,    58,    59,    60,    60,
-      61,    61,    61,    62,    63,    63,    64,    65,    66,    66,
-      67,    68,    68,    69,    69,    70,    71,    71,    71,    72,
-      72,    73,    73,    74,    74,    75,    76,    76,    77,    77,
-      77,    78,    78,    78,    78,    79,    79,    80,    80,    81,
-      81,    81,    81,    81,    82,    82,    83,    84,    84,    84,
-      85,    85,    85,    86,    86,    86,    87,    87,    87
+       0,    40,    41,    42,    42,    43,    43,    44,    44
   };
 
-  const unsigned char
+  const signed char
   parser::yyr2_[] =
   {
-       0,     2,     0,     1,     1,     6,     5,     5,     4,     1,
-       1,     1,     1,     4,     4,     8,     0,     1,     1,     1,
-       1,     1,     0,     1,     1,     1,     1,     1,     2,     8,
-       1,     2,     3,     8,     1,     2,     8,     3,     1,     2,
-       7,     0,     1,     1,     1,     1,     1,     2,     1,     2,
-       1,     2,     3,     7,     1,     2,     7,     4,     1,     2,
-       4,     1,     2,     3,     5,     7,     1,     1,     1,     1,
-       1,     1,     3,     1,     1,     1,     1,     3,     1,     3,
-       5,     1,     1,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     1,     2,     6,     0,     2,     4,
-       0,     1,     3,     0,     1,     3,     1,     1,     1
+       0,     2,     1,     2,     0,     5,     5,     3,     1
   };
 
 
-#if YYDEBUG
+
   // YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
   // First, the terminals, then, starting at \a yyntokens_, nonterminals.
   const char*
   const parser::yytname_[] =
   {
-  "\"end of file\"", "error", "$undefined", "\"identifier\"",
-  "\"number\"", "\"hello\"", "\"true\"", "\"false\"", "\"if\"", "\"elif\"",
-  "\"else\"", "\"while\"", "\"return\"", "\"state\"", "\"entry\"",
-  "\"exit\"", "\"on\"", "\"moveif\"", "\"break\"", "\"lambda\"",
-  "\"defevent\"", "\"int\"", "\"bool\"", "\"string\"", "\"+\"", "\";\"",
-  "\":\"", "\"{\"", "\"}\"", "\"(\"", "\")\"", "\",\"", "\"&&\"", "\"||\"",
-  "\"=<\"", "\"=>\"", "\"<\"", "\">\"", "\"==\"", "\"=\"", "$accept",
-  "program", "state_block", "state_stmts", "entry_meth", "exit_meth",
-  "method_def", "method_stmts", "stmts", "on_event_block", "on_event_term",
-  "if_event_terms", "if_event_term", "elif_event_block", "elif_event_term",
-  "return_stmt", "while_stmt", "while_term", "while_stmts", "break_stmt",
-  "if_stmt", "if_terms", "if_term", "elif_block", "elif_term", "else_term",
-  "assign_stmt", "assign_term", "dec_stmt", "dec_term", "lambda_def",
-  "exprs", "simple_exprs", "add_expr", "add_vals", "plus_op", "cond_expr",
-  "cond_term", "logic_terms", "logic_vals", "logic_op", "cond",
-  "event_def_header", "event_def_term", "args_type_iden", "args_iden",
-  "args_types", "types", YY_NULLPTR
+  "\"end of file\"", "error", "$undefined", "\"print\"", "\"identifier\"",
+  "INT_NUMBER", "\"hello\"", "TRUE", "true", "FALSE", "false", "\"if\"",
+  "\"elif\"", "\"else\"", "\"while\"", "\"return\"", "\"state\"",
+  "\"entry\"", "\"exit\"", "\"on\"", "\"moveif\"", "\"break\"",
+  "\"defevent\"", "\"int\"", "\"bool\"", "\"string\"", "PLUS", "\"+\"",
+  "\";\"", "\"{\"", "\"}\"", "LEFT_PAREN", "\"(\"", "RIGHT_PAREN", "\")\"",
+  "\",\"", "\"<\"", "\">\"", "\"==\"", "\"=\"", "$accept", "prog",
+  "stmtlist", "stmt", "exp", YY_NULLPTR
   };
 
-
-  const unsigned char
+#if YYDEBUG
+  const signed char
   parser::yyrline_[] =
   {
-       0,    67,    67,    67,    67,    69,    70,    71,    72,    73,
-      73,    73,    73,    75,    77,    79,    81,    81,    81,    81,
-      82,    82,    84,    84,    84,    84,    84,    86,    86,    87,
-      90,    90,    91,    92,    94,    94,    95,    98,   100,   100,
-     101,   102,   102,   102,   102,   102,   102,   103,   105,   105,
-     106,   106,   106,   107,   108,   108,   109,   110,   112,   112,
-     113,   115,   115,   116,   116,   118,   120,   120,   120,   121,
-     121,   123,   123,   124,   124,   125,   127,   127,   128,   128,
-     129,   130,   130,   130,   130,   131,   131,   132,   132,   133,
-     133,   133,   133,   133,   135,   135,   136,   138,   138,   138,
-     139,   139,   139,   140,   140,   140,   141,   141,   141
+       0,    82,    82,    83,    87,    89,    91,   104,   106
   };
 
   // Print the state stack on the debug stream.
@@ -1051,7 +1297,7 @@ namespace yy {
            i = yystack_.begin (),
            i_end = yystack_.end ();
          i != i_end; ++i)
-      *yycdebug_ << ' ' << i->state;
+      *yycdebug_ << ' ' << int (i->state);
     *yycdebug_ << '\n';
   }
 
@@ -1059,7 +1305,7 @@ namespace yy {
   void
   parser::yy_reduce_print_ (int yyrule)
   {
-    unsigned yylno = yyrline_[yyrule];
+    int yylno = yyrline_[yyrule];
     int yynrhs = yyr2_[yyrule];
     // Print the symbols being reduced, and their result.
     *yycdebug_ << "Reducing stack by rule " << yyrule - 1
@@ -1072,15 +1318,31 @@ namespace yy {
 #endif // YYDEBUG
 
 
-
+#line 5 "parserspec.yxx"
 } // yy
-#line 1078 "parser.cpp" // lalr1.cc:1217
-#line 143 "parserspec.yxx" // lalr1.cc:1218
+#line 1324 "parser.cpp"
+
+#line 110 "parserspec.yxx"
 
 
-void yy::parser::error(const std::string& msg)
+int main()
 {
-    std::cerr << msg << std::endl;
+    std::string args_str = "int var = 2 + 2;";
+
+    program myroot;
+    yy::Lexer lexer(args_str);
+    yy::parser parser(lexer, myroot);
+
+    if(parser.parse() != 0) {
+        std::cout << "ERROR in parsing" << std::endl;
+    }
+
+    myroot.evaluate();
+}
+
+void yy::parser::error(const location& loc, const std::string& msg)
+{
+    std::cerr << loc << ": " << msg << std::endl;
     if (lexer.size() == 0)      // if token is unknown (no match)
         lexer.matcher().winput(); // skip character
 }

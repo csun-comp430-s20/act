@@ -14,9 +14,14 @@ class exp_node {
     types value;
     
     public:
-    exp_node();
-    virtual void print();
-    virtual types evaluate() const;
+    exp_node() { value = std::monostate(); };
+    virtual void print() { std::cout << "Not Implemented"; }
+    virtual types evaluate() const { return std::monostate(); }
+    virtual exp_node operator+(const exp_node& node) {
+        exp_node new_node;
+        new_node.value = std::monostate();
+        return new_node;
+    };
 };
 
 class int_node : public exp_node {
