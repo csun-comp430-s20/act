@@ -8,7 +8,11 @@ project(act CXX)
 #### PROJECT SOURCE FILES ####
 
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-set(SRC_FILE lexertk.hpp)
+set(SRC_FILE 
+    lexer.cpp lexer.hpp
+    lexercore.cpp lexercore.hpp
+    token.cpp token.hpp
+    config.hpp)
 
 foreach(src ${SRC_FILE})
     list(APPEND SRC_FILES ${SOURCE_DIR}/${src})
@@ -16,8 +20,13 @@ endforeach(src ${SRC_FILE})
 
 add_library(act_common ${SRC_FILES})
 
+add_executable(act ${SOURCE_DIR}/main.cpp)
+
 set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests)
-set(TEST_FILE main.cpp lexer_tests.cpp)
+set(TEST_FILE
+    main.cpp lexer_tests.cpp
+    lexercore_tests.cpp
+    token_helpers.hpp)
 
 foreach(test ${TEST_FILE})
     list(APPEND TEST_FILES ${TEST_DIR}/${test})
