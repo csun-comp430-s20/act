@@ -12,7 +12,8 @@ set(SRC_FILE
     lexer.cpp lexer.hpp
     lexercore.cpp lexercore.hpp
     token.cpp token.hpp
-    config.hpp)
+    config.hpp
+    type.cpp type.hpp)
 
 foreach(src ${SRC_FILE})
     list(APPEND SRC_FILES ${SOURCE_DIR}/${src})
@@ -107,6 +108,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 endif()
    
 # Assume same opts for all.
-target_compile_options(dflat_common ${ACT_COMPILE_OPTIONS})
-target_compile_options(dflat ${ACT_COMPILE_OPTIONS})
+target_compile_options(act_common ${ACT_COMPILE_OPTIONS})
+target_compile_options(act ${ACT_COMPILE_OPTIONS})
 target_compile_options(tests ${ACT_COMPILE_OPTIONS})

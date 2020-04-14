@@ -55,7 +55,8 @@ LexerResult Lexer::run() {
         } 
         while (isalpha(cur()) || isdigit(cur()));
 
-        if (Optional<Token> keyword = lookup(keywords, value)) {
+        // Pointer error here before added *
+        if (Optional<Token> keyword = *(lookup(keywords, value))) {
             return keyword;
         }
     

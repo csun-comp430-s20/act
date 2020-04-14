@@ -1,3 +1,6 @@
+# Cmake
+/build
+
 # Out Files
 *.out
 *.output
