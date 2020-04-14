@@ -1,9 +1,9 @@
 #include "exp.hpp"
 
 int_node::int_node() { value = std::monostate(); }
-int_node::int_node(const int val) { value = val; }
+int_node::int_node(const int& val) { value = val; }
 void int_node::print() { std::cout << std::get<int>(value); }
-void int_node::set(const int val) { value = val; }
+void int_node::set(const int& val) { value = val; }
 types int_node::evaluate() const { return std::get<int>(value); }
 int_node int_node::operator+(const int_node& node) {
     int_node new_node;

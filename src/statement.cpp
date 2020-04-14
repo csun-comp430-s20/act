@@ -15,7 +15,7 @@ void print_stmt::evaluate() {
     std::cout << std::endl;
 }
 
-assignment_stmt::assignment_stmt(std::string dec_type, std::string name, exp_node expression) {
+assignment_stmt::assignment_stmt(std::string& dec_type, std::string& name, exp_node& expression) {
     type = dec_type;
     id = name;
     expr = expression;

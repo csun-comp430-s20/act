@@ -34,7 +34,7 @@ class assignment_stmt : public statement {
     std::string id;
     exp_node expr;
     public:
-    assignment_stmt(std::string dec_type, std::string name, exp_node expression);
+    assignment_stmt(std::string& dec_type, std::string& name, exp_node& expression);
     void print();
     void evaluate();
 };

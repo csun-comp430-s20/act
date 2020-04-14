@@ -27,9 +27,9 @@ class exp_node {
 class int_node : public exp_node {
     public:
     int_node();
-    int_node(const int val);
+    int_node(const int& val);
     void print();
-    void set(const int val);
+    void set(const int& val);
     types evaluate() const;
     int_node operator+(const int_node& node);
 };
