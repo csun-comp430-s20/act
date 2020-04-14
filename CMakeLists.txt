@@ -12,8 +12,7 @@ set(SRC_FILE
     lexer.cpp lexer.hpp
     lexercore.cpp lexercore.hpp
     token.cpp token.hpp
-    config.hpp
-    type.cpp type.hpp)
+    config.hpp)
 
 foreach(src ${SRC_FILE})
     list(APPEND SRC_FILES ${SOURCE_DIR}/${src})

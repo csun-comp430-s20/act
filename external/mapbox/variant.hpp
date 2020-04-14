@@ -572,8 +572,8 @@ class variant
     static_assert(!detail::disjunction<std::is_array<Types>...>::value, "Variant can not hold array types.");
     static_assert(sizeof...(Types) < std::numeric_limits<type_index_t>::max(), "Internal index type must be able to accommodate all alternatives.");
 private:
-    static const std::size_t data_size = detail::static_max<sizeof(Types)...>::value;
-    static const std::size_t data_align = detail::static_max<alignof(Types)...>::value;
+    static const std::size_t data_size = detail::static_max<static_cast<type_index_t>(sizeof(Types))...>::value;
+    static const std::size_t data_align = detail::static_max<static_cast<type_index_t>(alignof(Types))...>::value;
 public:
     struct adapted_variant_tag;
     using types = std::tuple<Types...>;

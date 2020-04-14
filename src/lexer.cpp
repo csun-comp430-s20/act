@@ -55,9 +55,8 @@ LexerResult Lexer::run() {
         } 
         while (isalpha(cur()) || isdigit(cur()));
 
-        if (contains(keywords, value)) {
-            // Ensured keywords will find value
-            return keywords.find(value)->second;
+        if (Optional<Token> keyword = lookup(keywords, value)) {
+            return keyword;
         }
     
         return TokenName(value);
