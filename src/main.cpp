@@ -1,10 +1,10 @@
-#include "string.hpp"
+#include <string>
 #include "lexer.hpp"
 
 using namespace std;
 using namespace act;
 
-int lexify(String const& input) {
+int lexify(std::string const& input) {
     cout << "input: " << input << "\n";
 
     if (LexerResult result = lex(input)) {

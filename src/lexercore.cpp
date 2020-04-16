@@ -2,7 +2,7 @@
 
 namespace act {
 
-LexerCore::LexerCore(String const& input)
+LexerCore::LexerCore(std::string const& input)
     : _input(&input)
     , _input_pos(0)
 {}

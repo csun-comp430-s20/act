@@ -3,7 +3,7 @@
 
 namespace act {
 
-String to_string(Token const& t) {
+std::string to_string(Token const& t) {
     return t.match(
         [](TokenLPar) { 
             return "(LPar)"s; 
@@ -19,6 +19,9 @@ String to_string(Token const& t) {
         },
         [](TokenElse) { 
             return "(Else)"s; 
+        },
+        [](TokenPlus) {
+            return "(Plus)"s;
         },
         [](TokenName const& name) {
             return "(Name " + name.value + ")";
@@ -43,13 +46,14 @@ Color token_color(Token const& t) {
         [](TokenComma) { return col_op; },
         [](TokenIf)    { return col_op; },
         [](TokenElse)  { return col_op; },
+        [](TokenPlus)  { return col_op; },
         [](TokenName)  { return col_name; },
         [](TokenNum)   { return col_lit; },
         [](TokenStr)   { return col_lit; }
         );
 }
 
-String to_fancy_string(Token const& t) {
+std::string to_fancy_string(Token const& t) {
     return to_string(token_color(t)) 
          + to_string(t) 
          + to_string(Color::off);

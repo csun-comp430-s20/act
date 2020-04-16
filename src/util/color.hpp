@@ -1,6 +1,6 @@
 #pragma once
 
-#include "string.hpp"
+#include <string>
 
 namespace act {
 
@@ -25,7 +25,7 @@ enum class Color {
     white    = 97,
 };
 
-String to_string(Color c) {
+std::string to_string(Color c) {
     return "\033[" 
 		+ to_string(static_cast<int>(c)) 
 		+ "m";

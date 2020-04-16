@@ -8,11 +8,11 @@ namespace act {
 
 struct LexerError {
     size_t where;
-    String what;
+    std::string what;
 };
 
 using LexerResult = Result<Vector<Token>, LexerError>;
 
-LexerResult lex(String const&);
+LexerResult lex(std::string const&);
 
 } // namespace act

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "string.hpp"
-#include "variant.hpp"
+#include <variant>
+#include <string>
 
 namespace act {
 
@@ -10,11 +10,12 @@ struct TokenRPar {};
 struct TokenComma {};
 struct TokenIf {};
 struct TokenElse {};
+struct TokenPlus {};
 
 struct TokenName { 
-    String value; 
+    std::string value; 
 
-    explicit TokenName(String const& value_)
+    explicit TokenName(std::string const& value_)
         : value(value_)
     {}
 };
@@ -28,25 +29,28 @@ struct TokenNum {
 };
 
 struct TokenStr {
-    String value;
+    std::string value;
 
-    explicit TokenStr(String const& value_)
+    explicit TokenStr(std::string const& value_)
         : value(value_)
     {}
 };
 
-using Token = Variant<
-    TokenLPar, 
-    TokenRPar, 
+using Token = std::variant<
+    TokenLPar,
+    TokenRPar,
     TokenComma,
     TokenIf,
     TokenElse,
-    TokenName, 
+    TokenPlus,
+    TokenName,
     TokenNum,
     TokenStr
 >;
 
-String to_string(Token const&);
-String to_fancy_string(Token const&);
+
+
+std::string to_string(Token const&);
+std::string to_fancy_string(Token const&);
 
 } // namespace act

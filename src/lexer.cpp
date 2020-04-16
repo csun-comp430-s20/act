@@ -4,7 +4,7 @@
 namespace act {
 
 static 
-const Map<String, Token> keywords {
+const Map<std::string, Token> keywords {
     { "if",   TokenIf() },
     { "else", TokenElse() },
 };
@@ -18,7 +18,7 @@ char escape(char c) {
 
 class Lexer : private LexerCore {
     public:
-        explicit Lexer(String const& input)
+        explicit Lexer(std::string const& input)
             : LexerCore(input)
         {}
 
@@ -33,7 +33,7 @@ LexerResult Lexer::run() {
     auto t = [&](auto&& f) {
         PosReverter p = save_pos();
 
-        if (Optional<Token> result = f()) {
+        if (std::optional<Token> result = f()) {
             tokens.push_back(result.value());
             skip_ws();
             p.disable();
@@ -43,8 +43,8 @@ LexerResult Lexer::run() {
         return false;
     };
 
-    auto name_or_keyword = [&]() -> Optional<Token> {
-        String value;
+    auto name_or_keyword = [&]() -> std::optional<Token> {
+        std::string value;
         
         if (!isalpha(cur())) {
             return failure;
@@ -55,15 +55,15 @@ LexerResult Lexer::run() {
         } 
         while (isalpha(cur()) || isdigit(cur()));
 
-        if (Optional<Token> keyword = lookup(keywords, value)) {
+        if (std::optional<Token> keyword = lookup(keywords, value)) {
             return keyword;
         }
     
         return TokenName(value);
     };
     
-    auto num = [&]() -> Optional<Token> {
-        String s;
+    auto num = [&]() -> std::optional<Token> {
+        std::string s;
 
         if (!isdigit(cur())) {
             return failure;
@@ -82,12 +82,12 @@ LexerResult Lexer::run() {
         }
     };
 
-    auto str = [&]() -> Optional<Token> {
+    auto str = [&]() -> std::optional<Token> {
         if (get() != '"') {
             return failure;
         }
 
-        String value;
+        std::string value;
         char c = get();
 
         while (c != '"') {
@@ -106,7 +106,7 @@ LexerResult Lexer::run() {
         return TokenStr(value);
     };
 
-    auto single = [&]() -> Optional<Token> {
+    auto single = [&]() -> std::optional<Token> {
         switch (get()) {
             case '(': return TokenLPar();
             case ')': return TokenRPar();
@@ -131,7 +131,7 @@ LexerResult Lexer::run() {
     return tokens;
 }
 
-LexerResult lex(String const& input) {
+LexerResult lex(std::string const& input) {
     Lexer l(input);
     return l.run();
 }
