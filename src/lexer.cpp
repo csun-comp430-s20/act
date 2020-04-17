@@ -1,13 +1,25 @@
 #include "lexer.hpp"
-#include "map.hpp"
+// #include "map.hpp"
 
 namespace act {
 
 static 
-const Map<std::string, Token> keywords {
+const MapKeywords keywords {
     { "if",   TokenIf() },
     { "else", TokenElse() },
 };
+
+Token lookup_keyword(MapKeywords const& map, std::string const& key) {
+    auto it = map.find(key);
+
+    // Have to be explicit here. std::optional<any> didn't work.
+    if (it == map.end()) {
+        return TokenName(key);
+    }
+    else {
+        return it->second;
+    }
+}
 
 char escape(char c) {
     switch (c) {
@@ -33,7 +45,7 @@ LexerResult Lexer::run() {
     auto t = [&](auto&& f) {
         PosReverter p = save_pos();
 
-        if (std::optional<Token> result = f()) {
+        if (LexerToken result = f()) {
             tokens.push_back(result.value());
             skip_ws();
             p.disable();
@@ -43,11 +55,11 @@ LexerResult Lexer::run() {
         return false;
     };
 
-    auto name_or_keyword = [&]() -> std::optional<Token> {
+    auto name_or_keyword = [&]() -> LexerToken {
         std::string value;
         
         if (!isalpha(cur())) {
-            return failure;
+            return LexerError{ pos(), "Not alpha" };
         }
 
         do {
@@ -55,18 +67,19 @@ LexerResult Lexer::run() {
         } 
         while (isalpha(cur()) || isdigit(cur()));
 
-        if (std::optional<Token> keyword = lookup(keywords, value)) {
-            return keyword;
-        }
-    
-        return TokenName(value);
+        // if (LexerToken keyword = lookup_keyword(keywords, value)) {
+        //     return keyword;
+        // }
+
+        // If keyword token not found return a name token
+        return lookup_keyword(keywords, value);
     };
     
-    auto num = [&]() -> std::optional<Token> {
+    auto num = [&]() -> LexerToken {
         std::string s;
 
         if (!isdigit(cur())) {
-            return failure;
+            return LexerError{ pos(), "Not digit" };
         }
 
         do {
@@ -78,13 +91,13 @@ LexerResult Lexer::run() {
             return TokenNum(stoi(s));
         }
         catch (std::exception const&) {
-            return failure;
+            return LexerError{ pos(), "Exception returning TokenNum" };
         }
     };
 
-    auto str = [&]() -> std::optional<Token> {
+    auto str = [&]() -> LexerToken {
         if (get() != '"') {
-            return failure;
+            return LexerError{ pos(), "Not string" };
         }
 
         std::string value;
@@ -106,12 +119,12 @@ LexerResult Lexer::run() {
         return TokenStr(value);
     };
 
-    auto single = [&]() -> std::optional<Token> {
+    auto single = [&]() -> LexerToken {
         switch (get()) {
             case '(': return TokenLPar();
             case ')': return TokenRPar();
             case ',': return TokenComma();
-            default: return failure;
+            default: return LexerError{ pos(), "Error getting single" };
         }
     };
 
@@ -124,7 +137,7 @@ LexerResult Lexer::run() {
             // Ok.
         }
         else {
-            return LexerError{pos(), "something"};
+            return LexerError{ pos(), "something" };
         }
     }
 

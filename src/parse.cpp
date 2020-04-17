@@ -48,7 +48,7 @@ Parsed<Expr> parse_num_expr(Input& input) {
     TRY(num, input.get<TNum>());
 
     rollback.cancel();
-    return Expr(NumExpr{ num. value });
+    return Expr(NumExpr{ num.value });
 }
 
 // Parens :: '(' Expr ')'

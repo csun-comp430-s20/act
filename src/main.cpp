@@ -1,4 +1,4 @@
-#include <string>
+#include "print.hpp"
 #include "lexer.hpp"
 
 using namespace std;
@@ -9,7 +9,7 @@ int lexify(std::string const& input) {
 
     if (LexerResult result = lex(input)) {
         for (Token const& t : result.value()) {
-            cout << to_fancy_string(t);
+            cout << print_fancy_token(t);
         }
         
         cout << "\n";

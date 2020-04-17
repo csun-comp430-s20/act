@@ -11,8 +11,8 @@ set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SRC_FILE 
     lexer.cpp lexer.hpp
     lexercore.cpp lexercore.hpp
-    token.cpp token.hpp
-    config.hpp)
+    token.hpp
+    print.cpp print.hpp)
 
 foreach(src ${SRC_FILE})
     list(APPEND SRC_FILES ${SOURCE_DIR}/${src})

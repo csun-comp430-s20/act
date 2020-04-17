@@ -2,6 +2,9 @@
 
 #include <variant>
 #include <optional>
+#include <memory>
+
+namespace act {
 
 // Simplified/better interface over std::variant<T, E>.
 // Holds either a T or some kind of error E.
@@ -79,3 +82,5 @@ using Result_ = Result<void, E>;
 
 // TRY when there's no value to keep.
 #define TRY_(...) { auto try__ = __VA_ARGS__; if (!try__) { return try__.error(); }}
+
+} // namespace act
