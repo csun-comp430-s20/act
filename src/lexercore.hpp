@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "string.hpp"
 
 namespace act {
 
@@ -17,13 +17,13 @@ class PosReverter {
 };
 
 class LexerCore {
-    std::string const* _input;
+    String const* _input;
     size_t _input_pos;
 
     friend class PosReverter;
 
     public:
-        explicit LexerCore(std::string const&);
+        explicit LexerCore(String const&);
     
         bool eof() const;
         size_t pos() const;

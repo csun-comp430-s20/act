@@ -9,7 +9,7 @@ const MapKeywords keywords {
     { "else", TokenElse() },
 };
 
-Token lookup_keyword(MapKeywords const& map, std::string const& key) {
+Token lookup_keyword(MapKeywords const& map, String const& key) {
     auto it = map.find(key);
 
     // Have to be explicit here. std::optional<any> didn't work.
@@ -30,7 +30,7 @@ char escape(char c) {
 
 class Lexer : private LexerCore {
     public:
-        explicit Lexer(std::string const& input)
+        explicit Lexer(String const& input)
             : LexerCore(input)
         {}
 
@@ -56,7 +56,7 @@ LexerResult Lexer::run() {
     };
 
     auto name_or_keyword = [&]() -> LexerToken {
-        std::string value;
+        String value;
         
         if (!isalpha(cur())) {
             return LexerError{ pos(), "Not alpha" };
@@ -76,7 +76,7 @@ LexerResult Lexer::run() {
     };
     
     auto num = [&]() -> LexerToken {
-        std::string s;
+        String s;
 
         if (!isdigit(cur())) {
             return LexerError{ pos(), "Not digit" };
@@ -88,7 +88,7 @@ LexerResult Lexer::run() {
         while (isdigit(cur()));
 
         try {
-            return TokenNum(stoi(s));
+            return Token(TokenNum(stoi(s)));
         }
         catch (std::exception const&) {
             return LexerError{ pos(), "Exception returning TokenNum" };
@@ -100,7 +100,7 @@ LexerResult Lexer::run() {
             return LexerError{ pos(), "Not string" };
         }
 
-        std::string value;
+        String value;
         char c = get();
 
         while (c != '"') {
@@ -116,14 +116,15 @@ LexerResult Lexer::run() {
         }
  
         next();
-        return TokenStr(value);
+        return Token(TokenStr(value));
     };
 
     auto single = [&]() -> LexerToken {
         switch (get()) {
-            case '(': return TokenLPar();
-            case ')': return TokenRPar();
-            case ',': return TokenComma();
+            case '(': return Token(TokenLPar());
+            case ')': return Token(TokenRPar());
+            case ',': return Token(TokenComma());
+            case '+': return Token(TokenPlus());
             default: return LexerError{ pos(), "Error getting single" };
         }
     };
@@ -144,7 +145,7 @@ LexerResult Lexer::run() {
     return tokens;
 }
 
-LexerResult lex(std::string const& input) {
+LexerResult lex(String const& input) {
     Lexer l(input);
     return l.run();
 }

@@ -10,15 +10,15 @@ namespace act {
 
 struct LexerError {
     size_t where;
-    std::string what;
+    String what;
 };
 
-using MapKeywords = std::unordered_map<std::string, Token>;
+using MapKeywords = std::unordered_map<String, Token>;
 
 using LexerToken = Result<Token, LexerError>;
 
 using LexerResult = Result<Vector<Token>, LexerError>;
 
-LexerResult lex(std::string const&);
+LexerResult lex(String const&);
 
 } // namespace act

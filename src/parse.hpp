@@ -28,6 +28,6 @@ auto any(Input& input, char const* expecting, Parser<T> first, Ts... rest) -> Pa
         }
     }
 
-    return ParseError{ std::string("expected ") + expecting };
+    return ParseError{ String("expected ") + expecting };
 }
 

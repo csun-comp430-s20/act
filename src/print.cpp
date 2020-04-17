@@ -2,20 +2,32 @@
 
 namespace act {
 
-struct PrintToken {
-    std::string operator()(Token const& t) {
-        return t.to_string();
-    }
+struct GetId {
+    Id operator()(TokenLPar const& t)   { return t.tid; }
+    Id operator()(TokenRPar const& t)   { return t.tid; }
+    Id operator()(TokenComma const& t)  { return t.tid; }
+    Id operator()(TokenIf const& t)     { return t.tid; }
+    Id operator()(TokenElse const& t)   { return t.tid; }
+    Id operator()(TokenPlus const& t)   { return t.tid; }
+    Id operator()(TokenName const& t)   { return t.tid; }
+    Id operator()(TokenNum const& t)    { return t.tid; }
+    Id operator()(TokenStr const& t)    { return t.tid; }
 };
-struct PrintFancyToken {
-    std::string operator()(Token const& t) {
-        return id_to_string(t.tid)
-            + t.to_string()
-            + id_to_string(Id::off);
-    }
+
+struct GetStr {
+    String operator()(TokenLPar const& t)   { return t.to_string(); }
+    String operator()(TokenRPar const& t)   { return t.to_string(); }
+    String operator()(TokenComma const& t)  { return t.to_string(); }
+    String operator()(TokenIf const& t)     { return t.to_string(); }
+    String operator()(TokenElse const& t)   { return t.to_string(); }
+    String operator()(TokenPlus const& t)   { return t.to_string(); }
+    String operator()(TokenName const& t)   { return t.to_string(); }
+    String operator()(TokenNum const& t)    { return t.to_string(); }
+    String operator()(TokenStr const& t)    { return t.to_string(); }
 };
+
 // struct PrintExpr {
-//     std::string operator()(BinOpExpr const& e) {
+//     String operator()(BinOpExpr const& e) {
 //         return "("
 //              + print_expr(*e.left)
 //              + " "
@@ -25,13 +37,13 @@ struct PrintFancyToken {
 //              + ")";
 //     }
 
-//     std::string operator()(NumExpr const& e) {
+//     String operator()(NumExpr const& e) {
 //         return std::to_string(e.value);
 //     }
 // };
 
-// std::string print_op(BinOp const& op) {
-//     std::string str;
+// String print_op(BinOp const& op) {
+//     String str;
 
 //     switch (op) {
 //         case BinOp::add: str = "+"; break;
@@ -43,20 +55,25 @@ struct PrintFancyToken {
 //     return str;
 // }
 
-std::string print_token(Token const& token) {
-    return std::visit(PrintToken{}, token);
+String print_id(Id const& i) {
+    return "[" + std::to_string(static_cast<int>(i)) + "]";
 }
 
-std::string print_fancy_token(Token const& token) {
-    return std::visit(PrintFancyToken{}, token);
+String print_token(Token const& token) {
+    return std::visit(GetStr{}, token);
 }
 
-// std::string print_expr(Expr const& expr) {
+String print_fancy_token(Token const& token) {
+    return print_id(std::visit(GetId{}, token))
+            + std::visit(GetStr{}, token);
+}
+
+// String print_expr(Expr const& expr) {
 //     return std::visit(PrintExpr{}, expr);
 // }
 
-// std::string print_program(Program const& program) {
-//     std::string result;
+// String print_program(Program const& program) {
+//     String result;
 
 //     for (Expr const& expr : program.exprs) {
 //         result += print_expr(expr) + "\n";

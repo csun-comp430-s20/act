@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "string.hpp"
 #include "vector.hpp"
 #include <iostream>
 
@@ -10,7 +10,7 @@ namespace act
 enum TraceResult { traceUndefined, traceSuccess, traceFailure, traceSubfailure };
 
 inline
-std::string to_string(TraceResult t)
+String to_string(TraceResult t)
 {
     switch (t)
     {
@@ -25,13 +25,13 @@ std::string to_string(TraceResult t)
 
 struct Trace
 {
-    std::string name;
+    String name;
     size_t depth;
     Trace* parent;
     Vector<Trace> children;
     TraceResult result = traceUndefined;
 
-    Trace(std::string _name, Trace* _parent, size_t _depth)
+    Trace(String _name, Trace* _parent, size_t _depth)
         : name(_name)
         , depth(_depth)
         , parent(_parent)
@@ -91,7 +91,7 @@ class Tracer
 		};
         
         printColor(color);
-        std::cout << std::string(t.depth * _indent, ' ') << t.name << "\n";
+        std::cout << String(t.depth * _indent, ' ') << t.name << "\n";
         printColor(0);
 
         for (Trace const& c : t.children)
@@ -101,13 +101,13 @@ class Tracer
     }
 
     public:
-        Tracer(std::string root_name, size_t indent)
+        Tracer(String root_name, size_t indent)
             : _root(root_name, nullptr, 0)
             , _cur(&_root)
             , _indent(indent)
         {}
 
-        void push(std::string name)
+        void push(String name)
         {
             _cur->children.push_back(
                 Trace(name, _cur, _cur->depth + 1)

@@ -3,7 +3,7 @@
 #include "result.hpp"
 
 struct ParseError {
-    std::string what;
+    String what;
 };
 
 template <typename T>

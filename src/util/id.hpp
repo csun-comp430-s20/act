@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "string.hpp"
 
 namespace act {
 
@@ -11,12 +11,6 @@ enum class Id {
     literal  = 32,
     name     = 33,
 };
-
-std::string id_to_string(Id i) {
-    return "\033[" 
-		+ std::to_string(static_cast<int>(i)) 
-		+ "m";
-}
 
 } //act
 
