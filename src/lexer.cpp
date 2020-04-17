@@ -88,7 +88,7 @@ LexerResult Lexer::run() {
         while (isdigit(cur()));
 
         try {
-            return Token(TokenNum(stoi(s)));
+            return TokenNum(stoi(s));
         }
         catch (std::exception const&) {
             return LexerError{ pos(), "Exception returning TokenNum" };
@@ -116,7 +116,7 @@ LexerResult Lexer::run() {
         }
  
         next();
-        return Token(TokenStr(value));
+        return TokenStr(value);
     };
 
     auto single = [&]() -> LexerToken {

@@ -21,6 +21,11 @@ class Result {
             : _value(std::move(t))
         {}
 
+        template <typename U>
+        Result(U u)
+            : _value(std::move(u))
+        {}
+
         Result(E e)
             : _value(std::move(e))
         {}
