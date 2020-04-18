@@ -10,6 +10,7 @@ enum class Id {
     keyword  = 31,
     literal  = 32,
     name     = 33,
+    type     = 34,
 };
 
 } //act

@@ -1,5 +1,4 @@
 #include "lexer.hpp"
-// #include "map.hpp"
 
 namespace act {
 
@@ -7,6 +6,11 @@ static
 const MapKeywords keywords {
     { "if",   TokenIf() },
     { "else", TokenElse() },
+    { "int", TokenIntType() },
+    { "string", TokenStringType() },
+    { "bool", TokenBoolType() },
+    { "true", TokenTrue() },
+    { "false", TokenFalse() },
 };
 
 Token lookup_keyword(MapKeywords const& map, String const& key) {
@@ -88,10 +92,10 @@ LexerResult Lexer::run() {
         while (isdigit(cur()));
 
         try {
-            return TokenNum(stoi(s));
+            return TokenIntVal(stoi(s));
         }
         catch (std::exception const&) {
-            return LexerError{ pos(), "Exception returning TokenNum" };
+            return LexerError{ pos(), "Exception returning TokenIntVal" };
         }
     };
 
@@ -116,16 +120,32 @@ LexerResult Lexer::run() {
         }
  
         next();
-        return TokenStr(value);
+        return TokenStringVal(value);
+    };
+
+    auto condition = [&]() -> LexerToken {
+        char c1 = get();
+        char c2 = cur();
+
+        if(c1 == '=' && c2 == '=')
+            return TokenEqual();
+        else if(c1 == '<')
+            return TokenLess();
+        else if(c1 == '>')
+            return TokenGreater();
+        else
+            return LexerError{ pos(), "Not condition" };
     };
 
     auto single = [&]() -> LexerToken {
         switch (get()) {
-            case '(': return Token(TokenLPar());
-            case ')': return Token(TokenRPar());
-            case ',': return Token(TokenComma());
-            case '+': return Token(TokenPlus());
-            default: return LexerError{ pos(), "Error getting single" };
+            case '(':   return TokenLPar();
+            case ')':   return TokenRPar();
+            case ',':   return TokenComma();
+            case ';':   return TokenSemi();
+            case '=':   return TokenAssign();
+            case '+':   return TokenPlus();
+            default: return LexerError{ pos(), "Not single" };
         }
     };
 
@@ -133,8 +153,8 @@ LexerResult Lexer::run() {
         if (t(name_or_keyword)
          || t(num)
          || t(str)
-         || t(single)
-         ) {
+         || t(condition)
+         || t(single)) {
             // Ok.
         }
         else {

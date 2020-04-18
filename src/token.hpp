@@ -27,6 +27,20 @@ struct TokenComma {
         return "(Comma)"s;
     }
 };
+struct TokenSemi {
+    Id tid = Id::symbol;
+    
+    String to_string() const {
+        return "(Semi)"s;
+    }
+};
+struct TokenAssign {
+    Id tid = Id::symbol;
+    
+    String to_string() const {
+        return "(Assign)"s;
+    }
+};
 struct TokenPlus {
     Id tid = Id::symbol;
     
@@ -34,6 +48,28 @@ struct TokenPlus {
         return "(Plus)"s;
     }
 };
+struct TokenLess {
+    Id tid = Id::symbol;
+    
+    String to_string() const {
+        return "(Less)"s;
+    }
+};
+struct TokenGreater {
+    Id tid = Id::symbol;
+    
+    String to_string() const {
+        return "(Greater)"s;
+    }
+};
+struct TokenEqual {
+    Id tid = Id::symbol;
+    
+    String to_string() const {
+        return "(Equal)"s;
+    }
+};
+
 struct TokenIf {
     Id tid = Id::keyword;
 
@@ -46,6 +82,27 @@ struct TokenElse {
 
     String to_string() const {
         return "(Else)"s;
+    }
+};
+struct TokenIntType {
+    Id tid = Id::keyword;
+
+    String to_string() const {
+        return "(Int)"s;
+    }
+};
+struct TokenStringType {
+    Id tid = Id::keyword;
+
+    String to_string() const {
+        return "(String)"s;
+    }
+};
+struct TokenBoolType {
+    Id tid = Id::keyword;
+
+    String to_string() const {
+        return "(Bool)"s;
     }
 };
 
@@ -62,11 +119,11 @@ struct TokenName {
     }
 };
 
-struct TokenNum { 
+struct TokenIntVal { 
     int value;
     Id tid = Id::literal;
    
-    explicit TokenNum(int value_) 
+    explicit TokenIntVal(int value_) 
         : value(value_) 
     {}
 
@@ -74,12 +131,11 @@ struct TokenNum {
         return "(Num " + std::to_string(value) + ")";
     }
 };
-
-struct TokenStr {
+struct TokenStringVal {
     String value;
     Id tid = Id::literal;
 
-    explicit TokenStr(String const& value_)
+    explicit TokenStringVal(String const& value_)
         : value(value_)
     {}
 
@@ -87,17 +143,41 @@ struct TokenStr {
         return "(Str " + value + ")";
     }
 };
+struct TokenTrue {
+    Id tid = Id::literal;
+
+    String to_string() const {
+        return "(True)"s;
+    }
+};
+struct TokenFalse {
+    Id tid = Id::literal;
+
+    String to_string() const {
+        return "(False)"s;
+    }
+};
 
 using Token = std::variant<
     TokenLPar,
     TokenRPar,
     TokenComma,
+    TokenSemi,
+    TokenAssign,
+    TokenPlus,
+    TokenLess,
+    TokenGreater,
+    TokenEqual,
     TokenIf,
     TokenElse,
-    TokenPlus,
+    TokenIntType,
+    TokenBoolType,
+    TokenStringType,
     TokenName,
-    TokenNum,
-    TokenStr
+    TokenIntVal,
+    TokenStringVal,
+    TokenTrue,
+    TokenFalse
 >;
 
 } // namespace act

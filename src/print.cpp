@@ -3,27 +3,47 @@
 namespace act {
 
 struct GetId {
-    Id operator()(TokenLPar const& t)   { return t.tid; }
-    Id operator()(TokenRPar const& t)   { return t.tid; }
-    Id operator()(TokenComma const& t)  { return t.tid; }
-    Id operator()(TokenIf const& t)     { return t.tid; }
-    Id operator()(TokenElse const& t)   { return t.tid; }
-    Id operator()(TokenPlus const& t)   { return t.tid; }
-    Id operator()(TokenName const& t)   { return t.tid; }
-    Id operator()(TokenNum const& t)    { return t.tid; }
-    Id operator()(TokenStr const& t)    { return t.tid; }
+    Id operator()(TokenLPar const& t)       { return t.tid; }
+    Id operator()(TokenRPar const& t)       { return t.tid; }
+    Id operator()(TokenComma const& t)      { return t.tid; }
+    Id operator()(TokenSemi const& t)       { return t.tid; }
+    Id operator()(TokenAssign const& t)     { return t.tid; }
+    Id operator()(TokenPlus const& t)       { return t.tid; }
+    Id operator()(TokenLess const& t)       { return t.tid; }
+    Id operator()(TokenGreater const& t)    { return t.tid; }
+    Id operator()(TokenEqual const& t)      { return t.tid; }
+    Id operator()(TokenIf const& t)         { return t.tid; }
+    Id operator()(TokenElse const& t)       { return t.tid; }
+    Id operator()(TokenIntType const& t)    { return t.tid; }
+    Id operator()(TokenBoolType const& t)   { return t.tid; }
+    Id operator()(TokenStringType const& t) { return t.tid; }
+    Id operator()(TokenName const& t)       { return t.tid; }
+    Id operator()(TokenIntVal const& t)     { return t.tid; }
+    Id operator()(TokenStringVal const& t)  { return t.tid; }
+    Id operator()(TokenTrue const& t)       { return t.tid; }
+    Id operator()(TokenFalse const& t)      { return t.tid; }
 };
 
 struct GetStr {
-    String operator()(TokenLPar const& t)   { return t.to_string(); }
-    String operator()(TokenRPar const& t)   { return t.to_string(); }
-    String operator()(TokenComma const& t)  { return t.to_string(); }
-    String operator()(TokenIf const& t)     { return t.to_string(); }
-    String operator()(TokenElse const& t)   { return t.to_string(); }
-    String operator()(TokenPlus const& t)   { return t.to_string(); }
-    String operator()(TokenName const& t)   { return t.to_string(); }
-    String operator()(TokenNum const& t)    { return t.to_string(); }
-    String operator()(TokenStr const& t)    { return t.to_string(); }
+    String operator()(TokenLPar const& t)       { return t.to_string(); }
+    String operator()(TokenRPar const& t)       { return t.to_string(); }
+    String operator()(TokenComma const& t)      { return t.to_string(); }
+    String operator()(TokenSemi const& t)       { return t.to_string(); }
+    String operator()(TokenAssign const& t)     { return t.to_string(); }
+    String operator()(TokenPlus const& t)       { return t.to_string(); }
+    String operator()(TokenLess const& t)       { return t.to_string(); }
+    String operator()(TokenGreater const& t)    { return t.to_string(); }
+    String operator()(TokenEqual const& t)      { return t.to_string(); }
+    String operator()(TokenIf const& t)         { return t.to_string(); }
+    String operator()(TokenElse const& t)       { return t.to_string(); }
+    String operator()(TokenIntType const& t)    { return t.to_string(); }
+    String operator()(TokenBoolType const& t)   { return t.to_string(); }
+    String operator()(TokenStringType const& t) { return t.to_string(); }
+    String operator()(TokenName const& t)       { return t.to_string(); }
+    String operator()(TokenIntVal const& t)     { return t.to_string(); }
+    String operator()(TokenStringVal const& t)  { return t.to_string(); }
+    String operator()(TokenTrue const& t)       { return t.to_string(); }
+    String operator()(TokenFalse const& t)      { return t.to_string(); }
 };
 
 // struct PrintExpr {

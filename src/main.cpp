@@ -10,7 +10,7 @@ int lexify(String const& input) {
 
     if (LexerResult result = lex(input)) {
         for (Token const& t : result.value()) {
-            cout << print_fancy_token(t);
+            cout << print_token(t);
         }
         
         cout << "\n";
@@ -24,5 +24,5 @@ int lexify(String const& input) {
 }
 
 int main() {
-    return lexify(" if ()() 4num");
+    return lexify(" if +=()()><== \"Hello\" 4num");
 }

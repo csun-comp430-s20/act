@@ -6,10 +6,7 @@
 
 // Binary operators.
 enum class BinOp {
-    add,
-    sub,
-    mul,
-    div
+    add
 };
 
 
