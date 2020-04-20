@@ -132,7 +132,7 @@ class Lexer : private LexerCore {
                     c = get();
                 }
         
-                next();
+                // next();
                 return TokenStringVal(value);
             };
 

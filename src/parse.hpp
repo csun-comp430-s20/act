@@ -54,7 +54,7 @@ auto any(Input& input, char const* expecting, Parser<T> first, Ts... rest) -> Pa
         }
     }
 
-    return ParseError{ String("expected ") + expecting };
+    return ParseError{ expecting };
 }
 
 // Program: Stmt*

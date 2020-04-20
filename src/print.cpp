@@ -117,8 +117,8 @@ String print_op(BinOp const& op) {
 
     switch (op) {
         case BinOp::add: str = "+"; break;
-        case BinOp::less: str = ">"; break;
-        case BinOp::greater: str = "<"; break;
+        case BinOp::less: str = "<"; break;
+        case BinOp::greater: str = ">"; break;
         case BinOp::equal: str = "=="; break;
     }
 
