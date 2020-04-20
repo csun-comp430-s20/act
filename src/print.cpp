@@ -51,15 +51,15 @@ struct PrintStmt {
         String str;
         str = "("
             + print_type(s.type) 
-            + " " 
+            + " (" 
             + s.name
-            + " = ";
+            + ") (=) ";
         
-        for(auto&& expr : s.exprs) {
-            str += print_expr(expr);
+        for(auto&& expr : *s.exprs) {
+            str += print_expr(*expr);
         }
 
-        return str;
+        return str + ")";
     }
 
     String operator()(AssignStmt const& s) {
@@ -68,11 +68,11 @@ struct PrintStmt {
             + s.name
             + " = ";
         
-        for(auto&& expr : s.exprs) {
-            str += print_expr(expr);
+        for(auto&& expr : *s.exprs) {
+            str += print_expr(*expr);
         }
 
-        return str;
+        return str + ")";
     }
 };
 
@@ -88,15 +88,15 @@ struct PrintExpr {
     }
 
     String operator()(IntExpr const& e) {
-        return to_string(e.value);
+        return "(" + to_string(e.value) + ")";
     }
 
     String operator()(StrExpr const& e) {
-        return e.value;
+        return "(" + e.value + ")";
     }
 
     String operator()(BoolExpr const& e) {
-        return to_string(e.value);
+        return "(" + to_string(e.value) + ")";
     }
 };
 
@@ -109,7 +109,7 @@ String print_type(Type const& t) {
         case Type::string: str = "string"; break;
     }
 
-    return str;
+    return "(" + str + ")";
 }
 
 String print_op(BinOp const& op) {
@@ -122,7 +122,7 @@ String print_op(BinOp const& op) {
         case BinOp::equal: str = "=="; break;
     }
 
-    return str;
+    return "(" + str + ")";
 }
 
 String print_id(Id const& i) {

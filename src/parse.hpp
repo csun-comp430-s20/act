@@ -80,7 +80,7 @@ Parsed<Stmt> parse_stmt(Input& input) {
 // DecStmt: Type Name '=' Expr* ';'
 Parsed<Stmt> parse_decstmt(Input& input) {
     auto rollback = input.mark_rollback();
-    Vector<Expr> exprs;
+    Vector<std::unique_ptr<Expr>> exprs;
 
     TRY(type, parse_type(input));
     TRY(name, input.get<TokenName>());
@@ -90,20 +90,20 @@ Parsed<Stmt> parse_decstmt(Input& input) {
 
     do {
         TRY(expr, parse_expr(input));
-        exprs.push_back(std::move(expr));
+        exprs.push_back(into_ptr<Expr>(expr));
     } while(!input.match<TokenSemi>() && !input.at_end());
 
     rollback.cancel();
     return DecStmt{
         type,
         name.value,
-        exprs
+        into_ptr<Vector<std::unique_ptr<Expr>>>(exprs)
     };
 }
 // AssignStmt: Name '=' Expr* ';'
 Parsed<Stmt> parse_assignstmt(Input& input) {
     auto rollback = input.mark_rollback();
-    Vector<Expr> exprs;
+    Vector<std::unique_ptr<Expr>> exprs;
 
     TRY(name, input.get<TokenName>());
     if (!input.match<TokenAssign>()) {
@@ -112,13 +112,13 @@ Parsed<Stmt> parse_assignstmt(Input& input) {
 
     do {
         TRY(expr, parse_expr(input));
-        exprs.push_back(std::move(expr));
+        exprs.push_back(into_ptr<Expr>(expr));
     } while(!input.match<TokenSemi>() && !input.at_end());
 
     rollback.cancel();
     return AssignStmt{
         name.value,
-        exprs
+        into_ptr<Vector<std::unique_ptr<Expr>>>(exprs)
     };
 }
 Parsed<Type> parse_type(Input& input) {

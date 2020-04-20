@@ -21,7 +21,8 @@ LexerResult lexify(String const& input) {
 
 int main() {
     // String lex_input = " if +=()()><== \"Hello\" 4num";
-    String lex_input = " if +=()()><== \"Hello\" 4num";
+    String lex_input = "int num = 10;\n"
+                        "string str = \"Hello\";";
     if (LexerResult lex_result = lexify(lex_input)) {
         Input parse_input(lex_result.value());
         Parsed<Program> program = parse_program(parse_input);
