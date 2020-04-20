@@ -1,24 +1,30 @@
 #pragma once
 
-#include <variant>
-#include <vector>
+#include "variant.hpp"
+#include "vector.hpp"
+#include "string.hpp"
 #include <memory>
+
+namespace act{
 
 // Binary operators.
 enum class BinOp {
-    add
+    add,
+    less,
+    greater,
+    equal
 };
 
-
-////////////////////////////////
-// Expr
-
 struct BinOpExpr;
-struct NumExpr;
+struct IntExpr;
+struct StrExpr;
+struct BoolExpr;
 
-using Expr = std::variant<
+using Expr = Variant<
     BinOpExpr,
-    NumExpr
+    IntExpr,
+    StrExpr,
+    BoolExpr
 >;
 
 // The Expr members create a recursive type. This has to be broken by
@@ -28,16 +34,41 @@ struct BinOpExpr {
     BinOp op;
     std::unique_ptr<Expr> right;
 };
-
-struct NumExpr {
+struct IntExpr {
     int value;
 };
-
-
-////////////////////////////////
-// Program
-
-struct Program {
-    std::vector<Expr> exprs;
+struct StrExpr {
+    String value;
+};
+struct BoolExpr {
+    bool value;
 };
 
+enum class Type {
+    integer,
+    boolean,
+    string
+};
+
+struct DecStmt {
+    Type type;
+    String name;
+    Vector<Expr> exprs;
+};
+
+struct AssignStmt {
+    String name;
+    Vector<Expr> exprs;
+};
+
+using Stmt = Variant<
+    DecStmt,
+    AssignStmt
+>;
+
+// Program
+struct Program {
+    Vector<Stmt> stmts;
+};
+
+} // namespace act

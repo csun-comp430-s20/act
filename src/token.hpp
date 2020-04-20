@@ -1,10 +1,18 @@
 #pragma once
 
-#include <variant>
+#include "variant.hpp"
 #include "string.hpp"
-#include "id.hpp"
 
 namespace act {
+
+enum class Id {
+    off      = 0,
+    symbol   = 30,
+    keyword  = 31,
+    literal  = 32,
+    name     = 33,
+    type     = 34,
+};
 
 struct TokenLPar {
     Id tid = Id::symbol;
@@ -158,7 +166,7 @@ struct TokenFalse {
     }
 };
 
-using Token = std::variant<
+using Token = Variant<
     TokenLPar,
     TokenRPar,
     TokenComma,

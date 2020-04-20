@@ -46,37 +46,87 @@ struct GetStr {
     String operator()(TokenFalse const& t)      { return t.to_string(); }
 };
 
-// struct PrintExpr {
-//     String operator()(BinOpExpr const& e) {
-//         return "("
-//              + print_expr(*e.left)
-//              + " "
-//              + print_op(e.op)
-//              + " "
-//              + print_expr(*e.right)
-//              + ")";
-//     }
+struct PrintStmt {
+    String operator()(DecStmt const& s) {
+        String str;
+        str = "("
+            + print_type(s.type) 
+            + " " 
+            + s.name
+            + " = ";
+        
+        for(auto&& expr : s.exprs) {
+            str += print_expr(expr);
+        }
 
-//     String operator()(NumExpr const& e) {
-//         return std::to_string(e.value);
-//     }
-// };
+        return str;
+    }
 
-// String print_op(BinOp const& op) {
-//     String str;
+    String operator()(AssignStmt const& s) {
+        String str;
+        str = "("
+            + s.name
+            + " = ";
+        
+        for(auto&& expr : s.exprs) {
+            str += print_expr(expr);
+        }
 
-//     switch (op) {
-//         case BinOp::add: str = "+"; break;
-//         case BinOp::sub: str = "-"; break;
-//         case BinOp::mul: str = "*"; break;
-//         case BinOp::div: str = "/"; break;
-//     }
+        return str;
+    }
+};
 
-//     return str;
-// }
+struct PrintExpr {
+    String operator()(BinOpExpr const& e) {
+        return "("
+            + print_expr(*e.left)
+            + " "
+            + print_op(e.op)
+            + " "
+            + print_expr(*e.right)
+            + ")";
+    }
+
+    String operator()(IntExpr const& e) {
+        return to_string(e.value);
+    }
+
+    String operator()(StrExpr const& e) {
+        return e.value;
+    }
+
+    String operator()(BoolExpr const& e) {
+        return to_string(e.value);
+    }
+};
+
+String print_type(Type const& t) {
+    String str;
+
+    switch (t) {
+        case Type::integer: str = "int"; break;
+        case Type::boolean: str = "bool"; break;
+        case Type::string: str = "string"; break;
+    }
+
+    return str;
+}
+
+String print_op(BinOp const& op) {
+    String str;
+
+    switch (op) {
+        case BinOp::add: str = "+"; break;
+        case BinOp::less: str = ">"; break;
+        case BinOp::greater: str = "<"; break;
+        case BinOp::equal: str = "=="; break;
+    }
+
+    return str;
+}
 
 String print_id(Id const& i) {
-    return "[" + std::to_string(static_cast<int>(i)) + "]";
+    return "[" + to_string(static_cast<int>(i)) + "]";
 }
 
 String print_token(Token const& token) {
@@ -88,18 +138,22 @@ String print_fancy_token(Token const& token) {
             + std::visit(GetStr{}, token);
 }
 
-// String print_expr(Expr const& expr) {
-//     return std::visit(PrintExpr{}, expr);
-// }
+String print_expr(Expr const& expr) {
+    return std::visit(PrintExpr{}, expr);
+}
 
-// String print_program(Program const& program) {
-//     String result;
+String print_stmt(Stmt const& stmt) {
+    return std::visit(PrintStmt{}, stmt);
+}
 
-//     for (Expr const& expr : program.exprs) {
-//         result += print_expr(expr) + "\n";
-//     }
+String print_program(Program const& program) {
+    String result;
 
-//     return result;
-// }
+    for (Stmt const& expr : program.stmts) {
+        result += print_stmt(expr) + "\n";
+    }
+
+    return result;
+}
 
 } // namespace act

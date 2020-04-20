@@ -1,5 +1,7 @@
 #include "parse_input.hpp"
 
+namespace act {
+
 InputRollback::InputRollback(Input& input, size_t rollback)
     : _input(input)
     , _rollback(rollback)
@@ -15,3 +17,5 @@ InputRollback::~InputRollback() {
 void InputRollback::cancel() {
     _canceled = true;
 }
+
+} // namespace act

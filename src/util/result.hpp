@@ -1,16 +1,16 @@
 #pragma once
 
-#include <variant>
+#include "variant.hpp"
 #include <optional>
 #include <memory>
 
 namespace act {
 
-// Simplified/better interface over std::variant<T, E>.
+// Simplified/better interface over Variant<T, E>.
 // Holds either a T or some kind of error E.
 template <typename T, typename E>
 class Result {
-    std::variant<T, E> _value;
+    Variant<T, E> _value;
 
     public:
         static Result<T,E> ok(T t) {

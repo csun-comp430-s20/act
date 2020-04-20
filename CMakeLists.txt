@@ -9,9 +9,11 @@ project(act CXX)
 
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SRC_FILE 
-    lexer.cpp lexer.hpp
+    token.hpp lexer.hpp
     lexercore.cpp lexercore.hpp
-    token.hpp
+    ast.hpp parse.hpp
+    parse_input.cpp parse_input.hpp
+    parse_result.hpp
     print.cpp print.hpp)
 
 foreach(src ${SRC_FILE})

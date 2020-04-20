@@ -1,28 +1,37 @@
 #include <iostream>
 #include "print.hpp"
 #include "lexer.hpp"
+#include "parse.hpp"
 
 using namespace std;
 using namespace act;
 
-int lexify(String const& input) {
+LexerResult lexify(String const& input) {
     cout << "input: " << input << "\n";
 
     if (LexerResult result = lex(input)) {
-        for (Token const& t : result.value()) {
-            cout << print_token(t);
-        }
-        
-        cout << "\n";
-        return 0;
+        return result;
     }
     else {
         LexerError e = result.error();
-        cout << "Error: " << e.what << " at " << e.where << "\n";
-        return 1;
+        cout << "Lexer Error: " << e.what << " at " << e.where << "\n";
+        return e;
     }
 }
 
 int main() {
-    return lexify(" if +=()()><== \"Hello\" 4num");
+    // String lex_input = " if +=()()><== \"Hello\" 4num";
+    String lex_input = " if +=()()><== \"Hello\" 4num";
+    if (LexerResult lex_result = lexify(lex_input)) {
+        Input parse_input(lex_result.value());
+        Parsed<Program> program = parse_program(parse_input);
+
+        if(program) {
+            cout << print_program(program.value());
+        }
+        else {
+            cout << "parse error (" << parse_input.pos() << "): " << 
+                program.error().what << "\n";
+        }
+    }
 }
