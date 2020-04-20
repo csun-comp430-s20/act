@@ -11,7 +11,7 @@ Grammar
     Stmt        : DecStmt | AssignStmt
     DecStmt     : Type Name '=' Expr* ';'
     AssignStmt  : Name '=' Expr* ';'
-    Expr        : Val | Val BinOp Val
+    Expr        : Val | Val BinOp Expr
     BinOp       : '+' | '<' | '>' | '=='
     Val         : int | string | 'true' | 'false' | '(' Expr ')'
 */
@@ -135,19 +135,20 @@ Parsed<Type> parse_type(Input& input) {
         return ParseError{ "expected type" };
     }
 }
-// Expr: Val | Val BinOp Val
+// Expr: Val | Val BinOp Expr
 Parsed<Expr> parse_expr(Input& input) {
     return any(input, "expected expr",
         parse_binexpr,
         parse_val
     );
 }
+// Using right recursion here
 Parsed<Expr> parse_binexpr(Input& input) {
     auto rollback = input.mark_rollback();
 
     TRY(left,  parse_val(input));
     TRY(op,    parse_binop(input));
-    TRY(right, parse_val(input));
+    TRY(right, parse_expr(input));
 
     rollback.cancel();
     return BinOpExpr{
