@@ -97,7 +97,7 @@ Parsed<Stmt> parse_decstmt(Input& input) {
     return DecStmt{
         type,
         name.value,
-        into_ptr<Vector<std::unique_ptr<Expr>>>(exprs)
+        std::move(exprs)
     };
 }
 // AssignStmt: Name '=' Expr* ';'
@@ -118,7 +118,7 @@ Parsed<Stmt> parse_assignstmt(Input& input) {
     rollback.cancel();
     return AssignStmt{
         name.value,
-        into_ptr<Vector<std::unique_ptr<Expr>>>(exprs)
+        std::move(exprs)
     };
 }
 Parsed<Type> parse_type(Input& input) {

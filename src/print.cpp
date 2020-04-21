@@ -55,7 +55,7 @@ struct PrintStmt {
             + s.name
             + ") (=) ";
         
-        for(auto&& expr : *s.exprs) {
+        for(auto&& expr : s.exprs) {
             str += print_expr(*expr);
         }
 
@@ -68,7 +68,7 @@ struct PrintStmt {
             + s.name
             + " = ";
         
-        for(auto&& expr : *s.exprs) {
+        for(auto&& expr : s.exprs) {
             str += print_expr(*expr);
         }
 

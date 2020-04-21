@@ -53,12 +53,12 @@ enum class Type {
 struct DecStmt {
     Type type;
     String name;
-    std::unique_ptr<Vector<std::unique_ptr<Expr>>> exprs;
+    Vector<std::unique_ptr<Expr>> exprs;
 };
 
 struct AssignStmt {
     String name;
-    std::unique_ptr<Vector<std::unique_ptr<Expr>>> exprs;
+    Vector<std::unique_ptr<Expr>> exprs;
 };
 
 using Stmt = Variant<
