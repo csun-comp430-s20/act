@@ -16,7 +16,7 @@ struct LexerError {
 using MapKeywords = std::unordered_map<String, Token>;
 using LexerToken = Result<Token, LexerError>;
 using LexerResult = Result<Vector<Token>, LexerError>;
-// LexerResult lex(String const&);
+LexerResult lex(String const&);
 
 static 
 const MapKeywords keywords {

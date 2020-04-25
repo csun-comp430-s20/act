@@ -80,45 +80,35 @@ Parsed<Stmt> parse_stmt(Input& input) {
 // DecStmt: Type Name '=' Expr* ';'
 Parsed<Stmt> parse_decstmt(Input& input) {
     auto rollback = input.mark_rollback();
-    Vector<std::unique_ptr<Expr>> exprs;
+    // Vector<std::unique_ptr<Expr>> exprs;
 
     TRY(type, parse_type(input));
     TRY(name, input.get<TokenName>());
-    if (!input.match<TokenAssign>()) {
-        return ParseError{ "expected assign" };
-    }
-
-    do {
-        TRY(expr, parse_expr(input));
-        exprs.push_back(into_ptr<Expr>(expr));
-    } while(!input.match<TokenSemi>() && !input.at_end());
+    TRY_(input.expect<TokenAssign>());
+    TRY(expr, parse_expr(input));
+    TRY_(input.expect<TokenSemi>());
 
     rollback.cancel();
     return DecStmt{
         type,
         name.value,
-        std::move(exprs)
+        into_ptr(expr)
     };
 }
 // AssignStmt: Name '=' Expr* ';'
 Parsed<Stmt> parse_assignstmt(Input& input) {
     auto rollback = input.mark_rollback();
-    Vector<std::unique_ptr<Expr>> exprs;
+    // Vector<std::unique_ptr<Expr>> exprs;
 
     TRY(name, input.get<TokenName>());
-    if (!input.match<TokenAssign>()) {
-        return ParseError{ "expected assign" };
-    }
-
-    do {
-        TRY(expr, parse_expr(input));
-        exprs.push_back(into_ptr<Expr>(expr));
-    } while(!input.match<TokenSemi>() && !input.at_end());
+    TRY_(input.expect<TokenAssign>());
+    TRY(expr, parse_expr(input));
+    TRY_(input.expect<TokenSemi>());
 
     rollback.cancel();
     return AssignStmt{
         name.value,
-        std::move(exprs)
+        into_ptr(expr)
     };
 }
 Parsed<Type> parse_type(Input& input) {

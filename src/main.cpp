@@ -39,7 +39,7 @@ int main() {
     //                     "bool b = \"Hello\";\n"
     //                     "string t = 24;";
     
-    // Passes but should be an error
+    // NOTE: Passes but should be an error
     // String lex_input = "bool b = 23 < 45 < 45;";
 
     if (LexerResult lex_result = lexify(lex_input)) {

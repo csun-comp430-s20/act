@@ -18,7 +18,9 @@ state life {
         }
 
         on BORED {
-            if(true) moveto fun {}
+            moveif(true) fun {}
+            else moveif(someother condition) moveto other {}
+            else moveto other2 {}
         }
     }
 
