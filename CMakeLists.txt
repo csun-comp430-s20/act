@@ -13,7 +13,7 @@ set(SRC_FILE
     lexercore.cpp lexercore.hpp
     ast.hpp parse.hpp
     parse_input.cpp parse_input.hpp
-    parse_result.hpp
+    type.cpp type.hpp
     print.cpp print.hpp)
 
 foreach(src ${SRC_FILE})

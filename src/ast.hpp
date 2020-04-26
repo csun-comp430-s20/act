@@ -1,9 +1,10 @@
 #pragma once
 
+#include <memory>
 #include "variant.hpp"
 #include "vector.hpp"
 #include "string.hpp"
-#include <memory>
+#include "type.hpp"
 
 namespace act{
 
@@ -44,11 +45,11 @@ struct BoolExpr {
     bool value;
 };
 
-enum class Type {
-    integer,
-    boolean,
-    string
-};
+// enum class Type {
+//     integer,
+//     boolean,
+//     string
+// };
 
 struct DecStmt {
     Type type;

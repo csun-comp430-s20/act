@@ -12,6 +12,11 @@ struct GetStr {
     String operator()(T const& t) { return t.to_string(); }
 };
 
+struct GetTypeStr {
+    template <typename T>
+    String operator()(T const& t) { return t.toString(); }
+};
+
 struct PrintStmt {
     String operator()(DecStmt const& s) {
         String str;
@@ -63,15 +68,15 @@ struct PrintExpr {
 };
 
 String print_type(Type const& t) {
-    String str;
+    // String str;
 
-    switch (t) {
-        case Type::integer: str = "int"; break;
-        case Type::boolean: str = "bool"; break;
-        case Type::string: str = "string"; break;
-    }
+    // switch (t) {
+    //     case Type::integer: str = "int"; break;
+    //     case Type::boolean: str = "bool"; break;
+    //     case Type::string: str = "string"; break;
+    // }
 
-    return "(" + str + ")";
+    return "(" + std::visit(GetTypeStr{}, t) + ")";
 }
 
 String print_op(BinOp const& op) {

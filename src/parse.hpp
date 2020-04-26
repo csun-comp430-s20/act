@@ -113,13 +113,13 @@ Parsed<Stmt> parse_assignstmt(Input& input) {
 }
 Parsed<Type> parse_type(Input& input) {
     if (input.match<TokenIntType>()) {
-        return Type::integer;
+        return intType;
     }
     else if (input.match<TokenBoolType>()) {
-        return Type::boolean;
+        return boolType;
     }
     else if (input.match<TokenStringType>()) {
-        return Type::string;
+        return stringType;
     }
     else {
         return ParseError{ "expected type" };
