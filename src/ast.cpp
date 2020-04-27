@@ -1,4 +1,4 @@
-#include "typechecker_tools.hpp"
+#include "ast.hpp"
 
 namespace act {
 
@@ -36,6 +36,19 @@ void TypeEnv::initialize() {
 
 }
 
+String TypeEnv::opString(BinOp const& op) {
+    String str;
+
+    switch (op) {
+        case BinOp::opPlus: str = "+"; break;
+        case BinOp::opLess: str = "<"; break;
+        case BinOp::opGreater: str = ">"; break;
+        case BinOp::opEqual: str = "=="; break;
+    }
+
+    return str;
+}
+
 TypeResult TypeEnv::lookupRuleType(CanonName const& name) const {
     Type const* type = lookup(_rules, name);
 
@@ -47,19 +60,6 @@ TypeResult TypeEnv::lookupRuleType(CanonName const& name) const {
     {
         return TypeError{ "Invalid operands to operator: " + name.canonName() };
     }
-}
-
-String opString(BinOp const& op) {
-    String str;
-
-    switch (op) {
-        case BinOp::opPlus: str = "+"; break;
-        case BinOp::opLess: str = "<"; break;
-        case BinOp::opGreater: str = ">"; break;
-        case BinOp::opEqual: str = "=="; break;
-    }
-
-    return str;
 }
 
 } // namespace act

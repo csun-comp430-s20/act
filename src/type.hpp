@@ -3,9 +3,10 @@
 #include "string.hpp"
 #include "vector.hpp"
 #include "variant.hpp"
+#include "map.hpp"
+#include "result.hpp"
 
-namespace act
-{
+namespace act {
 
 using TypeName = String;
 

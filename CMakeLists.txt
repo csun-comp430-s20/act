@@ -9,13 +9,13 @@ project(act CXX)
 
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SRC_FILE 
-    token.hpp lexer.hpp
+    token.hpp lexer.cpp lexer.hpp
     lexercore.cpp lexercore.hpp
-    ast.hpp parse.hpp
-    parse_input.cpp parse_input.hpp
+    parse.cpp parse.hpp
+    ast.cpp ast.hpp
+    parse_input.cpp parse_input.hpp parse_result.hpp
     type.cpp type.hpp
     canonname.cpp canonname.hpp
-    typechecker_tools.cpp typechecker_tools.hpp
     typechecker.cpp typechecker.hpp
     print.cpp print.hpp)
 

@@ -5,6 +5,9 @@
 #include "vector.hpp"
 #include "string.hpp"
 #include "type.hpp"
+#include "canonname.hpp"
+#include "result.hpp"
+#include "map.hpp"
 
 namespace act{
 
@@ -64,6 +67,26 @@ using Stmt = Variant<
 // Program
 struct Program {
     Vector<Stmt> stmts;
+};
+
+struct TypeError {
+    String what;
+};
+
+using TypeResult = Result<Type, TypeError>;
+
+class TypeEnv {
+
+    public:
+    TypeEnv();
+
+    TypeResult lookupRuleType(CanonName const&) const;
+
+    private:
+    void initialize();
+    String opString(BinOp const&);
+
+    Map<CanonName,Type> _rules;
 };
 
 } // namespace act

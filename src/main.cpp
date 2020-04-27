@@ -30,7 +30,7 @@ int main() {
     // String lex_input = " if +=()()><== \"Hello\" 4num";
     // String lex_input = "int num = (10 + 23) + 45;\n"
     //                     "string str = \"Hello\";";
-    String lex_input = "int num = 5;\n" 
+    String lex_input = "int num = 5 + 10 + 20;\n" 
                         "string str = \"Hello\";\n"
                         "bool b = 23 < 45;";
     // String lex_input = "string str = \"Hello\";\n"
