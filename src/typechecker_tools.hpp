@@ -1,7 +1,8 @@
 #pragma once
 
 #include "ast.hpp"
-#include "result.hpp"
+#include "canonname.hpp"
+#include "parse_result.hpp"
 #include "map.hpp"
 
 namespace act {
@@ -17,7 +18,7 @@ class TypeEnv {
     public:
     TypeEnv();
 
-    TypeResult lookUpRuleType(CanonName const&) const;
+    TypeResult lookupRuleType(CanonName const&) const;
 
     private:
     void initialize();
@@ -25,8 +26,7 @@ class TypeEnv {
     Map<CanonName,Type> _rules;
 };
 
-TypeEnv typeCheck(Parsed<Program> const&);
-
-
+// TypeEnv typeCheck(Parsed<Program> const&);
+String opString(BinOp const&);
 
 } // namespace act

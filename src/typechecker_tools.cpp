@@ -1,4 +1,4 @@
-#include "typechecker.hpp"
+#include "typechecker_tools.hpp"
 
 namespace act {
 
@@ -21,18 +21,18 @@ void TypeEnv::initialize() {
     ValueType const b = boolType;
     ValueType const s = stringType;
 
-    binopRule(opPlus, i, i, i);     // int = int + int
-    binopRule(opPlus, s, s, s);     // str = str + str
+    binopRule(BinOp::opPlus, i, i, i);     // int = int + int
+    binopRule(BinOp::opPlus, s, s, s);     // str = str + str
 
-    binopRule(opLess, b, i, i);     // bool = i < i
-    binopRule(opLess, b, s, s);
+    binopRule(BinOp::opLess, b, i, i);     // bool = i < i
+    binopRule(BinOp::opLess, b, s, s);
 
-    binopRule(opGreater, b, i, i);
-    binopRule(opGreater, b, s, s);
+    binopRule(BinOp::opGreater, b, i, i);
+    binopRule(BinOp::opGreater, b, s, s);
 
-    binopRule(opEqual, b, i, i);    // bool = i == i
-    binopRule(opEqual, b, s, s);
-    binopRule(opEqual, b, b, b);
+    binopRule(BinOp::opEqual, b, i, i);    // bool = i == i
+    binopRule(BinOp::opEqual, b, s, s);
+    binopRule(BinOp::opEqual, b, b, b);
 
 }
 
@@ -47,6 +47,19 @@ TypeResult TypeEnv::lookupRuleType(CanonName const& name) const {
     {
         return TypeError{ "Invalid operands to operator: " + name.canonName() };
     }
+}
+
+String opString(BinOp const& op) {
+    String str;
+
+    switch (op) {
+        case BinOp::opPlus: str = "+"; break;
+        case BinOp::opLess: str = "<"; break;
+        case BinOp::opGreater: str = ">"; break;
+        case BinOp::opEqual: str = "=="; break;
+    }
+
+    return str;
 }
 
 } // namespace act

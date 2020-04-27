@@ -68,14 +68,6 @@ struct PrintExpr {
 };
 
 String print_type(Type const& t) {
-    // String str;
-
-    // switch (t) {
-    //     case Type::integer: str = "int"; break;
-    //     case Type::boolean: str = "bool"; break;
-    //     case Type::string: str = "string"; break;
-    // }
-
     return "(" + std::visit(GetTypeStr{}, t) + ")";
 }
 
