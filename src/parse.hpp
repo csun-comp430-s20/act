@@ -150,16 +150,16 @@ Parsed<Expr> parse_binexpr(Input& input) {
 // BinOp: '+' | '<' | '>' | '=='
 Parsed<BinOp> parse_binop(Input& input) {
     if (input.match<TokenPlus>()) {
-        return BinOp::add;
+        return BinOp::opPlus;
     }
     else if (input.match<TokenLess>()) {
-        return BinOp::less;
+        return BinOp::opLess;
     }
     else if (input.match<TokenGreater>()) {
-        return BinOp::greater;
+        return BinOp::opGreater;
     }
     else if (input.match<TokenEqual>()) {
-        return BinOp::equal;
+        return BinOp::opEqual;
     }
     else {
         return ParseError{ "expected binop" };

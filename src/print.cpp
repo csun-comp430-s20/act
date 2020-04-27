@@ -83,10 +83,10 @@ String print_op(BinOp const& op) {
     String str;
 
     switch (op) {
-        case BinOp::add: str = "+"; break;
-        case BinOp::less: str = "<"; break;
-        case BinOp::greater: str = ">"; break;
-        case BinOp::equal: str = "=="; break;
+        case BinOp::opPlus: str = "+"; break;
+        case BinOp::opLess: str = "<"; break;
+        case BinOp::opGreater: str = ">"; break;
+        case BinOp::opEqual: str = "=="; break;
     }
 
     return "(" + str + ")";

@@ -14,6 +14,9 @@ set(SRC_FILE
     ast.hpp parse.hpp
     parse_input.cpp parse_input.hpp
     type.cpp type.hpp
+    canonname.cpp canonname.hpp
+    typechecker_tools.cpp typechecker_tools.hpp
+    typechecker.cpp typechecker.hpp
     print.cpp print.hpp)
 
 foreach(src ${SRC_FILE})

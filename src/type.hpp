@@ -3,7 +3,6 @@
 #include "string.hpp"
 #include "vector.hpp"
 #include "variant.hpp"
-// #include "result.hpp"
 
 namespace act
 {
@@ -54,12 +53,7 @@ ValueType const intType("int");
 ValueType const boolType("bool");
 ValueType const stringType("string");
 
-struct TypeError {
-    String what;
-};
-
 using Type = Variant<ValueType, MethodType>;
-// using TypeResult = Result<Type, TypeError>;
 
 bool isBuiltinType(ValueType const&);
 char const* translateBuiltinType(ValueType const&);
