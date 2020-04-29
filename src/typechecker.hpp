@@ -24,7 +24,6 @@ class TypeEnv {
 struct TypeCheckExpr;
 struct TypeCheckStmt;
 
-ValueType get_expr_type(Expr const&);
 ValueTyped type_check_stmt(TypeEnv&, Stmt const&);
 TypeEnv typeCheck(Program const&);
 

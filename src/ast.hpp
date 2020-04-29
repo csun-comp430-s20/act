@@ -29,13 +29,27 @@ using Expr = Variant<
     BoolExpr
 >;
 
+struct GetExprType {
+    template<typename T>
+    ValueType operator()(T const& t) {
+        return t.type();
+    }
+};
+
+ValueType get_expr_type(Expr const& expr) {
+    return std::visit(GetExprType{}, expr);
+}
+
 // The Expr members create a recursive type. This has to be broken by
 // making them dynamically allocated somehow.
 struct BinOpExpr {
-    public:
     std::unique_ptr<Expr> left;
     BinOp op;
     std::unique_ptr<Expr> right;
+
+    ValueType type() const {
+        return undefinedType;
+    }
 };
 struct IntExpr {
     int value;

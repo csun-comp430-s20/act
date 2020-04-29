@@ -71,32 +71,6 @@ ValueTyped TypeEnv::lookupDecValue(String const& name) const {
     }
 }
 
-struct GetExprType {
-    ValueType operator()(BinOpExpr const& e) {
-        auto t1 = get_expr_type(*e.left);
-        auto t2 = get_expr_type(*e.right);
-
-        if(!isBuiltinType(t2)) {
-            return undefinedType;
-        }
-        
-        // NOTE STUCK HERE
-        return (t1 == t2) ? t1 : undefinedType;
-    }
-
-    ValueType operator()(IntExpr const& e) {
-        return e.type();
-    }
-
-    ValueType operator()(StrExpr const& e) {
-        return e.type();
-    }
-
-    ValueType operator()(BoolExpr const& e) {
-        return e.type();
-    }
-};
-
 struct TypeCheckStmt {
     TypeEnv env;
     
@@ -120,10 +94,6 @@ struct TypeCheckStmt {
         } 
     }
 };
-
-ValueType get_expr_type(Expr const& expr) {
-    return std::visit(GetExprType{}, expr);
-}
 
 ValueTyped type_check_stmt(TypeEnv& env, Stmt const& stmt) {
     return std::visit(TypeCheckStmt{ env }, stmt);
