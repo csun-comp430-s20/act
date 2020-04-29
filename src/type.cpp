@@ -102,7 +102,7 @@ namespace
     {
         { intType, {"int"} },
         { boolType, {"bool"} },
-        { stringType, {"string"} },
+        { strType, {"string"} },
     };
 }
 
@@ -111,16 +111,16 @@ bool isBuiltinType(ValueType const& type)
     return s_builtinTypes.count(type) != 0;
 }
 
-char const* translateBuiltinType(ValueType const& type)
-{
-    BuiltinType const* bt = lookup(s_builtinTypes, type);
+// char const* translateBuiltinType(ValueType const& type)
+// {
+//     BuiltinType const* bt = lookup(s_builtinTypes, type);
 
-    if (!bt)
-    {
-        throw std::logic_error("No builtin type '" + type.toString() + "'");
-    }
+//     if (!bt)
+//     {
+//         throw std::logic_error("No builtin type '" + type.toString() + "'");
+//     }
     
-    return bt->translation;
-}
+//     return bt->translation;
+// }
 
 } // namespace act

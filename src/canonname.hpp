@@ -4,8 +4,7 @@
 #include "type.hpp"
 #include <iosfwd>
 
-namespace act
-{
+namespace act {
 
 class CanonName
 {

@@ -1,8 +1,7 @@
 #include "canonname.hpp"
 #include <iostream>
 
-namespace act
-{
+namespace act {
 
 static
 String mkCanonName(String const& base, MethodType const& type)

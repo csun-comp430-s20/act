@@ -2,6 +2,7 @@
 #include "print.hpp"
 #include "lexer.hpp"
 #include "parse.hpp"
+#include "typechecker.hpp"
 
 using namespace std;
 using namespace act;
@@ -32,14 +33,13 @@ int main() {
     //                     "string str = \"Hello\";";
     String lex_input = "int num = 5 + 10 + 20;\n" 
                         "string str = \"Hello\";\n"
-                        "bool b = 23 < 45;";
+                        "bool a = 23 < 45;\n"
+                        "bool b = 23 < 45 < 12;";
     // String lex_input = "string str = \"Hello\";\n"
     //                     "bool b = 23 < 45;";
     // String lex_input = "string str = \"Hello\";\n"
     //                     "bool b = \"Hello\";\n"
     //                     "string t = 24;";
-    
-    // NOTE: Passes but should be an error
     // String lex_input = "bool b = 23 < 45 < 45;";
 
     if (LexerResult lex_result = lexify(lex_input)) {
@@ -53,5 +53,8 @@ int main() {
             cout << "parse error (" << parse_input.pos() << "): " << 
                 program.error().what << "\n";
         }
+
+        TypeEnv typeEnv = typeCheck(program.value());
+
     }
 }

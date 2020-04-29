@@ -25,9 +25,8 @@ Parsed<Stmt> parse_stmt(Input& input) {
 // DecStmt: Type Name '=' Expr* ';'
 Parsed<Stmt> parse_decstmt(Input& input) {
     auto rollback = input.mark_rollback();
-    // Vector<std::unique_ptr<Expr>> exprs;
 
-    TRY(type, parse_type(input));
+    TRY(type, parse_value_type(input));
     TRY(name, input.get<TokenName>());
     TRY_(input.expect<TokenAssign>());
     TRY(expr, parse_expr(input));
@@ -43,7 +42,6 @@ Parsed<Stmt> parse_decstmt(Input& input) {
 // AssignStmt: Name '=' Expr* ';'
 Parsed<Stmt> parse_assignstmt(Input& input) {
     auto rollback = input.mark_rollback();
-    // Vector<std::unique_ptr<Expr>> exprs;
 
     TRY(name, input.get<TokenName>());
     TRY_(input.expect<TokenAssign>());
@@ -56,7 +54,7 @@ Parsed<Stmt> parse_assignstmt(Input& input) {
         into_ptr(expr)
     };
 }
-Parsed<Type> parse_type(Input& input) {
+Parsed<ValueType> parse_value_type(Input& input) {
     if (input.match<TokenIntType>()) {
         return intType;
     }
@@ -64,10 +62,10 @@ Parsed<Type> parse_type(Input& input) {
         return boolType;
     }
     else if (input.match<TokenStringType>()) {
-        return stringType;
+        return strType;
     }
     else {
-        return ParseError{ "expected type" };
+        return ParseError{ "expected value type" };
     }
 }
 // Expr: Val | Val BinOp Expr

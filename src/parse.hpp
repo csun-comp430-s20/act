@@ -22,7 +22,7 @@ Parsed<Program> parse_program(Input&);
 Parsed<Stmt> parse_stmt(Input&);
 Parsed<Stmt> parse_decstmt(Input&);
 Parsed<Stmt> parse_assignstmt(Input&);
-Parsed<Type> parse_type(Input&);
+Parsed<ValueType> parse_value_type(Input&);
 Parsed<Expr> parse_expr(Input&);
 Parsed<Expr> parse_binexpr(Input&);
 Parsed<BinOp> parse_binop(Input&);

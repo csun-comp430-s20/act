@@ -3,7 +3,6 @@
 #include "string.hpp"
 #include "vector.hpp"
 #include "variant.hpp"
-#include "map.hpp"
 #include "result.hpp"
 
 namespace act {
@@ -52,12 +51,17 @@ ValueType const undefinedType("undefined");
 // Builtin types
 ValueType const intType("int");
 ValueType const boolType("bool");
-ValueType const stringType("string");
+ValueType const strType("string");
 
-using Type = Variant<ValueType, MethodType>;
+struct TypeError {
+    String what;
+};
+
+using ValueTyped = Result<ValueType, TypeError>;
+using MethodTyped = Result<MethodType, TypeError>;
 
 bool isBuiltinType(ValueType const&);
-char const* translateBuiltinType(ValueType const&);
+// char const* translateBuiltinType(ValueType const&);
 
 } // namespace act
 
