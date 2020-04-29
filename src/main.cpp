@@ -31,16 +31,10 @@ int main() {
     // String lex_input = " if +=()()><== \"Hello\" 4num";
     // String lex_input = "int num = (10 + 23) + 45;\n"
     //                     "string str = \"Hello\";";
-    String lex_input = "int num = 5 + 10 + 20;\n" 
+    String lex_input = "int num = 5 + 10;\n" 
                         "string str = \"Hello\";\n"
                         "bool a = 23 < 45;\n"
-                        "bool b = 23 < 45 < 12;";
-    // String lex_input = "string str = \"Hello\";\n"
-    //                     "bool b = 23 < 45;";
-    // String lex_input = "string str = \"Hello\";\n"
-    //                     "bool b = \"Hello\";\n"
-    //                     "string t = 24;";
-    // String lex_input = "bool b = 23 < 45 < 45;";
+                        "bool b = 23 < 45;";
 
     if (LexerResult lex_result = lexify(lex_input)) {
         Input parse_input(lex_result.value());

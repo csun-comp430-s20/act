@@ -68,20 +68,19 @@ Parsed<ValueType> parse_value_type(Input& input) {
         return ParseError{ "expected value type" };
     }
 }
-// Expr: Val | Val BinOp Expr
+// Expr: Val | Val BinOp Val
 Parsed<Expr> parse_expr(Input& input) {
     return any(input, "expected expr",
         parse_binexpr,
         parse_val
     );
 }
-// Using right recursion here
 Parsed<Expr> parse_binexpr(Input& input) {
     auto rollback = input.mark_rollback();
 
     TRY(left,  parse_val(input));
     TRY(op,    parse_binop(input));
-    TRY(right, parse_expr(input));
+    TRY(right, parse_val(input));
 
     rollback.cancel();
     return BinOpExpr{

@@ -9,9 +9,9 @@
 Grammar
     Program     : Stmt*
     Stmt        : DecStmt | AssignStmt
-    DecStmt     : Type Name '=' Expr* ';'
-    AssignStmt  : Name '=' Expr* ';'
-    Expr        : Val | Val BinOp Expr
+    DecStmt     : Type Name '=' Expr+ ';'
+    AssignStmt  : Name '=' Expr+ ';'
+    Expr        : Val | Val BinOp Val
     BinOp       : '+' | '<' | '>' | '=='
     Val         : int | string | 'true' | 'false' | '(' Expr ')'
 */

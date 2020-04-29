@@ -11,7 +11,8 @@ set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SRC_FILE 
     token.hpp lexer.cpp lexer.hpp
     lexercore.cpp lexercore.hpp
-    parse.cpp parse.hpp ast.hpp
+    parse.cpp parse.hpp
+    ast.cpp ast.hpp
     parse_input.cpp parse_input.hpp parse_result.hpp
     type.cpp type.hpp
     canonname.cpp canonname.hpp
