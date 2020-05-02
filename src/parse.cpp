@@ -80,7 +80,7 @@ Parsed<Expr> parse_binexpr(Input& input) {
 
     TRY(left,  parse_val(input));
     TRY(op,    parse_binop(input));
-    TRY(right, parse_val(input));
+    TRY(right, parse_expr(input));
 
     rollback.cancel();
     return BinOpExpr{

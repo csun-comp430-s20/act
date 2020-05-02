@@ -1,23 +1,15 @@
 #pragma once
 
 #include "ast.hpp"
-// #include "canonname.hpp"
+#include "typechecker_tools.hpp"
 
 namespace act {
-
-class TypeEnv {
-
-    public:
-    // TypeEnv();
-    ValueTyped lookupDecValue(String const&) const;
-    
-    Map<String,ValueType> declmap;
-};
 
 struct TypeCheckExpr;
 struct TypeCheckStmt;
 
+ValueTyped type_check_expr(TypeEnv&, Expr const&);
 ValueTyped type_check_stmt(TypeEnv&, Stmt const&);
-TypeEnv typeCheck(Program const&);
+TypeEnv type_check_program(Program const&);
 
 } // namespace act

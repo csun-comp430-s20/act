@@ -5,6 +5,7 @@
 
 namespace act {
 
+String opString(BinOp const&);
 String print_id(Id const&);
 String print_token(Token const&);
 String print_fancy_token(Token const&);

@@ -2,6 +2,19 @@
 
 namespace act {
 
+String opString(BinOp const& op) {
+    String str = "";
+
+    switch (op) {
+        case BinOp::opPlus: str = "+"; break;
+        case BinOp::opLess: str = "<"; break;
+        case BinOp::opGreater: str = ">"; break;
+        case BinOp::opEqual: str = "=="; break;
+    }
+
+    return str;
+}
+
 struct GetTokenId {
     template <typename T>
     Id operator()(T const& t) { return t.tid; }

@@ -3,6 +3,9 @@ The Act Language in the future will utilize the concept of an Actor Model paradi
 Currently it is only planned to support a single actor that supports the creation
 of an HSM.
 
+## Requirements
+~ gcc/g++ version 5+
+
 ## Build & Run
 In the project directory:
 ```sh

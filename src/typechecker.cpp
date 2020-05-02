@@ -3,59 +3,91 @@
 
 namespace act {
 
-ValueTyped TypeEnv::lookupDecValue(String const& name) const {
-    ValueType const* type = lookup(declmap, name);
+struct TypeCheckExpr {
+    TypeEnv env;
 
-    if (type) {
-        return *type;
+    ValueTyped operator()(BinOpExpr const& e) {
+        ValueTyped lhs = type_check_expr(env, *e.left);
+        ValueTyped rhs = type_check_expr(env, *e.right);
+
+        if(!lhs) {
+            return lhs.error();
+        }
+
+        if(!rhs) {
+            return rhs.error();
+        }
+
+        String name(opString(e.op));
+        MethodType type(undefinedType, { lhs.value(), rhs.value() });
+        CanonName canonName(name, type);
+
+        return env.lookupRuleType(canonName); 
     }
-    else {
-        return TypeError{ "Value not declared for " + name };
+
+    ValueTyped operator()(IntExpr const& e) {
+        return e.type;
     }
-}
+
+    ValueTyped operator()(StrExpr const& e) {
+        return e.type;
+    }
+
+    ValueTyped operator()(BoolExpr const& e) {
+        return e.type;
+    }
+};
 
 struct TypeCheckStmt {
     TypeEnv env;
-    
-    ValueTyped operator()(DecStmt const& s) {
-        env.declmap.insert({ s.name, s.type });
 
-        ValueType expr_type = get_expr_type(*s.exprs);
-        if(expr_type == s.type)
-            return s.type;
-        else if(expr_type == undefinedType)
-            return TypeError{ "Incorrect binop expr" };
-        else
-            return TypeError{ "Incorrect type in DecStmt" };
+    ValueTyped operator()(DecStmt const& s) {
+        if(auto expr_type = type_check_expr(env, *s.exprs)) {
+            if(expr_type.value() == s.type) {
+                env.declareLocal(s.name, expr_type.value());
+                return s.type;
+            }
+            else {
+                return TypeError{ "Improperly declared var" };
+            }
+        } else {
+            return expr_type.error();
+        }
     }
 
     ValueTyped operator()(AssignStmt const& s) {
-        if(auto val = env.lookupDecValue(s.name)) {
-            ValueType expr_type = get_expr_type(*s.exprs);
-            if(expr_type == val.value())
-                return val.value();
-            else if(expr_type == undefinedType)
-                return TypeError{ "Incorrect binop expr" };
-            else
-                return TypeError{ "Incorrect type in AssignStmt" };
+        if(auto var_type = env.lookupVarType(s.name)) {
+            if(auto expr_type = type_check_expr(env, *s.exprs)) {
+                if(var_type.value() == expr_type.value()) {
+                    return var_type.value();
+                } else {
+                    return TypeError{ "Types do not match in AssignStmt" };
+                }       
+            } else {
+                return expr_type.error();
+            }
         } else {
-            return val.error();
-        } 
+            return var_type.error();
+        }
     }
 };
+
+ValueTyped type_check_expr(TypeEnv& env, Expr const& expr) {
+    return std::visit(TypeCheckExpr{ env }, expr);
+}
 
 ValueTyped type_check_stmt(TypeEnv& env, Stmt const& stmt) {
     return std::visit(TypeCheckStmt{ env }, stmt);
 }
 
-TypeEnv typeCheck(Program const& program) {
+TypeEnv type_check_program(Program const& program) {
     TypeEnv env;
 
     for (Stmt const& stmt : program.stmts) {
-        if(auto val = type_check_stmt(env, stmt)) {
-            std::cout << "The value is " << val.value().toString() << std::endl;
+        if(auto stmt_type = type_check_stmt(env, stmt)) {
+            // ok
         } else {
-            std::cout << "The error is " << val.error().what << std::endl;
+            std::cout << "Type Error: " << stmt_type.error().what << std::endl;
         }
     }
 

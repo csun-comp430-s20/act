@@ -31,7 +31,7 @@ int main() {
     // String lex_input = " if +=()()><== \"Hello\" 4num";
     // String lex_input = "int num = (10 + 23) + 45;\n"
     //                     "string str = \"Hello\";";
-    String lex_input = "int num = 5 + 10;\n" 
+    String lex_input = "int num = 5 + 10 + 4;\n" 
                         "string str = \"Hello\";\n"
                         "bool a = 23 < 45;\n"
                         "bool b = 23 < 45;";
@@ -48,7 +48,9 @@ int main() {
                 program.error().what << "\n";
         }
 
-        TypeEnv typeEnv = typeCheck(program.value());
+        TypeEnv typeEnv = type_check_program(program.value());
+
+        // cout << typeEnv
 
     }
 }
