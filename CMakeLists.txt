@@ -18,6 +18,7 @@ set(SRC_FILE
     canonname.cpp canonname.hpp
     typechecker_tools.cpp typechecker_tools.hpp
     typechecker.cpp typechecker.hpp
+    codegen.cpp codegen.hpp
     print.cpp print.hpp)
 
 foreach(src ${SRC_FILE})

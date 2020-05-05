@@ -133,7 +133,7 @@ Parsed<Expr> parse_false(Input& input) {
     TRY_(input.expect<TokenFalse>());
 
     rollback.cancel();
-    return BoolExpr{ false };
+    return BoolExpr(false);
 }
 Parsed<Expr> parse_true(Input& input) {
     auto rollback = input.mark_rollback();
@@ -141,7 +141,7 @@ Parsed<Expr> parse_true(Input& input) {
     TRY_(input.expect<TokenTrue>());
 
     rollback.cancel();
-    return BoolExpr{ true };
+    return BoolExpr(true);
 }
 Parsed<Expr> parse_str(Input& input) {
     auto rollback = input.mark_rollback();
@@ -149,7 +149,7 @@ Parsed<Expr> parse_str(Input& input) {
     TRY(str, input.get<TokenStringVal>());
 
     rollback.cancel();
-    return StrExpr{ str.value };
+    return StrExpr(str.value);
 }
 Parsed<Expr> parse_int(Input& input) {
     auto rollback = input.mark_rollback();
@@ -157,7 +157,7 @@ Parsed<Expr> parse_int(Input& input) {
     TRY(num, input.get<TokenIntVal>());
 
     rollback.cancel();
-    return IntExpr{ num.value };
+    return IntExpr(num.value);
 }
 
 } // namespace act

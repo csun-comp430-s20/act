@@ -38,14 +38,32 @@ struct BinOpExpr {
 struct IntExpr {
     int value;
     const ValueType type = intType;
+    String code;
+
+    IntExpr(int val) {
+        value = val;
+        code = to_string(value);
+    }
 };
 struct StrExpr {
     String value;
     const ValueType type = strType;
+    String code;
+
+    StrExpr(String val) {
+        value = val;
+        code = value;
+    }
 };
 struct BoolExpr {
     bool value;
     const ValueType type = boolType;
+    String code;
+
+    BoolExpr(bool val) {
+        value = val;
+        code = value ? "true" : "false";
+    }
 };
 
 struct DecStmt {

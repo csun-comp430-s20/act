@@ -3,6 +3,7 @@
 #include "lexer.hpp"
 #include "parse.hpp"
 #include "typechecker.hpp"
+#include "codegen.hpp"
 
 using namespace std;
 using namespace act;
@@ -50,7 +51,9 @@ int main() {
 
         TypeEnv typeEnv = type_check_program(program.value());
 
-        // cout << typeEnv
-
+        String output = gen_code(program.value(), typeEnv);
+        cout << output << endl;
     }
+
+    return 0;
 }
