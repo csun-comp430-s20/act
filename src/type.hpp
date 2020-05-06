@@ -7,46 +7,38 @@
 
 namespace act {
 
-using TypeName = String;
-
 // A simple type consisting only of a name.
 // Can be used as a key in a Set or Map.
-class ValueType
-{
+class ValueType {
     private:
-        TypeName _name;
+    String _name;
 
     public:
-        explicit ValueType(TypeName const&);
-        
-        TypeName const& name() const;
-        String toString() const; // Identical to name().
-        bool operator==(ValueType const&) const;
-        bool operator!=(ValueType const&) const;
-        bool operator<(ValueType const&) const;
+    explicit ValueType(String const&);
+    
+    String const& name() const;
+    String toString() const; // Identical to name().
+    bool operator==(ValueType const&) const;
+    bool operator!=(ValueType const&) const;
+    bool operator<(ValueType const&) const;
 };
 
-// A complex type consisting of a return type and argument types.
-// Its types are themselves ValueTypes.
-class MethodType
-{
+class EventType {
     private:
-        ValueType _ret;
-        Vector<ValueType> _args;
+    Vector<ValueType> _args;
 
     public:
-        MethodType(ValueType const&, Vector<ValueType> const&);
-        void addArgType(ValueType const&);
-       
-        ValueType const& ret() const;
-        Vector<ValueType> const& args() const;
-        String toString() const;
-        bool operator==(MethodType const&) const;
-        bool operator!=(MethodType const&) const;
+    explicit EventType(Vector<ValueType> const&);
+    // void addArgType(ValueType const&);
+
+    Vector<ValueType> const& args() const;
+    String toString() const;
+    bool operator==(EventType const&) const;
+    bool operator!=(EventType const&) const;
 };
 
 // Type that can't be used.
-ValueType const undefinedType("undefined");
+// ValueType const undefinedType("undefined");
 
 // Builtin types
 ValueType const intType("int");
@@ -57,8 +49,12 @@ struct TypeError {
     String what;
 };
 
-using ValueTyped = Result<ValueType, TypeError>;
-using MethodTyped = Result<MethodType, TypeError>;
+using Type = Variant<
+    ValueType,
+    EventType
+>;
+
+using Typed = Result<Type, TypeError>;
 
 bool isBuiltinType(ValueType const&);
 // char const* translateBuiltinType(ValueType const&);
@@ -70,11 +66,9 @@ namespace std
 {
 
 template <>
-struct hash<act::ValueType>
-{
-    size_t operator()(act::ValueType const& x) const
-    {
-        return std::hash<act::TypeName>{}(x.name());
+struct hash<act::ValueType> {
+    size_t operator()(act::ValueType const& x) const {
+        return std::hash<act::String>{}(x.name());
     }
 };
 

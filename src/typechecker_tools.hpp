@@ -35,15 +35,10 @@ class TypeEnv
         void declareLocal(String const& name, ValueType const& type);
         
         ValueTyped lookupRuleType(CanonName const&) const;
-        // MethodType lookupMethodType(CanonName const&) const;
-        // MethodType lookupMethodTypeByClass(ValueType const& classType,
         //         CanonName const&) const;
         ValueTyped lookupVarType(String const& varName) const;
         // ValueType lookupVarTypeByClass(ValueType const& classType,
         //         String const& varName) const;
-
-        // CanonName resolveMethod(ValueType const& classType,
-        //         String const& baseName, MethodType const&) const;
         
         // bool compatibleArgs(Vector<ValueType> const& formal,
         //         Vector<ValueType> const& actual) const;

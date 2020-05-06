@@ -113,14 +113,20 @@ struct TokenBoolType {
         return "(Bool)"s;
     }
 };
+struct TokenDefEvent {
+    Id tid = Id::keyword;
+
+    String to_string() const {
+        return "(defevent)"s;
+    }
+};
 
 struct TokenName { 
     String value;
     Id tid = Id::name;
 
     explicit TokenName(String const& value_)
-        : value(value_)
-    {}
+        : value(value_) {}
 
     String to_string() const {
         return "(Name " + value + ")";
@@ -132,8 +138,7 @@ struct TokenIntVal {
     Id tid = Id::literal;
    
     explicit TokenIntVal(int value_) 
-        : value(value_) 
-    {}
+        : value(value_) {}
 
     String to_string() const {
         return "(Num " + std::to_string(value) + ")";
@@ -144,8 +149,7 @@ struct TokenStringVal {
     Id tid = Id::literal;
 
     explicit TokenStringVal(String const& value_)
-        : value(value_)
-    {}
+        : value(value_) {}
 
     String to_string() const {
         return "(Str " + value + ")";
@@ -181,6 +185,7 @@ using Token = Variant<
     TokenIntType,
     TokenBoolType,
     TokenStringType,
+    TokenDefEvent,
     TokenName,
     TokenIntVal,
     TokenStringVal,

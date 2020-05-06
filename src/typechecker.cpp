@@ -19,7 +19,7 @@ struct TypeCheckExpr {
         }
 
         String name(opString(e.op));
-        MethodType type(undefinedType, { lhs.value(), rhs.value() });
+        Vector<ValueType> type{ lhs.value(), rhs.value() };
         CanonName canonName(name, type);
 
         return env.lookupRuleType(canonName); 

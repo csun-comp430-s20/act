@@ -15,11 +15,14 @@ Parsed<Program> parse_program(Input& input) {
         std::move(stmts)
     };
 }
+
 // Stmt: DecStmt | AssignStmt
 Parsed<Stmt> parse_stmt(Input& input) {
     return any(input, "expected stmt",
         parse_decstmt,
-        parse_assignstmt
+        parse_assignstmt,
+        parse_defevent,
+        parse_callevent
     );
 }
 // DecStmt: Type Name '=' Expr* ';'
@@ -54,6 +57,49 @@ Parsed<Stmt> parse_assignstmt(Input& input) {
         into_ptr(expr)
     };
 }
+Parsed<Stmt> parse_defevent(Input& input) {
+    auto rollback = input.mark_rollback();
+    Vector<ValueType> types;
+
+    TRY_(input.expect<TokenDefEvent>());
+    TRY(name, input.get<TokenName>());
+    TRY_(input.expect<TokenLPar>());
+
+    while(!input.check<TokenRPar>() || !input.at_end()) {
+        TRY(type_temp, parse_value_type(input));
+        types.push_back(std::move(type_temp));
+        TRY_(input.expect<TokenComma>());
+    }
+    TRY_(input.expect<TokenRPar>());
+    TRY_(input.expect<TokenSemi>());
+    
+    rollback.cancel();
+    return DefEvent{
+        name.value,
+        std::move(types)
+    };
+}
+Parsed<Stmt> parse_callevent(Input& input) {
+    auto rollback = input.mark_rollback();
+    Vector<Expr> exprs;
+
+    TRY(name, input.get<TokenName>());
+    TRY_(input.expect<TokenLPar>());
+
+    while(!input.check<TokenRPar>() || !input.at_end()) {
+        TRY(expr, parse_expr(input));
+        exprs.push_back(std::move(expr));
+        TRY_(input.expect<TokenComma>());
+    }
+    TRY_(input.expect<TokenRPar>());
+    
+    rollback.cancel();
+    return CallEvent{
+        name.value,
+        std::move(exprs)
+    };
+}
+
 Parsed<ValueType> parse_value_type(Input& input) {
     if (input.match<TokenIntType>()) {
         return intType;

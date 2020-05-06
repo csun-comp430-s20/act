@@ -4,7 +4,7 @@ Currently it is only planned to support a single actor that supports the creatio
 of an HSM.
 
 ## Requirements
-~ gcc/g++ version 5+
+~ g++ version 7+
 
 ## Build & Run
 In the project directory:

@@ -4,12 +4,12 @@
 namespace act {
 
 static
-String mkCanonName(String const& base, MethodType const& type)
+String mkCanonName(String const& base, Vector<ValueType> const& types)
 {
     String s = base + "(";
     bool first = true;
 
-    for (ValueType const& arg : type.args())
+    for (ValueType const& t : types)
     {
         if (first)
         {
@@ -20,14 +20,14 @@ String mkCanonName(String const& base, MethodType const& type)
             s += ",";
         }
 
-        s += arg.toString();
+        s += t.toString();
     }
 
     s += ")";
     return s;
 }
 
-CanonName::CanonName(String base, MethodType const& type)
+CanonName::CanonName(String base, Vector<ValueType> const& type)
     : _baseName(std::move(base))
     , _type(type)
     , _canonName(mkCanonName(_baseName, _type))
@@ -43,7 +43,7 @@ String const& CanonName::canonName() const
     return _canonName;
 }
 
-MethodType const& CanonName::type() const
+Vector<ValueType> const& CanonName::type() const
 {
     return _type;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "string.hpp"
+#include "vector.hpp"
 #include "type.hpp"
 #include <iosfwd>
 
@@ -9,14 +10,14 @@ namespace act {
 class CanonName
 {
     public:
-        CanonName(String, MethodType const&);
+        CanonName(String, Vector<ValueType> const&);
         String const& baseName() const;
         String const& canonName() const;
-        MethodType const& type() const;
+        Vector<ValueType> const& type() const;
 
     private:
         String _baseName;
-        MethodType _type;
+        Vector<ValueType> _type;
         String _canonName;
 };
 

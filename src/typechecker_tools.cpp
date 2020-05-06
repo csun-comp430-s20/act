@@ -14,7 +14,7 @@ void TypeEnv::initialize()
             ValueType const& lhs, ValueType const& rhs)
     {
         String name(opString(op));
-        MethodType type(ret, { lhs, rhs });
+        Vector<ValueType> type{ lhs, rhs };
         CanonName canonName(name, type);
         _rules.insert({ canonName, ret });
     };

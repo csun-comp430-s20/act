@@ -20,7 +20,6 @@ struct BinOpExpr;
 struct IntExpr;
 struct StrExpr;
 struct BoolExpr;
-
 using Expr = Variant<
     BinOpExpr,
     IntExpr,
@@ -37,33 +36,30 @@ struct BinOpExpr {
 };
 struct IntExpr {
     int value;
-    const ValueType type = intType;
-    String code;
+    const ValueType type;
+    const String code;
 
-    IntExpr(int val) {
-        value = val;
-        code = to_string(value);
-    }
+    explicit IntExpr(int const& value_)
+        : value(value_), type(intType), 
+        code(to_string(value_)) {}
 };
 struct StrExpr {
     String value;
-    const ValueType type = strType;
-    String code;
+    const ValueType type;
+    const String code;
 
-    StrExpr(String val) {
-        value = val;
-        code = value;
-    }
+    explicit StrExpr(String const& value_)
+        : value(value_), type(strType),
+        code(value_) {}
 };
 struct BoolExpr {
     bool value;
-    const ValueType type = boolType;
-    String code;
+    const ValueType type;
+    const String code;
 
-    BoolExpr(bool val) {
-        value = val;
-        code = value ? "true" : "false";
-    }
+    explicit StrExpr(bool const& value_)
+        : value(value_), type(boolType),
+        code(value_ ? "true" : "false") {}
 };
 
 struct DecStmt {
@@ -75,10 +71,19 @@ struct AssignStmt {
     String name;
     std::unique_ptr<Expr> exprs;
 };
-
+struct DefEvent {
+    String name;
+    Vector<ValueType> types;
+};
+struct CallEvent {
+    String name;
+    Vector<Expr> args;
+};
 using Stmt = Variant<
     DecStmt,
-    AssignStmt
+    AssignStmt,
+    DefEvent,
+    CallEvent
 >;
 
 // Program

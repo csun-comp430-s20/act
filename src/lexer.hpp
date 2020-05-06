@@ -27,6 +27,7 @@ const MapKeywords keywords {
     { "bool", TokenBoolType() },
     { "true", TokenTrue() },
     { "false", TokenFalse() },
+    { "defevent", TokenDefEvent() },
 };
 
 Token lookup_keyword(MapKeywords const& map, String const& key);
