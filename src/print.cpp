@@ -69,7 +69,7 @@ struct PrintStmt {
             + s.name
             + ") (=) ";
         
-        str += print_expr(*s.exprs);
+        str += print_expr(s.expr);
 
         return str + ")";
     }
@@ -80,9 +80,97 @@ struct PrintStmt {
             + s.name
             + " = ";
         
-        str += print_expr(*s.exprs);
+        str += print_expr(s.expr);
 
         return str + ")";
+    }
+
+    String operator()(IfStmt const& s) {
+        String str;
+
+        str = "(if(";
+
+        bool first = true;
+        unsigned cond_ctr = 0;
+        if(!s.has_else) {
+            for(auto & b: s.blocks) {
+                if(first) { // print if statement
+                    str += print_expr(s.exprs[cond_ctr])
+                        + ") {\n";
+                    
+                    for(auto & stmt: b.stmts) {
+                        str += print_stmt(stmt) + "\n";
+                    }
+
+                    str += "}";
+                    first = false;
+                    cond_ctr++;
+                } else {
+                    str += " elif("
+                        + print_expr(s.exprs[cond_ctr])
+                        + ") {\n";
+                    
+                    for(auto & stmt: b.stmts) {
+                        str += print_stmt(stmt) + "\n";
+                    }
+
+                    str += "}";
+                    cond_ctr++;
+                }
+            }
+        } else {
+            for(unsigned b_ctr = 0; b_ctr < s.blocks.size(); b_ctr++) {
+                if(b_ctr != s.blocks.size()-1) {
+                    if(first) {
+                        str += print_expr(s.exprs[cond_ctr])
+                            + ") {\n";
+                    
+                        for(auto & stmt: s.blocks[b_ctr].stmts) {
+                            str += print_stmt(stmt) + "\n";
+                        }
+
+                        str += "}";
+                        first = false;
+                        cond_ctr++;
+                    } else {
+                        str += " elif("
+                            + print_expr(s.exprs[cond_ctr])
+                            + ") {\n";
+                        
+                        for(auto & stmt: s.blocks[b_ctr].stmts) {
+                            str += print_stmt(stmt) + "\n";
+                        }
+
+                        str += "}";
+                        cond_ctr++;
+                    }
+                } else { // print else statement
+                    str += String(" else{\n");
+                        
+                    for(auto & stmt: s.blocks[b_ctr].stmts) {
+                        str += print_stmt(stmt) + "\n";
+                    }
+
+                    str += "}";
+                }
+            }
+        }
+
+        return str + ")";
+    }
+
+    String operator()(WhileStmt const& s) {
+        String str;
+
+        str = "while("
+            + print_expr(s.expr)
+            + ") {\n";
+        
+        for(auto & stmt: s.block.stmts) {
+            str += print_stmt(stmt) + "\n";
+        }
+
+        return str + "})";
     }
 };
 

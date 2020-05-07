@@ -32,11 +32,14 @@ int main() {
     // String lex_input = " if +=()()><== \"Hello\" 4num";
     // String lex_input = "int num = (10 + 23) + 45;\n"
     //                     "string str = \"Hello\";";
-    String lex_input = "int num = 5 + 10 + 4;\n" 
+    String lex_input = "int num = 5 + 10 + 4;\n"
                         "string str = \"Hello\";\n"
                         "bool a = 23 < 45;\n"
                         "bool b = 23 < 45;\n"
-                        "defevent test();";
+                        "defevent test();\n"
+                        "if(34 < 56) {\n"
+                        "num = num + 5;\n"
+                        "}";
 
     if (LexerResult lex_result = lexify(lex_input)) {
         Input parse_input(lex_result.value());

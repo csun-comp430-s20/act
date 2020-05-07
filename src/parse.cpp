@@ -22,8 +22,88 @@ Parsed<Stmt> parse_stmt(Input& input) {
         parse_decstmt,
         parse_assignstmt,
         parse_defevent,
-        parse_callevent
+        parse_callevent,
+        parse_ifstmt,
+        parse_whilestmt
     );
+}
+Parsed<Stmt> parse_ifstmt(Input& input) {
+    auto rollback = input.mark_rollback();
+    Vector<Expr> exprs;
+    Vector<Block> blocks;
+    Vector<Stmt> stmts;
+    bool has_else = false;
+
+    TRY_(input.expect<TokenIf>());
+    TRY_(input.expect<TokenLPar>());
+    TRY(exprif, parse_expr(input));
+    exprs.push_back(std::move(exprif));
+    TRY_(input.expect<TokenRPar>());
+    TRY_(input.expect<TokenLBrace>());
+
+    while(!input.expect<TokenRBrace>()) {
+        TRY(stmt, parse_stmt(input));
+        stmts.push_back(std::move(stmt));
+    }
+
+    blocks.push_back(std::move(Block{ std::move(stmts) }));
+
+    while(input.expect<TokenElIf>()) {
+        TRY_(input.expect<TokenLPar>());
+        TRY(exprelif, parse_expr(input));
+        exprs.push_back(std::move(exprelif));
+        TRY_(input.expect<TokenRPar>());
+        TRY_(input.expect<TokenLBrace>());
+
+        stmts.clear();
+        while(!input.expect<TokenRBrace>()) {
+            TRY(stmt, parse_stmt(input));
+            stmts.push_back(std::move(stmt));
+        }
+
+        blocks.push_back(std::move(Block{ std::move(stmts) }));
+    }
+
+    if(input.expect<TokenElse>()) {
+        has_else = true;
+       TRY_(input.expect<TokenLBrace>());
+
+       stmts.clear();
+       while(!input.expect<TokenRBrace>()) {
+            TRY(stmt, parse_stmt(input));
+            stmts.push_back(std::move(stmt));
+        }
+
+        blocks.push_back(std::move(Block{ std::move(stmts) }));
+    }
+
+    rollback.cancel();
+    return IfStmt{
+        std::move(exprs),
+        std::move(blocks),
+        has_else
+    };
+}
+Parsed<Stmt> parse_whilestmt(Input& input) {
+    auto rollback = input.mark_rollback();
+    Vector<Stmt> stmts;
+
+    TRY_(input.expect<TokenWhile>());
+    TRY_(input.expect<TokenLPar>());
+    TRY(expr, parse_expr(input));
+    TRY_(input.expect<TokenRPar>());
+    TRY_(input.expect<TokenLBrace>());
+
+    while(!input.expect<TokenRBrace>()) {
+        TRY(stmt, parse_stmt(input));
+        stmts.push_back(std::move(stmt));
+    }
+
+    rollback.cancel();
+    return WhileStmt{
+        std::move(expr),
+        Block{ std::move(stmts) }
+    };
 }
 // DecStmt: Type Name '=' Expr* ';'
 Parsed<Stmt> parse_decstmt(Input& input) {
@@ -39,7 +119,7 @@ Parsed<Stmt> parse_decstmt(Input& input) {
     return DecStmt{
         type,
         name.value,
-        into_ptr(expr)
+        std::move(expr)
     };
 }
 // AssignStmt: Name '=' Expr* ';'
@@ -54,7 +134,7 @@ Parsed<Stmt> parse_assignstmt(Input& input) {
     rollback.cancel();
     return AssignStmt{
         name.value,
-        into_ptr(expr)
+        std::move(expr)
     };
 }
 Parsed<Stmt> parse_defevent(Input& input) {
@@ -65,12 +145,12 @@ Parsed<Stmt> parse_defevent(Input& input) {
     TRY(name, input.get<TokenName>());
     TRY_(input.expect<TokenLPar>());
 
-    if(!input.check<TokenRPar>()) {
+    if(!input.check_done<TokenRPar>()) {
         TRY(type_temp, parse_value_type(input));
         types.push_back(std::move(type_temp));
     }
 
-    while(!input.check<TokenRPar>()) {
+    while(!input.check_done<TokenRPar>()) {
         TRY_(input.expect<TokenComma>());
         TRY(type_temp, parse_value_type(input));
         types.push_back(std::move(type_temp));
@@ -92,12 +172,12 @@ Parsed<Stmt> parse_callevent(Input& input) {
     TRY(name, input.get<TokenName>());
     TRY_(input.expect<TokenLPar>());
 
-    if(!input.check<TokenRPar>()) {
+    if(!input.check_done<TokenRPar>()) {
         TRY(expr, parse_expr(input));
         exprs.push_back(std::move(expr));
     }
 
-    while(!input.check<TokenRPar>()) {
+    while(!input.check_done<TokenRPar>()) {
         TRY_(input.expect<TokenComma>());
         TRY(expr, parse_expr(input));
         exprs.push_back(std::move(expr));

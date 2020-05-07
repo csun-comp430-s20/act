@@ -62,14 +62,31 @@ struct BoolExpr {
         code(value_ ? "true" : "false") {}
 };
 
+struct DecStmt;
+struct AssignStmt;
+struct DefEvent;
+struct CallEvent;
+struct IfStmt;
+struct WhileStmt;
+struct Block;
+
+using Stmt = Variant<
+    DecStmt,
+    AssignStmt,
+    DefEvent,
+    CallEvent,
+    IfStmt,
+    WhileStmt
+>;
+
 struct DecStmt {
     ValueType type;
     String name;
-    std::unique_ptr<Expr> exprs;
+    Expr expr;
 };
 struct AssignStmt {
     String name;
-    std::unique_ptr<Expr> exprs;
+    Expr expr;
 };
 struct DefEvent {
     String name;
@@ -79,12 +96,18 @@ struct CallEvent {
     String name;
     Vector<Expr> args;
 };
-using Stmt = Variant<
-    DecStmt,
-    AssignStmt,
-    DefEvent,
-    CallEvent
->;
+struct Block {
+    Vector<Stmt> stmts;
+};
+struct IfStmt {
+    Vector<Expr> exprs;
+    Vector<Block> blocks;
+    bool has_else;
+};
+struct WhileStmt {
+    Expr expr;
+    Block block;
+};
 
 // Program
 struct Program {

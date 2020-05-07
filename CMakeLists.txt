@@ -8,6 +8,8 @@ project(act CXX)
 #### PROJECT SOURCE FILES ####
 
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+#[[
 set(SRC_FILE 
     token.hpp lexer.cpp lexer.hpp
     lexercore.cpp lexercore.hpp
@@ -19,6 +21,15 @@ set(SRC_FILE
     typechecker_tools.cpp typechecker_tools.hpp
     typechecker.cpp typechecker.hpp
     codegen.cpp codegen.hpp
+    print.cpp print.hpp)
+]]
+
+set(SRC_FILE 
+    token.hpp lexer.cpp lexer.hpp
+    lexercore.cpp lexercore.hpp
+    parse.cpp parse.hpp ast.hpp
+    parse_input.cpp parse_input.hpp parse_result.hpp
+    type.cpp type.hpp
     print.cpp print.hpp)
 
 foreach(src ${SRC_FILE})

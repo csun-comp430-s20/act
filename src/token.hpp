@@ -14,6 +14,20 @@ enum class Id {
     type     = 34,
 };
 
+struct TokenLBrace {
+    Id tid = Id::symbol;
+
+    String to_string() const {
+        return "(LBrace)"s;
+    }
+};
+struct TokenRBrace {
+    Id tid = Id::symbol;
+
+    String to_string() const {
+        return "(RBrace)"s;
+    }
+};
 struct TokenLPar {
     Id tid = Id::symbol;
 
@@ -78,11 +92,25 @@ struct TokenEqual {
     }
 };
 
+struct TokenWhile {
+    Id tid = Id::keyword;
+
+    String to_string() const {
+        return "(While)"s;
+    }
+};
 struct TokenIf {
     Id tid = Id::keyword;
 
     String to_string() const {
         return "(If)"s;
+    }
+};
+struct TokenElIf {
+    Id tid = Id::keyword;
+
+    String to_string() const {
+        return "(Elif)"s;
     }
 };
 struct TokenElse {
@@ -171,6 +199,8 @@ struct TokenFalse {
 };
 
 using Token = Variant<
+    TokenLBrace,
+    TokenRBrace,
     TokenLPar,
     TokenRPar,
     TokenComma,
@@ -180,7 +210,9 @@ using Token = Variant<
     TokenLess,
     TokenGreater,
     TokenEqual,
+    TokenWhile,
     TokenIf,
+    TokenElIf,
     TokenElse,
     TokenIntType,
     TokenBoolType,

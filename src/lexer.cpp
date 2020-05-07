@@ -119,6 +119,8 @@ LexerResult Lexer::run() {
 
     auto single = [&]() -> LexerToken {
         switch (get()) {
+            case '{':   return TokenLBrace();
+            case '}':   return TokenRBrace();
             case '(':   return TokenLPar();
             case ')':   return TokenRPar();
             case ',':   return TokenComma();

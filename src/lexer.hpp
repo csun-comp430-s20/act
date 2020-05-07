@@ -20,7 +20,9 @@ LexerResult lex(String const&);
 
 static 
 const MapKeywords keywords {
+    { "while", TokenWhile() },
     { "if",   TokenIf() },
+    { "elif", TokenElIf() },
     { "else", TokenElse() },
     { "int", TokenIntType() },
     { "string", TokenStringType() },

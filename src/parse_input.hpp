@@ -64,7 +64,7 @@ class Input {
     }
 
     template <typename T>
-    bool check() {
+    bool check_done() {
         if (at_end()) {
             return true;
         }
