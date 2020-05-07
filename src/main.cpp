@@ -35,8 +35,8 @@ int main() {
     String lex_input = "int num = 5 + 10 + 4;\n" 
                         "string str = \"Hello\";\n"
                         "bool a = 23 < 45;\n"
-                        "bool b = 23 < 45;"
-                        "defevent testevent(int, bool, string, string);";
+                        "bool b = 23 < 45;\n"
+                        "defevent test();";
 
     if (LexerResult lex_result = lexify(lex_input)) {
         Input parse_input(lex_result.value());

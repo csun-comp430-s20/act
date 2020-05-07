@@ -25,6 +25,14 @@ struct genExpr {
 };
 
 struct genStmt {
+    String operator()(DefEvent const& s) {
+        return "";
+    }
+
+    String operator()(CallEvent const& s) {
+        return "";
+    }
+    
     String operator()(DecStmt const& s) {
         return s.type.toString() +
                 " " +

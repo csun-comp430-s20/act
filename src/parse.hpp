@@ -28,6 +28,7 @@ Parsed<ValueType> parse_value_type(Input&);
 Parsed<Expr> parse_expr(Input&);
 Parsed<Expr> parse_binexpr(Input&);
 Parsed<BinOp> parse_binop(Input&);
+Parsed<Expr> parse_var(Input&);
 Parsed<Expr> parse_val(Input&);
 Parsed<Expr> parse_paren(Input&);
 Parsed<Expr> parse_false(Input&);

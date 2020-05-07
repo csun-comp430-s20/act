@@ -54,7 +54,8 @@ using Type = Variant<
     EventType
 >;
 
-using Typed = Result<Type, TypeError>;
+template <typename T>
+using Typed = Result<T, TypeError>;
 
 bool isBuiltinType(ValueType const&);
 // char const* translateBuiltinType(ValueType const&);

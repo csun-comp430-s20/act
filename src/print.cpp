@@ -26,6 +26,41 @@ struct GetTokenStr {
 };
 
 struct PrintStmt {
+    String operator()(DefEvent const& s) {
+        String str;
+
+        str = "("
+            + String("defevent ")
+            + s.name
+            + "(";
+        
+        for(auto & t : s.types) {
+            str += t.toString() + ",";
+        }
+
+        if(str.find(",") != String::npos)
+            str = str.substr(0, str.size()-1);
+
+        return str + "))";
+    }
+
+    String operator()(CallEvent const& s) {
+        String str;
+
+        str = "("
+            + s.name
+            + "(";
+
+        for(auto & e : s.args) {
+            str += print_expr(e) + ",";
+        }
+
+        if(str.find(",") != String::npos)
+            str = str.substr(0, str.size()-1);
+
+        return str + "))";
+    }
+
     String operator()(DecStmt const& s) {
         String str;
         str = "("

@@ -65,11 +65,17 @@ Parsed<Stmt> parse_defevent(Input& input) {
     TRY(name, input.get<TokenName>());
     TRY_(input.expect<TokenLPar>());
 
-    while(!input.check<TokenRPar>() || !input.at_end()) {
+    if(!input.check<TokenRPar>()) {
         TRY(type_temp, parse_value_type(input));
         types.push_back(std::move(type_temp));
-        TRY_(input.expect<TokenComma>());
     }
+
+    while(!input.check<TokenRPar>()) {
+        TRY_(input.expect<TokenComma>());
+        TRY(type_temp, parse_value_type(input));
+        types.push_back(std::move(type_temp));
+    }
+
     TRY_(input.expect<TokenRPar>());
     TRY_(input.expect<TokenSemi>());
     
@@ -86,11 +92,17 @@ Parsed<Stmt> parse_callevent(Input& input) {
     TRY(name, input.get<TokenName>());
     TRY_(input.expect<TokenLPar>());
 
-    while(!input.check<TokenRPar>() || !input.at_end()) {
+    if(!input.check<TokenRPar>()) {
         TRY(expr, parse_expr(input));
         exprs.push_back(std::move(expr));
-        TRY_(input.expect<TokenComma>());
     }
+
+    while(!input.check<TokenRPar>()) {
+        TRY_(input.expect<TokenComma>());
+        TRY(expr, parse_expr(input));
+        exprs.push_back(std::move(expr));
+    }
+
     TRY_(input.expect<TokenRPar>());
     
     rollback.cancel();
@@ -157,6 +169,7 @@ Parsed<BinOp> parse_binop(Input& input) {
 Parsed<Expr> parse_val(Input& input) {
     return any(input, "value expr",
         parse_paren,
+        parse_var,
         parse_false,
         parse_true,
         parse_str,
@@ -188,6 +201,14 @@ Parsed<Expr> parse_true(Input& input) {
 
     rollback.cancel();
     return BoolExpr(true);
+}
+Parsed<Expr> parse_var(Input& input) {
+    auto rollback = input.mark_rollback();
+
+    TRY(var, input.get<TokenName>());
+
+    rollback.cancel();
+    return StrExpr(var.value);
 }
 Parsed<Expr> parse_str(Input& input) {
     auto rollback = input.mark_rollback();

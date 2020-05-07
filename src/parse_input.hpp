@@ -66,7 +66,7 @@ class Input {
     template <typename T>
     bool check() {
         if (at_end()) {
-            return false;
+            return true;
         }
 
         return std::holds_alternative<T>(_tokens[_pos]);

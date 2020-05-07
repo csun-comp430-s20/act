@@ -57,7 +57,7 @@ struct BoolExpr {
     const ValueType type;
     const String code;
 
-    explicit StrExpr(bool const& value_)
+    explicit BoolExpr(bool const& value_)
         : value(value_), type(boolType),
         code(value_ ? "true" : "false") {}
 };

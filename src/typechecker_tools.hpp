@@ -34,9 +34,9 @@ class TypeEnv
         
         void declareLocal(String const& name, ValueType const& type);
         
-        ValueTyped lookupRuleType(CanonName const&) const;
+        Typed<ValueType> lookupRuleType(CanonName const&) const;
         //         CanonName const&) const;
-        ValueTyped lookupVarType(String const& varName) const;
+        Typed<ValueType> lookupVarType(String const& varName) const;
         // ValueType lookupVarTypeByClass(ValueType const& classType,
         //         String const& varName) const;
         

@@ -6,9 +6,9 @@ namespace act {
 struct TypeCheckExpr {
     TypeEnv env;
 
-    ValueTyped operator()(BinOpExpr const& e) {
-        ValueTyped lhs = type_check_expr(env, *e.left);
-        ValueTyped rhs = type_check_expr(env, *e.right);
+    Typed<ValueType> operator()(BinOpExpr const& e) {
+        Typed<ValueType> lhs = type_check_expr(env, *e.left);
+        Typed<ValueType> rhs = type_check_expr(env, *e.right);
 
         if(!lhs) {
             return lhs.error();
@@ -19,21 +19,21 @@ struct TypeCheckExpr {
         }
 
         String name(opString(e.op));
-        Vector<ValueType> type{ lhs.value(), rhs.value() };
+        Vector<ValueType> type = { lhs.value(), rhs.value() };
         CanonName canonName(name, type);
 
-        return env.lookupRuleType(canonName); 
+        return env.lookupRuleType(canonName);
     }
 
-    ValueTyped operator()(IntExpr const& e) {
+    Typed<ValueType> operator()(IntExpr const& e) {
         return e.type;
     }
 
-    ValueTyped operator()(StrExpr const& e) {
+    Typed<ValueType> operator()(StrExpr const& e) {
         return e.type;
     }
 
-    ValueTyped operator()(BoolExpr const& e) {
+    Typed<ValueType> operator()(BoolExpr const& e) {
         return e.type;
     }
 };
@@ -41,7 +41,15 @@ struct TypeCheckExpr {
 struct TypeCheckStmt {
     TypeEnv env;
 
-    ValueTyped operator()(DecStmt const& s) {
+    Typed<Type> operator()(DefEvent const& s) {
+        return EventType(s.types);
+    }
+
+    Typed<Type> operator()(CallEvent const& s) {
+        return EventType({intType, boolType});
+    }
+
+    Typed<Type> operator()(DecStmt const& s) {
         if(auto expr_type = type_check_expr(env, *s.exprs)) {
             if(expr_type.value() == s.type) {
                 env.declareLocal(s.name, expr_type.value());
@@ -55,7 +63,7 @@ struct TypeCheckStmt {
         }
     }
 
-    ValueTyped operator()(AssignStmt const& s) {
+    Typed<Type> operator()(AssignStmt const& s) {
         if(auto var_type = env.lookupVarType(s.name)) {
             if(auto expr_type = type_check_expr(env, *s.exprs)) {
                 if(var_type.value() == expr_type.value()) {
@@ -72,11 +80,11 @@ struct TypeCheckStmt {
     }
 };
 
-ValueTyped type_check_expr(TypeEnv& env, Expr const& expr) {
+Typed<ValueType> type_check_expr(TypeEnv& env, Expr const& expr) {
     return std::visit(TypeCheckExpr{ env }, expr);
 }
 
-ValueTyped type_check_stmt(TypeEnv& env, Stmt const& stmt) {
+Typed<Type> type_check_stmt(TypeEnv& env, Stmt const& stmt) {
     return std::visit(TypeCheckStmt{ env }, stmt);
 }
 

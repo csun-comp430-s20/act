@@ -42,7 +42,7 @@ void TypeEnv::declareLocal(String const& name, ValueType const& type)
     _scopes.declLocal(name, type);
 }
 
-ValueTyped TypeEnv::lookupRuleType(CanonName const& name) const
+Typed<ValueType> TypeEnv::lookupRuleType(CanonName const& name) const
 {
     ValueType const* type = lookup(_rules, name);
 
@@ -54,7 +54,7 @@ ValueTyped TypeEnv::lookupRuleType(CanonName const& name) const
     }
 }
 
-ValueTyped TypeEnv::lookupVarType(String const& varName) const
+Typed<ValueType> TypeEnv::lookupVarType(String const& varName) const
 {
     Decl const* decl = _scopes.lookup(varName);
 
