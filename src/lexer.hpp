@@ -20,16 +20,21 @@ LexerResult lex(String const&);
 
 static 
 const MapKeywords keywords {
-    { "while", TokenWhile() },
-    { "if",   TokenIf() },
-    { "elif", TokenElIf() },
-    { "else", TokenElse() },
-    { "int", TokenIntType() },
-    { "string", TokenStringType() },
-    { "bool", TokenBoolType() },
-    { "true", TokenTrue() },
-    { "false", TokenFalse() },
-    { "defevent", TokenDefEvent() },
+    { "state",      TokenState() },
+    { "on",         TokenOn() },
+    { "goif",       TokenGoIf() },
+    { "goelif",     TokenGoElIf() },
+    { "goelse",     TokenGoElse() },
+    { "while",      TokenWhile() },
+    { "if",         TokenIf() },
+    { "elif",       TokenElIf() },
+    { "else",       TokenElse() },
+    { "int",        TokenIntType() },
+    { "string",     TokenStringType() },
+    { "bool",       TokenBoolType() },
+    { "true",       TokenTrue() },
+    { "false",      TokenFalse() },
+    { "defevent",   TokenDefEvent() },
 };
 
 Token lookup_keyword(MapKeywords const& map, String const& key);

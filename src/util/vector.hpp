@@ -26,5 +26,4 @@ bool erase_if(Vector<T>& v, P&& p) {
     }
 }
 
-
 } //act

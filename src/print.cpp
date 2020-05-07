@@ -95,7 +95,7 @@ struct PrintStmt {
         if(!s.has_else) {
             for(auto & b: s.blocks) {
                 if(first) { // print if statement
-                    str += print_expr(s.exprs[cond_ctr])
+                    str += print_expr(s.conds[cond_ctr])
                         + ") {\n";
                     
                     for(auto & stmt: b.stmts) {
@@ -107,7 +107,7 @@ struct PrintStmt {
                     cond_ctr++;
                 } else {
                     str += " elif("
-                        + print_expr(s.exprs[cond_ctr])
+                        + print_expr(s.conds[cond_ctr])
                         + ") {\n";
                     
                     for(auto & stmt: b.stmts) {
@@ -122,7 +122,7 @@ struct PrintStmt {
             for(unsigned b_ctr = 0; b_ctr < s.blocks.size(); b_ctr++) {
                 if(b_ctr != s.blocks.size()-1) {
                     if(first) {
-                        str += print_expr(s.exprs[cond_ctr])
+                        str += print_expr(s.conds[cond_ctr])
                             + ") {\n";
                     
                         for(auto & stmt: s.blocks[b_ctr].stmts) {
@@ -134,7 +134,7 @@ struct PrintStmt {
                         cond_ctr++;
                     } else {
                         str += " elif("
-                            + print_expr(s.exprs[cond_ctr])
+                            + print_expr(s.conds[cond_ctr])
                             + ") {\n";
                         
                         for(auto & stmt: s.blocks[b_ctr].stmts) {
@@ -163,7 +163,7 @@ struct PrintStmt {
         String str;
 
         str = "while("
-            + print_expr(s.expr)
+            + print_expr(s.cond)
             + ") {\n";
         
         for(auto & stmt: s.block.stmts) {

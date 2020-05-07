@@ -3,6 +3,7 @@
 #include <memory>
 #include "variant.hpp"
 #include "vector.hpp"
+#include "stack.hpp"
 #include "string.hpp"
 #include "type.hpp"
 
@@ -62,6 +63,9 @@ struct BoolExpr {
         code(value_ ? "true" : "false") {}
 };
 
+struct StateStmt;
+struct OnStmt;
+struct GoIfStmt;
 struct DecStmt;
 struct AssignStmt;
 struct DefEvent;
@@ -100,18 +104,36 @@ struct Block {
     Vector<Stmt> stmts;
 };
 struct IfStmt {
-    Vector<Expr> exprs;
+    Vector<Expr> conds;
     Vector<Block> blocks;
     bool has_else;
 };
 struct WhileStmt {
-    Expr expr;
+    Expr cond;
     Block block;
+};
+struct GoIfStmt {
+    Vector<Expr> conds;
+    Vector<String> names; // state names
+    Vector<Block> blocks;
+    bool has_else;
+};
+struct OnStmt {
+    CallEvent event;
+    GoIfStmt gostmt;
+};
+
+template <typename T>
+using StateLevels = Stack<Vector<T>>;
+
+struct StateStmt {
+    Vector<OnStmt> onstmts;
+    StateLevels<StateStmt> levels;
 };
 
 // Program
 struct Program {
-    Vector<Stmt> stmts;
+    StateStmt states;
 };
 
 } // namespace act

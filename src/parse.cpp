@@ -16,7 +16,6 @@ Parsed<Program> parse_program(Input& input) {
     };
 }
 
-// Stmt: DecStmt | AssignStmt
 Parsed<Stmt> parse_stmt(Input& input) {
     return any(input, "expected stmt",
         parse_decstmt,
@@ -27,9 +26,75 @@ Parsed<Stmt> parse_stmt(Input& input) {
         parse_whilestmt
     );
 }
+
+Parsed<Stmt> parse_goifstmt(Input& input) {
+    auto rollback = input.mark_rollback();
+    Vector<Expr> conds;
+    Vector<String> names;
+    Vector<Block> blocks;
+    Vector<Stmt> stmts;
+    bool has_else = false;
+
+    TRY_(input.expect<TokenGoIf>());
+    TRY_(input.expect<TokenLPar>());
+    TRY(exprif, parse_expr(input));
+    conds.push_back(std::move(exprif));
+    TRY_(input.expect<TokenRPar>());
+    TRY(nameif, input.get<TokenName>());
+    names.push_back(nameif);
+    TRY_(input.expect<TokenLBrace>());
+
+    while(!input.expect<TokenRBrace>()) {
+        TRY(stmt, parse_stmt(input));
+        stmts.push_back(std::move(stmt));
+    }
+
+    blocks.push_back(std::move(Block{ std::move(stmts) }));
+
+    while(input.expect<TokenGoElIf>()) {
+        TRY_(input.expect<TokenLPar>());
+        TRY(exprelif, parse_expr(input));
+        conds.push_back(std::move(exprelif));
+        TRY_(input.expect<TokenRPar>());
+        TRY(nameelif, input.get<TokenName>());
+        names.push_back(nameelif);
+        TRY_(input.expect<TokenLBrace>());
+
+        stmts.clear();
+        while(!input.expect<TokenRBrace>()) {
+            TRY(stmt, parse_stmt(input));
+            stmts.push_back(std::move(stmt));
+        }
+
+        blocks.push_back(std::move(Block{ std::move(stmts) }));
+    }
+
+    if(input.expect<TokenGoElse>()) {
+        has_else = true;
+        TRY(nameelseif, input.get<TokenName>());
+        names.push_back(nameelseif);
+        TRY_(input.expect<TokenLBrace>());
+
+        stmts.clear();
+        while(!input.expect<TokenRBrace>()) {
+            TRY(stmt, parse_stmt(input));
+            stmts.push_back(std::move(stmt));
+        }
+        
+        blocks.push_back(std::move(Block{ std::move(stmts) }));
+    }
+
+        rollback.cancel();
+        return GoIfStmt{
+            std::move(conds),
+            std::move(names),
+            std::move(blocks),
+            has_else
+    };
+}
 Parsed<Stmt> parse_ifstmt(Input& input) {
     auto rollback = input.mark_rollback();
-    Vector<Expr> exprs;
+    Vector<Expr> conds;
     Vector<Block> blocks;
     Vector<Stmt> stmts;
     bool has_else = false;
@@ -37,7 +102,7 @@ Parsed<Stmt> parse_ifstmt(Input& input) {
     TRY_(input.expect<TokenIf>());
     TRY_(input.expect<TokenLPar>());
     TRY(exprif, parse_expr(input));
-    exprs.push_back(std::move(exprif));
+    conds.push_back(std::move(exprif));
     TRY_(input.expect<TokenRPar>());
     TRY_(input.expect<TokenLBrace>());
 
@@ -51,7 +116,7 @@ Parsed<Stmt> parse_ifstmt(Input& input) {
     while(input.expect<TokenElIf>()) {
         TRY_(input.expect<TokenLPar>());
         TRY(exprelif, parse_expr(input));
-        exprs.push_back(std::move(exprelif));
+        conds.push_back(std::move(exprelif));
         TRY_(input.expect<TokenRPar>());
         TRY_(input.expect<TokenLBrace>());
 
@@ -79,7 +144,7 @@ Parsed<Stmt> parse_ifstmt(Input& input) {
 
     rollback.cancel();
     return IfStmt{
-        std::move(exprs),
+        std::move(conds),
         std::move(blocks),
         has_else
     };
@@ -90,7 +155,7 @@ Parsed<Stmt> parse_whilestmt(Input& input) {
 
     TRY_(input.expect<TokenWhile>());
     TRY_(input.expect<TokenLPar>());
-    TRY(expr, parse_expr(input));
+    TRY(cond, parse_expr(input));
     TRY_(input.expect<TokenRPar>());
     TRY_(input.expect<TokenLBrace>());
 
@@ -101,7 +166,7 @@ Parsed<Stmt> parse_whilestmt(Input& input) {
 
     rollback.cancel();
     return WhileStmt{
-        std::move(expr),
+        std::move(cond),
         Block{ std::move(stmts) }
     };
 }

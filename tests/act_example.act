@@ -26,7 +26,9 @@ state life {
 
     state fun {
         on BORED {
-            if(true) moveto work {}
+            goif(true) work {}
+            goelif(cond) other {}
+            goelse another {}
         }
 
         on TIRED {

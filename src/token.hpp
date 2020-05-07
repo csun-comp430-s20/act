@@ -92,6 +92,41 @@ struct TokenEqual {
     }
 };
 
+struct TokenState {
+    Id tid = Id::keyword;
+
+    String to_string() const {
+        return "(State)"s;
+    }
+};
+struct TokenOn {
+    Id tid = Id::keyword;
+
+    String to_string() const {
+        return "(On)"s;
+    }
+};
+struct TokenGoIf {
+    Id tid = Id::keyword;
+
+    String to_string() const {
+        return "(GoIf)"s;
+    }
+};
+struct TokenGoElIf {
+    Id tid = Id::keyword;
+
+    String to_string() const {
+        return "(GoElIf)"s;
+    }
+};
+struct TokenGoElse {
+    Id tid = Id::keyword;
+
+    String to_string() const {
+        return "(GoElse)"s;
+    }
+};
 struct TokenWhile {
     Id tid = Id::keyword;
 
@@ -210,6 +245,11 @@ using Token = Variant<
     TokenLess,
     TokenGreater,
     TokenEqual,
+    TokenState,
+    TokenOn,
+    TokenGoIf,
+    TokenGoElIf,
+    TokenGoElse,
     TokenWhile,
     TokenIf,
     TokenElIf,
