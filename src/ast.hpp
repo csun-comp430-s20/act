@@ -3,7 +3,6 @@
 #include <memory>
 #include "variant.hpp"
 #include "vector.hpp"
-#include "stack.hpp"
 #include "string.hpp"
 #include "type.hpp"
 
@@ -77,8 +76,6 @@ struct Block;
 using Stmt = Variant<
     DecStmt,
     AssignStmt,
-    DefEvent,
-    CallEvent,
     IfStmt,
     WhileStmt
 >;
@@ -92,14 +89,6 @@ struct AssignStmt {
     String name;
     Expr expr;
 };
-struct DefEvent {
-    String name;
-    Vector<ValueType> types;
-};
-struct CallEvent {
-    String name;
-    Vector<Expr> args;
-};
 struct Block {
     Vector<Stmt> stmts;
 };
@@ -112,6 +101,15 @@ struct WhileStmt {
     Expr cond;
     Block block;
 };
+
+struct DefEvent {
+    String name;
+    Vector<ValueType> types;
+};
+struct CallEvent {
+    String name;
+    Vector<Expr> args;
+};
 struct GoIfStmt {
     Vector<Expr> conds;
     Vector<String> names; // state names
@@ -122,18 +120,17 @@ struct OnStmt {
     CallEvent event;
     GoIfStmt gostmt;
 };
-
-template <typename T>
-using StateLevels = Stack<Vector<T>>;
-
 struct StateStmt {
+    String name;
     Vector<OnStmt> onstmts;
-    StateLevels<StateStmt> levels;
+    Vector<StateStmt> states;
+    std::shared_ptr<StateStmt> parent;
 };
 
 // Program
 struct Program {
-    StateStmt states;
+    Vector<DefEvent> events;
+    StateStmt main_state;
 };
 
 } // namespace act

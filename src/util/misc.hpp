@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-// #include "variant.hpp"
 
 namespace act {
 
@@ -10,6 +9,11 @@ namespace act {
 template <typename T>
 std::unique_ptr<T> into_ptr(T& t) {
     return std::make_unique<T>(std::move(t));
+}
+
+template <typename T>
+std::shared_ptr<T> into_sptr(T& t) {
+    return std::make_shared<T>(std::move(t));
 }
 
 } // namespace act

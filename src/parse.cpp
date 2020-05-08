@@ -4,30 +4,82 @@ namespace act {
 
 // Program: Stmt*
 Parsed<Program> parse_program(Input& input) {
-    Vector<Stmt> stmts;
+    StateStmt main_state;
+    Vector<DefEvent> events;
 
-    while (!input.at_end()) {
-        TRY(stmt, parse_stmt(input));
-        stmts.push_back(std::move(stmt));
+    while(!input.check_done<TokenState>()) {
+        TRY(event, parse_defevent(input));
+        events.push_back(std::move(event));
     }
 
-    return Program{
-        std::move(stmts)
+    TRY_(input.expect<TokenState>());
+    TRY(name, input.get<TokenName>());
+    TRY_(input.expect<TokenLBrace>());
+
+    main_state{
+        name,
+        Vector<OnStmt>(),
+        Vector<StateStmt>(),
+        nullptr
+    };
+
+    TRY(state, parse_statestmt(input, main_state));
+
+    if(input.at_end()) {
+        return Program{
+            std::move(events),
+            std::move(state)
+        };
+    } else {
+        return ParseError{ "Not at end of file" };
+    }
+}
+
+Parsed<StateStmt> parse_statestmt(Input& input, StateStmt& state) {
+    auto rollback = input.mark_rollback();
+
+    while(!input.expect<TokenRBrace>()) {
+        if(input.expect<TokenState>()) {
+            TRY(name, input.get<TokenName>());
+            TRY_(input.expect<TokenLBrace>());
+
+            state.states.push_back(
+                std::move(parse_statestmt(input, 
+                StateStmt {
+                    name,
+                    Vector<OnStmt>(),
+                    Vector<StateStmt>(),
+                    into_sptr(state)
+                }))
+            );
+        } else if(input.expect<TokenOn>()) {
+            TRY(onstmt, parse_onstmt(input));
+            state.onstmts.push_back(std::move(onstmt));
+        } else {
+            return ParseError{ "Did not find token state or on" };
+        }
+    }
+
+    rollback.cancel();
+    return state;
+}
+
+Parsed<OnStmt> parse_onstmt(Input& input) {
+    auto rollback = input.mark_rollback();
+    // TRY_(input.expect<TokenOn>());
+    TRY(callevent, parse_callevent(input));
+
+    TRY_(input.expect<TokenLBrace>())
+    TRY(gostmt, parse_goifstmt(input));
+    TRY_(input.expect<TokenRBrace>())
+
+    rollback.cancel();
+    return OnStmt{
+        std::move(callevent),
+        std::move(gostmt)
     };
 }
-
-Parsed<Stmt> parse_stmt(Input& input) {
-    return any(input, "expected stmt",
-        parse_decstmt,
-        parse_assignstmt,
-        parse_defevent,
-        parse_callevent,
-        parse_ifstmt,
-        parse_whilestmt
-    );
-}
-
-Parsed<Stmt> parse_goifstmt(Input& input) {
+Parsed<GoIfStmt> parse_goifstmt(Input& input) {
     auto rollback = input.mark_rollback();
     Vector<Expr> conds;
     Vector<String> names;
@@ -45,7 +97,7 @@ Parsed<Stmt> parse_goifstmt(Input& input) {
     TRY_(input.expect<TokenLBrace>());
 
     while(!input.expect<TokenRBrace>()) {
-        TRY(stmt, parse_stmt(input));
+        TRY(stmt, parse_base_stmt(input));
         stmts.push_back(std::move(stmt));
     }
 
@@ -62,7 +114,7 @@ Parsed<Stmt> parse_goifstmt(Input& input) {
 
         stmts.clear();
         while(!input.expect<TokenRBrace>()) {
-            TRY(stmt, parse_stmt(input));
+            TRY(stmt, parse_base_stmt(input));
             stmts.push_back(std::move(stmt));
         }
 
@@ -77,20 +129,83 @@ Parsed<Stmt> parse_goifstmt(Input& input) {
 
         stmts.clear();
         while(!input.expect<TokenRBrace>()) {
-            TRY(stmt, parse_stmt(input));
+            TRY(stmt, parse_base_stmt(input));
             stmts.push_back(std::move(stmt));
         }
         
         blocks.push_back(std::move(Block{ std::move(stmts) }));
     }
 
-        rollback.cancel();
-        return GoIfStmt{
-            std::move(conds),
-            std::move(names),
-            std::move(blocks),
-            has_else
+    rollback.cancel();
+    return GoIfStmt{
+        std::move(conds),
+        std::move(names),
+        std::move(blocks),
+        has_else
     };
+}
+Parsed<DefEvent> parse_defevent(Input& input) {
+    auto rollback = input.mark_rollback();
+    Vector<ValueType> types;
+
+    TRY_(input.expect<TokenDefEvent>());
+    TRY(name, input.get<TokenName>());
+    TRY_(input.expect<TokenLPar>());
+
+    if(!input.check_done<TokenRPar>()) {
+        TRY(type_temp, parse_value_type(input));
+        types.push_back(std::move(type_temp));
+    }
+
+    while(!input.check_done<TokenRPar>()) {
+        TRY_(input.expect<TokenComma>());
+        TRY(type_temp, parse_value_type(input));
+        types.push_back(std::move(type_temp));
+    }
+
+    TRY_(input.expect<TokenRPar>());
+    TRY_(input.expect<TokenSemi>());
+    
+    rollback.cancel();
+    return DefEvent{
+        name.value,
+        std::move(types)
+    };
+}
+Parsed<CallEvent> parse_callevent(Input& input) {
+    auto rollback = input.mark_rollback();
+    Vector<Expr> exprs;
+
+    TRY(name, input.get<TokenName>());
+    TRY_(input.expect<TokenLPar>());
+
+    if(!input.check_done<TokenRPar>()) {
+        TRY(expr, parse_expr(input));
+        exprs.push_back(std::move(expr));
+    }
+
+    while(!input.check_done<TokenRPar>()) {
+        TRY_(input.expect<TokenComma>());
+        TRY(expr, parse_expr(input));
+        exprs.push_back(std::move(expr));
+    }
+
+    TRY_(input.expect<TokenRPar>());
+    
+    rollback.cancel();
+    return CallEvent{
+        name.value,
+        std::move(exprs)
+    };
+}
+
+Parsed<Stmt> parse_base_stmt(Input& input) {
+    return any(input, "expected base stmt",
+        parse_decstmt,
+        parse_assignstmt,
+        parse_ifstmt,
+        parse_whilestmt
+    );
 }
 Parsed<Stmt> parse_ifstmt(Input& input) {
     auto rollback = input.mark_rollback();
@@ -107,7 +222,7 @@ Parsed<Stmt> parse_ifstmt(Input& input) {
     TRY_(input.expect<TokenLBrace>());
 
     while(!input.expect<TokenRBrace>()) {
-        TRY(stmt, parse_stmt(input));
+        TRY(stmt, parse_base_stmt(input));
         stmts.push_back(std::move(stmt));
     }
 
@@ -122,7 +237,7 @@ Parsed<Stmt> parse_ifstmt(Input& input) {
 
         stmts.clear();
         while(!input.expect<TokenRBrace>()) {
-            TRY(stmt, parse_stmt(input));
+            TRY(stmt, parse_base_stmt(input));
             stmts.push_back(std::move(stmt));
         }
 
@@ -135,7 +250,7 @@ Parsed<Stmt> parse_ifstmt(Input& input) {
 
        stmts.clear();
        while(!input.expect<TokenRBrace>()) {
-            TRY(stmt, parse_stmt(input));
+            TRY(stmt, parse_base_stmt(input));
             stmts.push_back(std::move(stmt));
         }
 
@@ -160,7 +275,7 @@ Parsed<Stmt> parse_whilestmt(Input& input) {
     TRY_(input.expect<TokenLBrace>());
 
     while(!input.expect<TokenRBrace>()) {
-        TRY(stmt, parse_stmt(input));
+        TRY(stmt, parse_base_stmt(input));
         stmts.push_back(std::move(stmt));
     }
 
@@ -200,60 +315,6 @@ Parsed<Stmt> parse_assignstmt(Input& input) {
     return AssignStmt{
         name.value,
         std::move(expr)
-    };
-}
-Parsed<Stmt> parse_defevent(Input& input) {
-    auto rollback = input.mark_rollback();
-    Vector<ValueType> types;
-
-    TRY_(input.expect<TokenDefEvent>());
-    TRY(name, input.get<TokenName>());
-    TRY_(input.expect<TokenLPar>());
-
-    if(!input.check_done<TokenRPar>()) {
-        TRY(type_temp, parse_value_type(input));
-        types.push_back(std::move(type_temp));
-    }
-
-    while(!input.check_done<TokenRPar>()) {
-        TRY_(input.expect<TokenComma>());
-        TRY(type_temp, parse_value_type(input));
-        types.push_back(std::move(type_temp));
-    }
-
-    TRY_(input.expect<TokenRPar>());
-    TRY_(input.expect<TokenSemi>());
-    
-    rollback.cancel();
-    return DefEvent{
-        name.value,
-        std::move(types)
-    };
-}
-Parsed<Stmt> parse_callevent(Input& input) {
-    auto rollback = input.mark_rollback();
-    Vector<Expr> exprs;
-
-    TRY(name, input.get<TokenName>());
-    TRY_(input.expect<TokenLPar>());
-
-    if(!input.check_done<TokenRPar>()) {
-        TRY(expr, parse_expr(input));
-        exprs.push_back(std::move(expr));
-    }
-
-    while(!input.check_done<TokenRPar>()) {
-        TRY_(input.expect<TokenComma>());
-        TRY(expr, parse_expr(input));
-        exprs.push_back(std::move(expr));
-    }
-
-    TRY_(input.expect<TokenRPar>());
-    
-    rollback.cancel();
-    return CallEvent{
-        name.value,
-        std::move(exprs)
     };
 }
 
