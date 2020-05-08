@@ -8,38 +8,34 @@
 using namespace std;
 using namespace act;
 
-LexerResult lexify(String const& input) {
-    cout << "input: " << input << "\n";
+int main(int argc, char* argv[]) {
+    string fileName;
 
-    if (LexerResult result = lex(input)) {
-        cout << "The tokens are: ";
-        for (Token const& t : result.value()) {
-            cout << print_token(t);
-        }
-
-        cout << "\n\n";
-
-        return result;
+    if(argc == 2)
+    {
+        //read in a file name from command line:
+        fileName = argv[1];
     }
-    else {
-        LexerError e = result.error();
-        cout << "Lexer Error: " << e.what << " at " << e.where << "\n";
-        return e;
+    else
+    {
+        cerr << "Usage: act SOURCEFILE" << endl;
+        return 1;
     }
-}
 
-int main() {
-    // String lex_input = " if +=()()><== \"Hello\" 4num";
-    // String lex_input = "int num = (10 + 23) + 45;\n"
-    //                     "string str = \"Hello\";";
-    String lex_input = "int num = 5 + 10 + 4;\n"
-                        "string str = \"Hello\";\n"
-                        "bool a = 23 < 45;\n"
-                        "bool b = 23 < 45;\n"
-                        "defevent test();\n"
-                        "if(34 < 56) {\n"
-                        "num = num + 5;\n"
-                        "}";
+    ifstream file(fileName);
+    stringstream buffer;
+    string fileContents;
+
+    if(file.is_open())
+    {
+        buffer << file.rdbuf();
+        fileContents = buffer.str();
+    }
+    else
+    {
+        cerr << "Error: File not found!\n";
+        return 1;
+    }
 
     if (LexerResult lex_result = lexify(lex_input)) {
         Input parse_input(lex_result.value());
@@ -51,12 +47,16 @@ int main() {
         else {
             cout << "parse error (" << parse_input.pos() << "): " << 
                 program.error().what << "\n";
+            
+            return 1
         }
 
         // TypeEnv typeEnv = type_check_program(program.value());
 
         // String output = gen_code(program.value(), typeEnv);
         // cout << output << endl;
+    } else {
+        return 1;
     }
 
     return 0;

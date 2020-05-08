@@ -1,4 +1,6 @@
+#include <iostream>
 #include "lexer.hpp"
+#include "print.hpp"
 
 namespace act {
 
@@ -150,6 +152,26 @@ LexerResult Lexer::run() {
 LexerResult lex(String const& input) {
     Lexer l(input);
     return l.run();
+}
+
+LexerResult lexify(String const& input) {
+    std::cout << "input: " << input << "\n";
+
+    if (LexerResult result = lex(input)) {
+        std::cout << "The tokens are: ";
+        for (Token const& t : result.value()) {
+            std::cout << print_token(t);
+        }
+
+        std::cout << "\n\n";
+
+        return result;
+    }
+    else {
+        LexerError e = result.error();
+        std::cout << "Lexer Error: " << e.what << " at " << e.where << "\n";
+        return e;
+    }
 }
 
 } // namespace act

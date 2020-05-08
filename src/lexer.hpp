@@ -37,8 +37,8 @@ const MapKeywords keywords {
     { "defevent",   TokenDefEvent() },
 };
 
-Token lookup_keyword(MapKeywords const& map, String const& key);
-char escape(char c);
+Token lookup_keyword(MapKeywords const&, String const&);
+char escape(char);
 
 class Lexer : private LexerCore {
     public:
@@ -49,6 +49,7 @@ class Lexer : private LexerCore {
     LexerResult run();
 };
 
-LexerResult lex(String const& input);
+LexerResult lex(String const&);
+LexerResult lexify(String const&);
 
 } // namespace act
