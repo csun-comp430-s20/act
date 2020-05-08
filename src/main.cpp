@@ -1,4 +1,8 @@
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+
 #include "print.hpp"
 #include "lexer.hpp"
 #include "parse.hpp"
@@ -37,7 +41,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    if (LexerResult lex_result = lexify(lex_input)) {
+    if (LexerResult lex_result = lexify(fileContents)) {
         Input parse_input(lex_result.value());
         Parsed<Program> program = parse_program(parse_input);
 
@@ -48,7 +52,7 @@ int main(int argc, char* argv[]) {
             cout << "parse error (" << parse_input.pos() << "): " << 
                 program.error().what << "\n";
             
-            return 1
+            return 1;
         }
 
         // TypeEnv typeEnv = type_check_program(program.value());
