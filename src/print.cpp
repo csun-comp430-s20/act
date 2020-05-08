@@ -26,41 +26,6 @@ struct GetTokenStr {
 };
 
 struct PrintStmt {
-    String operator()(DefEvent const& s) {
-        String str;
-
-        str = "("
-            + String("defevent ")
-            + s.name
-            + "(";
-        
-        for(auto & t : s.types) {
-            str += t.toString() + ",";
-        }
-
-        if(str.find(",") != String::npos)
-            str = str.substr(0, str.size()-1);
-
-        return str + "))";
-    }
-
-    String operator()(CallEvent const& s) {
-        String str;
-
-        str = "("
-            + s.name
-            + "(";
-
-        for(auto & e : s.args) {
-            str += print_expr(e) + ",";
-        }
-
-        if(str.find(",") != String::npos)
-            str = str.substr(0, str.size()-1);
-
-        return str + "))";
-    }
-
     String operator()(DecStmt const& s) {
         String str;
         str = "("
@@ -236,14 +201,149 @@ String print_stmt(Stmt const& stmt) {
     return std::visit(PrintStmt{}, stmt);
 }
 
-String print_program(Program const& program) {
-    String result;
+String print_defevent(DefEvent const& event) {
+    String str;
 
-    for (Stmt const& stmt : program.stmts) {
-        result += print_stmt(stmt) + "\n";
+    str = "("
+        + String("defevent ")
+        + event.name
+        + "(";
+    
+    for(auto & t : event.types) {
+        str += t.toString() + ",";
     }
 
-    return result;
+    if(str.find(",") != String::npos)
+        str = str.substr(0, str.size()-1);
+
+    return str + "))";
+}
+
+String print_callevent(CallEvent const& event) {
+    String str;
+
+    str = "("
+        + event.name
+        + "(";
+
+    for(auto & e : event.args) {
+        str += print_expr(e) + ",";
+    }
+
+    if(str.find(",") != String::npos)
+        str = str.substr(0, str.size()-1);
+
+    return str + "))";
+}
+
+String print_goifstmt(GoIfStmt const& s) {
+    String str;
+
+    str = "(goif(";
+
+    bool first = true;
+    unsigned ctr = 0;
+    if(!s.has_else) {
+        for(auto & b: s.blocks) {
+            if(first) { // print if statement
+                str += print_expr(s.conds[ctr])
+                    + ") " + s.names[ctr] +  " {\n";
+                
+                for(auto & stmt: b.stmts) {
+                    str += print_stmt(stmt) + "\n";
+                }
+
+                str += "}";
+                first = false;
+                ctr++;
+            } else {
+                str += " goelif("
+                    + print_expr(s.conds[ctr])
+                    + ") " + s.names[ctr] + " {\n";
+                
+                for(auto & stmt: b.stmts) {
+                    str += print_stmt(stmt) + "\n";
+                }
+
+                str += "}";
+                ctr++;
+            }
+        }
+    } else {
+        for(unsigned b_ctr = 0; b_ctr < s.blocks.size(); b_ctr++) {
+            if(b_ctr != s.blocks.size()-1) {
+                if(first) {
+                    str += print_expr(s.conds[ctr])
+                        + ") {\n";
+                
+                    for(auto & stmt: s.blocks[b_ctr].stmts) {
+                        str += print_stmt(stmt) + "\n";
+                    }
+
+                    str += "}";
+                    first = false;
+                    ctr++;
+                } else {
+                    str += " goelif("
+                        + print_expr(s.conds[ctr])
+                        + ") " + s.names[ctr] + " {\n";
+                    
+                    for(auto & stmt: s.blocks[b_ctr].stmts) {
+                        str += print_stmt(stmt) + "\n";
+                    }
+
+                    str += "}";
+                    ctr++;
+                }
+            } else { // print else statement
+                str += " goelse " + s.names[ctr] + " {\n";
+                    
+                for(auto & stmt: s.blocks[b_ctr].stmts) {
+                    str += print_stmt(stmt) + "\n";
+                }
+
+                str += "}";
+            }
+        }
+    }
+
+    return str + ")";
+}
+
+String print_onstmt(OnStmt const& s) {
+    String str;
+
+    str = "on " + print_callevent(s.event) + " {\n";
+
+    str += print_goifstmt(s.gostmt) + "\n}";
+
+    return str + ")";
+}
+
+String print_statestmt(StateStmt const& s, String& str) {
+    str += s.name + " {\n";
+
+    for(auto & o: s.onstmts) {
+        str += print_onstmt(o) + "\n";
+    }
+
+    for(auto & state: s.states) {
+        str += print_statestmt(state, str) + "\n";
+    }
+    
+    return str + "}";
+}
+
+String print_program(Program const& program) {
+    String result = "";
+
+    for(auto & event: program.events) {
+        result += print_defevent(event) + "\n";
+    }
+
+    result += print_statestmt(program.main_state, result);
+
+    return result + ")";
 }
 
 } // namespace act
