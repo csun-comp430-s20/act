@@ -25,16 +25,16 @@ struct TypeCheckExpr {
         return env.lookupRuleType(canonName);
     }
 
-    Typed<ValueType> operator()(IntExpr const& e) {
-        return e.type;
+    Typed<ValueType> operator()(IntExpr) {
+        return intType;
     }
 
-    Typed<ValueType> operator()(StrExpr const& e) {
-        return e.type;
+    Typed<ValueType> operator()(StrExpr) {
+        return strType;
     }
 
-    Typed<ValueType> operator()(BoolExpr const& e) {
-        return e.type;
+    Typed<ValueType> operator()(BoolExpr) {
+        return boolType;
     }
 };
 

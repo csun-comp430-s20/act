@@ -19,7 +19,7 @@ Grammar
 namespace act {
 
 Parsed<Program> parse_program(Input&);
-Parsed<StateStmt> parse_statestmt(Input&, StateStmt&);
+Parsed<StateStmt> parse_statestmt(Input&);
 Parsed<OnStmt> parse_onstmt(Input&);
 Parsed<GoIfStmt> parse_goifstmt(Input&);
 Parsed<DefEvent> parse_defevent(Input&);

@@ -36,30 +36,12 @@ struct BinOpExpr {
 };
 struct IntExpr {
     int value;
-    const ValueType type;
-    const String code;
-
-    explicit IntExpr(int const& value_)
-        : value(value_), type(intType), 
-        code(to_string(value_)) {}
 };
 struct StrExpr {
     String value;
-    const ValueType type;
-    const String code;
-
-    explicit StrExpr(String const& value_)
-        : value(value_), type(strType),
-        code(value_) {}
 };
 struct BoolExpr {
     bool value;
-    const ValueType type;
-    const String code;
-
-    explicit BoolExpr(bool const& value_)
-        : value(value_), type(boolType),
-        code(value_ ? "true" : "false") {}
 };
 
 struct StateStmt;
@@ -122,9 +104,9 @@ struct OnStmt {
 };
 struct StateStmt {
     String name;
+    Vector<Stmt> stmts;
     Vector<OnStmt> onstmts;
     Vector<StateStmt> states;
-    std::shared_ptr<StateStmt> parent;
 };
 
 // Program

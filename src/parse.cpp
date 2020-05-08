@@ -11,18 +11,7 @@ Parsed<Program> parse_program(Input& input) {
         events.push_back(std::move(event));
     }
 
-    TRY_(input.expect<TokenState>());
-    TRY(name, input.get<TokenName>());
-    TRY_(input.expect<TokenLBrace>());
-
-    StateStmt main_state = StateStmt{
-        name.value,
-        std::move(Vector<OnStmt>()),
-        std::move(Vector<StateStmt>()),
-        nullptr
-    };
-
-    TRY(state, parse_statestmt(input, main_state));
+    TRY(state, parse_statestmt(input));
 
     if(input.at_end()) {
         return Program{
@@ -34,39 +23,44 @@ Parsed<Program> parse_program(Input& input) {
     }
 }
 
-Parsed<StateStmt> parse_statestmt(Input& input, StateStmt& state) {
+Parsed<StateStmt> parse_statestmt(Input& input) {
     auto rollback = input.mark_rollback();
 
+    StateStmt state = StateStmt{
+        "",
+        Vector<Stmt>(),
+        Vector<OnStmt>(),
+        Vector<StateStmt>()
+    };
+
+    TRY_(input.expect<TokenState>())
+    TRY(name, input.get<TokenName>());
+    TRY_(input.expect<TokenLBrace>());
+
+    state.name = name.value;
+
     while(!input.expect<TokenRBrace>()) {
-        if(input.expect<TokenState>()) {
-            TRY(name, input.get<TokenName>());
-            TRY_(input.expect<TokenLBrace>());
-
-            StateStmt new_state = StateStmt{
-                name.value,
-                Vector<OnStmt>(),
-                Vector<StateStmt>(),
-                into_sptr<StateStmt>(state)
-            };
-
-            TRY(temp_state, parse_statestmt(input, new_state))
-            state.states.push_back(std::move(temp_state));
-
-        } else if(input.expect<TokenOn>()) {
-            TRY(onstmt, parse_onstmt(input));
-            state.onstmts.push_back(std::move(onstmt));
+        if(input.check_token<TokenState>()) {
+            TRY(new_state, parse_statestmt(input));
+            state.states.push_back(std::move(new_state));
+        } else if(input.check_token<TokenOn>()) {
+            TRY(on_stmt, parse_onstmt(input));
+            state.onstmts.push_back(std::move(on_stmt));
+        } else if(!input.check_token<TokenRBrace>()) {
+            TRY(stmt, parse_base_stmt(input));
+            state.stmts.push_back(std::move(stmt));
         } else {
-            return ParseError{ "Did not find token state or on" };
+            // continue
         }
     }
 
     rollback.cancel();
-    return std::move(state);
+    return state;
 }
 
 Parsed<OnStmt> parse_onstmt(Input& input) {
     auto rollback = input.mark_rollback();
-    // TRY_(input.expect<TokenOn>());
+    TRY_(input.expect<TokenOn>());
     TRY(callevent, parse_callevent(input));
 
     TRY_(input.expect<TokenLBrace>())
@@ -398,7 +392,7 @@ Parsed<Expr> parse_false(Input& input) {
     TRY_(input.expect<TokenFalse>());
 
     rollback.cancel();
-    return BoolExpr(false);
+    return BoolExpr{ false };
 }
 Parsed<Expr> parse_true(Input& input) {
     auto rollback = input.mark_rollback();
@@ -406,7 +400,7 @@ Parsed<Expr> parse_true(Input& input) {
     TRY_(input.expect<TokenTrue>());
 
     rollback.cancel();
-    return BoolExpr(true);
+    return BoolExpr{ true };
 }
 Parsed<Expr> parse_var(Input& input) {
     auto rollback = input.mark_rollback();
@@ -414,7 +408,7 @@ Parsed<Expr> parse_var(Input& input) {
     TRY(var, input.get<TokenName>());
 
     rollback.cancel();
-    return StrExpr(var.value);
+    return StrExpr{ var.value };
 }
 Parsed<Expr> parse_str(Input& input) {
     auto rollback = input.mark_rollback();
@@ -422,7 +416,7 @@ Parsed<Expr> parse_str(Input& input) {
     TRY(str, input.get<TokenStringVal>());
 
     rollback.cancel();
-    return StrExpr(str.value);
+    return StrExpr{ str.value };
 }
 Parsed<Expr> parse_int(Input& input) {
     auto rollback = input.mark_rollback();
@@ -430,7 +424,7 @@ Parsed<Expr> parse_int(Input& input) {
     TRY(num, input.get<TokenIntVal>());
 
     rollback.cancel();
-    return IntExpr(num.value);
+    return IntExpr{ num.value };
 }
 
 } // namespace act

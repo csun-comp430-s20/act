@@ -12,15 +12,15 @@ struct genExpr {
     }
 
     String operator()(IntExpr const& e) {
-        return e.code;
+        return to_string(e.value);
     }
 
     String operator()(StrExpr const& e) {
-        return e.code;
+        return e.value;
     }
 
     String operator()(BoolExpr const& e) {
-        return e.code;
+        return e.value ? "true" : "false";
     }
 };
 

@@ -64,6 +64,15 @@ class Input {
     }
 
     template <typename T>
+    bool check_token() {
+        if (at_end()) {
+            return false;
+        }
+
+        return std::holds_alternative<T>(_tokens[_pos]);
+    }
+
+    template <typename T>
     bool check_done() {
         if (at_end()) {
             return true;

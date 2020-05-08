@@ -1,0 +1,40 @@
+state life {
+
+    int var = 10;
+
+    state work {
+        on TIRED(myval, myval2) {
+            goif(time == 23) rest {
+                int stamina = 0;
+            }
+        }
+
+        on BORED(new_val) {
+            goif(new_val == 1) fun {
+                string str = "bored";
+            } goelif(new_val == 2) rest {
+                string str = "not bored";
+            } goelse work {}
+        }
+    }
+
+    state fun {
+        on BORED(new_val) {
+            goif(true) work {}
+            goelif(new_val == 34) rest {}
+            goelse fun {}
+        }
+
+        on TIRED(myval, ) {
+            goif(true) rest {}
+        }
+    }
+
+    state rest {
+        on AWAKE(time) {
+            goif(time == 6) work {
+                stamina = 100;
+            }
+        }
+    }
+}
