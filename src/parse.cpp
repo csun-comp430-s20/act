@@ -33,7 +33,7 @@ Parsed<StateStmt> parse_statestmt(Input& input) {
         Vector<StateStmt>()
     };
 
-    TRY_(input.expect<TokenState>())
+    TRY_(input.expect<TokenState>());
     TRY(name, input.get<TokenName>());
     TRY_(input.expect<TokenLBrace>());
 
@@ -50,7 +50,8 @@ Parsed<StateStmt> parse_statestmt(Input& input) {
             TRY(stmt, parse_base_stmt(input));
             state.stmts.push_back(std::move(stmt));
         } else {
-            // continue
+            TRY_(input.expect<TokenRBrace>());
+            break;
         }
     }
 
@@ -80,6 +81,16 @@ Parsed<GoIfStmt> parse_goifstmt(Input& input) {
     Vector<Block> blocks;
     Vector<Stmt> stmts;
     bool has_else = false;
+
+    if(input.check_token<TokenRBrace>()) {
+        rollback.cancel();
+        return GoIfStmt{
+            std::move(conds),
+            std::move(names),
+            std::move(blocks),
+            has_else
+        };
+    }
 
     TRY_(input.expect<TokenGoIf>());
     TRY_(input.expect<TokenLPar>());

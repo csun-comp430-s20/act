@@ -1,0 +1,13 @@
+state life {
+
+    int age = 0;
+    int time = 10;
+
+    state work {
+        on TIRED(age, time) {
+            goif(23 == 23) rest {
+                int stamina = 0;
+            }
+        }
+    }
+}

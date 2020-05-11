@@ -1,9 +1,10 @@
 state life {
 
-    int var = 10;
+    int age = 0;
+    int time = 10;
 
     state work {
-        on TIRED(myval, myval2) {
+        on TIRED(age, time) {
             goif(time == 23) rest {
                 int stamina = 0;
             }
@@ -25,7 +26,7 @@ state life {
             goelse fun {}
         }
 
-        on TIRED(myval, ) {
+        on TIRED(myval, test) {
             goif(true) rest {}
         }
     }

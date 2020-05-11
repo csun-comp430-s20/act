@@ -3,6 +3,7 @@
 #include "token.hpp"
 #include "parse_result.hpp"
 #include "vector.hpp"
+#include "print.hpp"
 
 namespace act {
 
@@ -93,7 +94,9 @@ class Input {
             return Parsed_::ok();
         }
         else {
-            return ParseError{ "expect: unexpected" };
+            return ParseError{ "expect: unexpected at " + to_string(_pos) +
+                " for token " + print_token(_tokens[_pos])
+            };
         }
     }
     
@@ -112,7 +115,9 @@ class Input {
                 return *t;
             }
             else {
-                return ParseError{ "expect: unexpected" };
+                return ParseError{ "expect: unexpected at " + to_string(_pos) +
+                    " for token " + print_token(_tokens[_pos])
+                };
             }
         }
     }

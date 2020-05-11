@@ -1,0 +1,5 @@
+state life {
+
+    int age = 0;
+    int time = 10;
+}

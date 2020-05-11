@@ -1,0 +1,16 @@
+state life {
+
+    int age = 0;
+    int time = 10;
+
+    state work {
+        on TIRED(age, time) {
+            goif(time == 23) rest {
+                int stamina = 0;
+            }
+        }
+
+        on BORED(new_val) {
+        }
+    }
+}

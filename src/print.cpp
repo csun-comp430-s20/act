@@ -320,15 +320,20 @@ String print_onstmt(OnStmt const& s) {
     return str + ")";
 }
 
-String print_statestmt(StateStmt const& s, String& str) {
-    str += s.name + " {\n";
+String print_statestmt(StateStmt const& s) {
+
+    String str = "(state " + s.name + "{\n";
+
+    for(auto & base_s: s.stmts) {
+        str += print_stmt(base_s) + "\n";
+    }
 
     for(auto & o: s.onstmts) {
         str += print_onstmt(o) + "\n";
     }
 
     for(auto & state: s.states) {
-        str += print_statestmt(state, str) + "\n";
+        str += print_statestmt(state) + "\n";
     }
     
     return str + "}";
@@ -341,7 +346,7 @@ String print_program(Program const& program) {
         result += print_defevent(event) + "\n";
     }
 
-    result += print_statestmt(program.main_state, result);
+    result += print_statestmt(program.main_state);
 
     return result + ")";
 }

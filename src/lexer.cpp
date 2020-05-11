@@ -44,18 +44,14 @@ LexerResult Lexer::run() {
     auto name_or_keyword = [&]() -> LexerToken {
         String value;
         
-        if (!isalpha(cur())) {
+        if (!isalpha(cur()) && cur() != '_') {
             return LexerError{ pos(), "Not alpha" };
         }
 
         do {
             value.push_back(get());
         } 
-        while (isalpha(cur()) || isdigit(cur()));
-
-        // if (LexerToken keyword = lookup_keyword(keywords, value)) {
-        //     return keyword;
-        // }
+        while (isalpha(cur()) || isdigit(cur()) || cur() == '_' || cur() == '-');
 
         // If keyword token not found return a name token
         return lookup_keyword(keywords, value);
@@ -105,20 +101,6 @@ LexerResult Lexer::run() {
         return TokenStringVal(value);
     };
 
-    auto condition = [&]() -> LexerToken {
-        char c1 = get();
-        char c2 = cur();
-
-        if(c1 == '=' && c2 == '=')
-            return TokenEqual();
-        else if(c1 == '<')
-            return TokenLess();
-        else if(c1 == '>')
-            return TokenGreater();
-        else
-            return LexerError{ pos(), "Not condition" };
-    };
-
     auto single = [&]() -> LexerToken {
         switch (get()) {
             case '{':   return TokenLBrace();
@@ -127,8 +109,16 @@ LexerResult Lexer::run() {
             case ')':   return TokenRPar();
             case ',':   return TokenComma();
             case ';':   return TokenSemi();
-            case '=':   return TokenAssign();
+            case '=':
+                if(cur() == '=') {
+                    next();
+                    return TokenEqual();
+                } else {
+                    return TokenAssign();
+                }                    
             case '+':   return TokenPlus();
+            case '<':   return TokenLess();
+            case '>':   return TokenGreater();
             default: return LexerError{ pos(), "Not single" };
         }
     };
@@ -137,7 +127,6 @@ LexerResult Lexer::run() {
         if (t(name_or_keyword)
         || t(num)
         || t(str)
-        || t(condition)
         || t(single)) {
             // Ok.
         }
