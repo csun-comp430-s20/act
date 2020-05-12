@@ -21,7 +21,8 @@ set(SRC_FILE
     typechecker_tools.cpp typechecker_tools.hpp
     typechecker.cpp typechecker.hpp
     codegen.cpp codegen.hpp
-    print.cpp print.hpp)
+    print.cpp print.hpp
+    logger.hpp config.hpp)
 ]]
 
 set(SRC_FILE 
@@ -30,7 +31,8 @@ set(SRC_FILE
     parse.cpp parse.hpp ast.hpp
     parse_input.cpp parse_input.hpp parse_result.hpp
     type.cpp type.hpp
-    print.cpp print.hpp)
+    print.cpp print.hpp
+    logger.hpp config.hpp)
 
 foreach(src ${SRC_FILE})
     list(APPEND SRC_FILES ${SOURCE_DIR}/${src})
@@ -43,8 +45,7 @@ add_executable(act ${SOURCE_DIR}/main.cpp)
 set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests)
 set(TEST_FILE
     main.cpp lexer_tests.cpp
-    lexercore_tests.cpp
-    token_helpers.hpp)
+    lexercore_tests.cpp)
 
 foreach(test ${TEST_FILE})
     list(APPEND TEST_FILES ${TEST_DIR}/${test})

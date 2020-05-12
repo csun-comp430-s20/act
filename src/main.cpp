@@ -2,41 +2,52 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <unistd.h>
 
 #include "print.hpp"
 #include "lexer.hpp"
 #include "parse.hpp"
 #include "typechecker.hpp"
 #include "codegen.hpp"
+#include "logger.hpp"
+#include "config.hpp"
 
 using namespace std;
 using namespace act;
 
 int main(int argc, char* argv[]) {
-    string fileName;
 
-    if(argc == 2)
-    {
+    String actFileName;
+    String logFileName;
+    String logLevel;
+    
+    if(argc == 4) {
         //read in a file name from command line:
-        fileName = argv[1];
+        actFileName = String("../tests/") + argv[1];
+        char cwd[2048];
+        getcwd(cwd, sizeof(cwd));
+        logFileName = cwd + String("/../logs/") + argv[2];
+        logLevel = argv[3];
     }
-    else
-    {
-        cerr << "Usage: act SOURCEFILE" << endl;
+    else {
+        cerr << "Number of args input incorrect" << endl;
         return 1;
     }
 
-    ifstream file(fileName);
-    stringstream buffer;
-    string fileContents;
+    std::ofstream logFile (logFileName); // Create log file
+    config::logFileName = logFileName;
+    config::logLevel = logLevel;
+    setLogger(logFileName, logLevel);
 
-    if(file.is_open())
-    {
+    ifstream file(actFileName);
+    stringstream buffer;
+    String fileContents;
+
+    if(file.is_open()) {
         buffer << file.rdbuf();
         fileContents = buffer.str();
     }
-    else
-    {
+    else {
         cerr << "Error: File not found!\n";
         return 1;
     }
@@ -46,10 +57,13 @@ int main(int argc, char* argv[]) {
         Parsed<Program> program = parse_program(parse_input);
 
         if(program) {
-            cout << print_program(program.value());
+            // cout << print_program(program.value());
+            L_(ldebug) << print_program(program.value());
         }
         else {
-            cout << "parse error (" << parse_input.pos() << "): " << 
+            // cout << "parse error (" << parse_input.pos() << "): " << 
+            //     program.error().what << "\n";
+            L_(lerror) << "parse error (" << parse_input.pos() << "): " <<
                 program.error().what << "\n";
             
             return 1;

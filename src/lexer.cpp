@@ -1,6 +1,8 @@
 #include <iostream>
 #include "lexer.hpp"
 #include "print.hpp"
+#include "logger.hpp"
+#include "config.hpp"
 
 namespace act {
 
@@ -144,21 +146,26 @@ LexerResult lex(String const& input) {
 }
 
 LexerResult lexify(String const& input) {
-    std::cout << "input: " << input << "\n";
 
+    // std::cout << "input: " << input << "\n";
+    setLogger(config::logFileName, config::logLevel);
+    L_(ldebug) << "input: " << input << "\n";
+    
     if (LexerResult result = lex(input)) {
-        std::cout << "The tokens are: ";
+        String str_tokens = "The tokens are:\n";
         for (Token const& t : result.value()) {
-            std::cout << print_token(t);
+            str_tokens += print_token(t);
         }
 
-        std::cout << "\n\n";
+        str_tokens += "\n\n";
+        L_(ldebug) << str_tokens;
 
         return result;
     }
     else {
         LexerError e = result.error();
-        std::cout << "Lexer Error: " << e.what << " at " << e.where << "\n";
+        // std::cout << "Lexer Error: " << e.what << " at " << e.where << "\n";
+        L_(lerror) << "Lexer Error: " << e.what << " at " << e.where << "\n";
         return e;
     }
 }
