@@ -50,7 +50,6 @@ struct GoIfStmt;
 struct DecStmt;
 struct AssignStmt;
 struct DefEvent;
-struct CallEvent;
 struct IfStmt;
 struct WhileStmt;
 struct Block;
@@ -86,11 +85,7 @@ struct WhileStmt {
 
 struct DefEvent {
     String name;
-    Vector<ValueType> types;
-};
-struct CallEvent {
-    String name;
-    Vector<Expr> args;
+    Vector<DecStmt> decs;
 };
 struct GoIfStmt {
     Vector<Expr> conds;
@@ -99,7 +94,7 @@ struct GoIfStmt {
     bool has_else;
 };
 struct OnStmt {
-    CallEvent event;
+    String event;
     GoIfStmt gostmt;
 };
 struct StateStmt {

@@ -207,33 +207,13 @@ String print_defevent(DefEvent const& event) {
     str = "("
         + String("defevent ")
         + event.name
-        + "(";
+        + "{\n";
     
-    for(auto & t : event.types) {
-        str += t.toString() + ",";
+    for(auto & d : event.decs) {
+        str += "\t" + print_stmt(d) + "\n"
     }
 
-    if(str.find(",") != String::npos)
-        str = str.substr(0, str.size()-1);
-
-    return str + "))";
-}
-
-String print_callevent(CallEvent const& event) {
-    String str;
-
-    str = "("
-        + event.name
-        + "(";
-
-    for(auto & e : event.args) {
-        str += print_expr(e) + ",";
-    }
-
-    if(str.find(",") != String::npos)
-        str = str.substr(0, str.size()-1);
-
-    return str + "))";
+    return str + "})";
 }
 
 String print_goifstmt(GoIfStmt const& s) {
@@ -313,7 +293,7 @@ String print_goifstmt(GoIfStmt const& s) {
 String print_onstmt(OnStmt const& s) {
     String str;
 
-    str = "on " + print_callevent(s.event) + " {\n";
+    str = "on " + s.event + " {\n";
 
     str += print_goifstmt(s.gostmt) + "\n}";
 

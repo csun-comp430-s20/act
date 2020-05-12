@@ -1,2 +1,5 @@
 # Cmake
 /build
+
+# Coverage
+/coverage

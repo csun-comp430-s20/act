@@ -28,30 +28,6 @@ bool ValueType::operator<(ValueType const& other) const {
     return _name < other._name;
 }
 
-EventType::EventType(Vector<ValueType> const& args)
-    : _args(args) {}
-
-Vector<ValueType> const& EventType::args() const {
-    return _args;
-}
-
-String EventType::toString() const {
-    String s = "";
-    for(auto arg : _args) {
-        s += arg.toString() + ",";
-    }
-
-    return s;
-}
-
-bool EventType::operator==(EventType const& other) const {
-    return this->toString() == other.toString();
-}
-
-bool EventType::operator!=(EventType const& other) const {
-    return !(*this == other);
-}
-
 // Builtin types
 namespace  {
 struct BuiltinType {

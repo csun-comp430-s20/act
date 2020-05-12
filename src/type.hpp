@@ -23,20 +23,6 @@ class ValueType {
     bool operator<(ValueType const&) const;
 };
 
-class EventType {
-    private:
-    Vector<ValueType> _args;
-
-    public:
-    explicit EventType(Vector<ValueType> const&);
-    // void addArgType(ValueType const&);
-
-    Vector<ValueType> const& args() const;
-    String toString() const;
-    bool operator==(EventType const&) const;
-    bool operator!=(EventType const&) const;
-};
-
 // Type that can't be used.
 // ValueType const undefinedType("undefined");
 
@@ -49,10 +35,10 @@ struct TypeError {
     String what;
 };
 
-using Type = Variant<
-    ValueType,
-    EventType
->;
+// using Type = Variant<
+//     ValueType,
+//     EventType
+// >;
 
 template <typename T>
 using Typed = Result<T, TypeError>;

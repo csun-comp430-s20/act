@@ -6,11 +6,11 @@ of an HSM.
 ## Grammar
 
 ## Assumptions
-~ Every state has a unique name for now. <br />
-~ 
+~ Every state has a unique name for now.
 
 ## Requirements
-~ g++ version 7+
+~ g++ version 7+ <br />
+~ gcov & lcov for coverage report.
 
 ## Build & Run
 In the project directory:
@@ -24,7 +24,7 @@ make
 ```
 
 ## Generate Coverage Report
-Run ```gen-coverage.sh``` from the project root. Requires gcov+lcov. <br />
+Run ```bash gen-coverage.sh``` from the project root. <br />
 Produces a report at coverage/report/index.html.
 
 ## Resources

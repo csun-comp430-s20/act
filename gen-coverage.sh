@@ -1,10 +1,10 @@
-#!/bin/env bash
+#!/bin/bash
 
 set -u
 
 base="$(pwd)"
 src="$base/src"
-build="../build"
+build="$base/build"
 tests_tracefile="tests.info"
 baseline_tracefile="baseline.info"
 coverage_dir="coverage"

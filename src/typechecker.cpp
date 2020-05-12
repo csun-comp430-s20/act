@@ -45,10 +45,6 @@ struct TypeCheckStmt {
         return EventType(s.types);
     }
 
-    Typed<Type> operator()(CallEvent const& s) {
-        return EventType({intType, boolType});
-    }
-
     Typed<Type> operator()(DecStmt const& s) {
         if(auto expr_type = type_check_expr(env, *s.exprs)) {
             if(expr_type.value() == s.type) {
