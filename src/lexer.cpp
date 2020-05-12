@@ -147,7 +147,6 @@ LexerResult lex(String const& input) {
 
 LexerResult lexify(String const& input) {
 
-    // std::cout << "input: " << input << "\n";
     setLogger(config::logFileName, config::logLevel);
     L_(ldebug) << "input: " << input << "\n";
     
@@ -164,7 +163,6 @@ LexerResult lexify(String const& input) {
     }
     else {
         LexerError e = result.error();
-        // std::cout << "Lexer Error: " << e.what << " at " << e.where << "\n";
         L_(lerror) << "Lexer Error: " << e.what << " at " << e.where << "\n";
         return e;
     }

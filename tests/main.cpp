@@ -1,8 +1,11 @@
 //"Main" for the Catch unit test library
- /*
+
 #define CATCH_CONFIG_RUNNER // Allow us to define our own main
 #include "catch2/catch.hpp"
 #include "config.hpp"
+
+#include <fstream>
+#include <unistd.h>
 
 //All tests are done in external .cpp files
 
@@ -14,18 +17,29 @@ int main(int argc, char** argv)
 
     // Modify the included Catch CLI parser
     auto cli = session.cli()
-        | Opt([&](bool) { config::traceParse = true; 
-                          config::traceTypeCheck = true; })
-          ["--trace"]
-          ("print all trace output")
+        | Opt([&](bool) { config::logLevel = "error";
+                          char cwd[2048];
+                          getcwd(cwd, sizeof(cwd));
+                          config::logFileName = cwd + String("/../logs/logtest_error.txt"); 
+                          std::ofstream logFile (config::logFileName); })
+          ["--error"]
+          ("print error output")
         
-        | Opt([&](bool) { config::traceParse = true; })
-          ["--ptrace"]
-          ("print parser trace output")
+        | Opt([&](bool) { config::logLevel = "debug";
+                          char cwd[2048];
+                          getcwd(cwd, sizeof(cwd));
+                          config::logFileName = cwd + String("/../logs/logtest_debug.txt");
+                          std::ofstream logFile (config::logFileName); })
+          ["--debug"]
+          ("print debug output")
         
-        | Opt([&](bool) { config::traceTypeCheck = true; })
-          ["--ttrace"]
-          ("print typechecker trace output");
+        | Opt([&](bool) { config::logLevel = "info";
+                          char cwd[2048];
+                          getcwd(cwd, sizeof(cwd));
+                          config::logFileName = cwd + String("/../logs/logtest_info.txt");
+                          std::ofstream logFile (config::logFileName); })
+          ["--info"]
+          ("print info output");
 
     session.cli(cli); // Use the new CLI parser.
     auto rc = session.applyCommandLine(argc, argv); // Parse the CLI.
@@ -37,6 +51,3 @@ int main(int argc, char** argv)
 
     return session.run();
 }
-*/
-
-int main() { return 0; }
