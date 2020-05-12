@@ -20,7 +20,7 @@ cd build
 cmake ..
 make
 ./act <input filename>
-./tests
+./tests <--debug, --error, --info>
 ```
 
 ## Generate Coverage Report
