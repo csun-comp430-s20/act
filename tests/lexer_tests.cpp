@@ -26,7 +26,7 @@ Vector<Token> tokens(Vector<Token> vec) {
     return vec;
 }
 
-}
+} // namespace act
 
 TEST_CASE("Lexer produces correct output", "[lexer]") {
 

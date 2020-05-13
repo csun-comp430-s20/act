@@ -4,12 +4,11 @@
 #include <sstream>
 #include <unistd.h>
 
-#include "print.hpp"
 #include "lexer.hpp"
 #include "parse.hpp"
 #include "typechecker.hpp"
 #include "codegen.hpp"
-#include "logger.hpp"
+// #include "logger.hpp"
 #include "config.hpp"
 
 using namespace std;
@@ -37,7 +36,7 @@ int main(int argc, char* argv[]) {
     std::ofstream logFile (logFileName); // Create log file
     config::logFileName = logFileName;
     config::logLevel = logLevel;
-    setLogger(logFileName, logLevel);
+    // setLogger(logFileName, logLevel);
 
     ifstream file(actFileName);
     stringstream buffer;
@@ -57,15 +56,9 @@ int main(int argc, char* argv[]) {
         Parsed<Program> program = parse_program(parse_input);
 
         if(program) {
-            // cout << print_program(program.value());
-            L_(ldebug) << print_program(program.value());
+            // ok
         }
         else {
-            // cout << "parse error (" << parse_input.pos() << "): " << 
-            //     program.error().what << "\n";
-            L_(lerror) << "parse error (" << parse_input.pos() << "): " <<
-                program.error().what << "\n";
-            
             return 1;
         }
 

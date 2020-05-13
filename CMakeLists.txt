@@ -44,7 +44,8 @@ add_executable(act ${SOURCE_DIR}/main.cpp)
 
 set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests)
 set(TEST_FILE
-    main.cpp lexer_tests.cpp)
+    main.cpp lexer_tests.cpp
+    parse_tests.cpp)
 
 foreach(test ${TEST_FILE})
     list(APPEND TEST_FILES ${TEST_DIR}/${test})

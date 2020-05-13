@@ -23,9 +23,6 @@ class ValueType {
     bool operator<(ValueType const&) const;
 };
 
-// Type that can't be used.
-// ValueType const undefinedType("undefined");
-
 // Builtin types
 ValueType const intType("int");
 ValueType const boolType("bool");
@@ -34,11 +31,6 @@ ValueType const strType("string");
 struct TypeError {
     String what;
 };
-
-// using Type = Variant<
-//     ValueType,
-//     EventType
-// >;
 
 template <typename T>
 using Typed = Result<T, TypeError>;

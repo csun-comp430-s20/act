@@ -41,11 +41,11 @@ struct TypeCheckExpr {
 struct TypeCheckStmt {
     TypeEnv env;
 
-    Typed<Type> operator()(DefEvent const& s) {
-        return EventType(s.types);
+    Typed<ValueType> operator()(DefEvent const& s) {
+        return intType;
     }
 
-    Typed<Type> operator()(DecStmt const& s) {
+    Typed<ValueType> operator()(DecStmt const& s) {
         if(auto expr_type = type_check_expr(env, *s.exprs)) {
             if(expr_type.value() == s.type) {
                 env.declareLocal(s.name, expr_type.value());
@@ -59,7 +59,7 @@ struct TypeCheckStmt {
         }
     }
 
-    Typed<Type> operator()(AssignStmt const& s) {
+    Typed<ValueType> operator()(AssignStmt const& s) {
         if(auto var_type = env.lookupVarType(s.name)) {
             if(auto expr_type = type_check_expr(env, *s.exprs)) {
                 if(var_type.value() == expr_type.value()) {
@@ -80,7 +80,7 @@ Typed<ValueType> type_check_expr(TypeEnv& env, Expr const& expr) {
     return std::visit(TypeCheckExpr{ env }, expr);
 }
 
-Typed<Type> type_check_stmt(TypeEnv& env, Stmt const& stmt) {
+Typed<ValueType> type_check_stmt(TypeEnv& env, Stmt const& stmt) {
     return std::visit(TypeCheckStmt{ env }, stmt);
 }
 

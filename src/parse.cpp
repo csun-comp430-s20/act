@@ -1,9 +1,13 @@
 #include "parse.hpp"
+#include "print.hpp"
+#include "logger.hpp"
+#include "config.hpp"
 
 namespace act {
 
 // Program: Stmt*
 Parsed<Program> parse_program(Input& input) {
+    setLogger(config::logFileName, config::logLevel);
     Vector<DefEvent> events;
 
     while(!input.check_done<TokenState>()) {
@@ -14,11 +18,17 @@ Parsed<Program> parse_program(Input& input) {
     TRY(state, parse_statestmt(input));
 
     if(input.at_end()) {
-        return Program{
+        Program prg = Program{
             std::move(events),
             std::move(state)
         };
+
+        L_(ldebug) << print_program(prg);
+
+        return prg;
     } else {
+        L_(lerror) << "parse error (" << input.pos() << "): " <<
+                "Not at end of file" << "\n";
         return ParseError{ "Not at end of file" };
     }
 }
@@ -157,14 +167,8 @@ Parsed<DefEvent> parse_defevent(Input& input) {
     TRY(name, input.get<TokenName>());
     TRY_(input.expect<TokenLBrace>());
 
-    if(!input.check_done<TokenRBrace>()) {
-        TRY(stmt_temp_init, parse_decstmt(input));
-        decstmts.push_back(std::move(stmt_temp_init));
-    }
-
     while(!input.check_done<TokenRBrace>()) {
-        TRY_(input.expect<TokenComma>());
-        TRY(stmt_temp, parse_decstmt(input));
+        TRY(stmt_temp, parse_decstmt_only(input));
         decstmts.push_back(std::move(stmt_temp));
     }
 
@@ -175,6 +179,22 @@ Parsed<DefEvent> parse_defevent(Input& input) {
     return DefEvent{
         name.value,
         std::move(decstmts)
+    };
+}
+Parsed<DecStmt> parse_decstmt_only(Input& input) {
+    auto rollback = input.mark_rollback();
+
+    TRY(type, parse_value_type(input));
+    TRY(name, input.get<TokenName>());
+    TRY_(input.expect<TokenAssign>());
+    TRY(expr, parse_expr(input));
+    TRY_(input.expect<TokenSemi>());
+
+    rollback.cancel();
+    return DecStmt{
+        type,
+        name.value,
+        std::move(expr)
     };
 }
 

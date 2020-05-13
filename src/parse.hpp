@@ -23,6 +23,7 @@ Parsed<StateStmt> parse_statestmt(Input&);
 Parsed<OnStmt> parse_onstmt(Input&);
 Parsed<GoIfStmt> parse_goifstmt(Input&);
 Parsed<DefEvent> parse_defevent(Input&);
+Parsed<DecStmt> parse_decstmt_only(Input&);
 Parsed<Stmt> parse_base_stmt(Input&);
 Parsed<Stmt> parse_ifstmt(Input&);
 Parsed<Stmt> parse_whilestmt(Input&);

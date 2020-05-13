@@ -201,6 +201,18 @@ String print_stmt(Stmt const& stmt) {
     return std::visit(PrintStmt{}, stmt);
 }
 
+String print_decstmt_only(DecStmt const& d) {
+    String str;
+    str = "("
+        + d.type.toString() 
+        + " (" 
+        + d.name
+        + ") (=) ";
+    
+    str += print_expr(d.expr);
+
+    return str + ")";
+}
 String print_defevent(DefEvent const& event) {
     String str;
 
@@ -210,7 +222,7 @@ String print_defevent(DefEvent const& event) {
         + "{\n";
     
     for(auto & d : event.decs) {
-        str += "\t" + print_stmt(d) + "\n"
+        str += "\t" + print_decstmt_only(d) + "\n";
     }
 
     return str + "})";
