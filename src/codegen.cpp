@@ -36,15 +36,63 @@ struct genStmt {
             gen_expr(s.cond) <<
             ") {\n";
 
-        env << CodeTabIn();
+        env << CodeTabIn() << CodeTabs();
         for(auto & stmt: s.block.stmts) {
             gen_stmt(env, stmt);
         }
-        env << CodeTabOut();
+        env << CodeTabOut() << CodeTabs() << "}";
     }
 
-    String operator()(IfStmt const& s) {
+    void operator()(IfStmt const& s) {
+        if(s.conds.size() > 1) {
+            if(s.has_else) {
+                bool first = true;
+                int ctr = 0;
+                for(auto & b: s.blocks) {
+                    if(first) {
+                        env << "if(" <<
+                            gen_expr(s.conds[0]) <<
+                            ") {\n";
+                        
+                        env << CodeTabIn() << CodeTabs();
+                        for(auto & stmt: b.stmts) {
+                            
+                        }
+                    }
+                }
+            } else {
 
+            }
+        } else {
+            if(s.has_else) {
+                env << "if(" <<
+                    gen_expr(s.conds[0]) <<
+                    ") {\n";
+                
+                env << CodeTabIn() << CodeTabs();
+                for(auto & stmt: s.blocks[0].stmts) {
+                    gen_stmt(env, stmt);
+                }
+                env << CodeTabOut() << CodeTabs() << "}";
+                
+                env << "else {\n";
+                env << CodeTabIn() << CodeTabs();
+                for(auto & stmt: s.blocks[1].stmts) {
+                    gen_stmt(env, stmt);
+                }
+                env << CodeTabOut() << CodeTabs() << "}";
+            } else {
+                env << "if(" <<
+                    gen_expr(s.conds[0]) <<
+                    ") {\n";
+                
+                env << CodeTabIn() << CodeTabs();
+                for(auto & stmt: s.blocks[0].stmts) {
+                    gen_stmt(env, stmt);
+                }
+                env << CodeTabOut() << CodeTabs() << "}";
+            }
+        }
     }
     
     String operator()(DecStmt const& s) {

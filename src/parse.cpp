@@ -5,18 +5,25 @@ namespace act {
 
 // Program: Stmt*
 Parsed<Program> parse_program(Input& input) {
-    Vector<DefEvent> events;
+    Vector<DefEvent> defevents;
+    Vector<DefState> defstates;
 
     while(!input.check_done<TokenState>()) {
-        TRY(event, parse_defevent(input));
-        events.push_back(std::move(event));
+        if(input.check_token<TokenDefEvent>()) {
+            TRY(defevent, parse_defevent(input));
+            defevents.push_back(std::move(defevent));
+        } else {
+            TRY(defstate, parse_defstate(input));
+            defstates.push_back(std::move(defstate));
+        }
     }
 
     TRY(state, parse_statestmt(input));
 
     if(input.at_end()) {
         return Program{
-            std::move(events),
+            std::move(defstates),
+            std::move(defevents),
             std::move(state)
         };
     } else {
@@ -148,6 +155,18 @@ Parsed<GoIfStmt> parse_goifstmt(Input& input) {
         std::move(names),
         std::move(blocks),
         has_else
+    };
+}
+Parsed<DefState> parse_defstate(Input& input) {
+    auto rollback = input.mark_rollback();
+    
+    TRY_(input.expect<TokenDefState>());
+    TRY(name, input.get<TokenName>());
+    TRY_(input.expect<TokenSemi>());
+
+    rollback.cancel();
+    return DefState{
+        name.value
     };
 }
 Parsed<DefEvent> parse_defevent(Input& input) {

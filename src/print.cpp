@@ -217,6 +217,9 @@ String print_decstmt_only(DecStmt const& d) {
 
     return str + ")";
 }
+String print_defstate(DefState const& defstate) {
+    return "(" + defstate.name + ")";
+}
 String print_defevent(DefEvent const& event) {
     String str;
 
@@ -338,7 +341,11 @@ String print_statestmt(StateStmt const& s) {
 String print_program(Program const& program) {
     String result = "";
 
-    for(auto & event: program.events) {
+    for(auto & state: program.defstates) {
+        result += print_defstate(state) + "\n";
+    }
+
+    for(auto & event: program.defevents) {
         result += print_defevent(event) + "\n";
     }
 

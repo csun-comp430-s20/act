@@ -1,3 +1,6 @@
+defstate life;
+defstate work;
+defstate rest;
 defevent TIRED {};
 defevent AWAKE {};
 

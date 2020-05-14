@@ -140,6 +140,10 @@ Typed<ValueType> type_check_event_decstmt(TypeEnv& env, DecStmt const& dec) {
     }
 }
 
+void add_defstate(TypeEnv& env, DefState const& defstate) {
+    env.addState(defstate.name);
+}
+
 Typed<ValueType> type_check_defevent(TypeEnv& env, DefEvent const& event) {
     ValueType temp("");
     env.addEvent(event.name);
@@ -165,14 +169,11 @@ Typed<ValueType> type_check_goifstmt(TypeEnv& env, GoIfStmt const& stmt) {
         }
     }
     
-    /** TODO: Need a way to typecheck when states are not in an ideal order **/
-    // for(auto & n: stmt.names) {
-    //     if(env.lookupState(n)) {
-    //         return temp;
-    //     } else {
-    //         return TypeError{ "State not declared" };
-    //     }
-    // }
+    for(auto & n: stmt.names) {
+        if(!env.lookupState(n)) {
+            return TypeError{ "State not declared" };
+        }
+    }
 
     for(auto & b: stmt.blocks) {
         for(auto & bs: b.stmts) {
@@ -196,7 +197,10 @@ Typed<ValueType> type_check_onstmt(TypeEnv& env, OnStmt const& stmt) {
 
 Typed<ValueType> type_check_statestmt(TypeEnv& env, StateStmt const& stmt) {
     ValueType temp("");
-    env.addState(stmt.name);
+
+    if(!env.lookupState(stmt.name)) {
+        return TypeError{ "State not declared" };
+    }
 
     for(auto & s: stmt.stmts) {
         if(auto stmt_temp = type_check_stmt(env, s)) {
@@ -225,7 +229,11 @@ TypeEnv type_check_program(Program const& program) {
     TypeEnv env;
     setLogger(config::logFileName, config::logLevel);
 
-    for(auto & e: program.events) {
+    for(auto & s: program.defstates) {
+        add_defstate(env, s);
+    }
+
+    for(auto & e: program.defevents) {
         if(auto event_temp = type_check_defevent(env, e)) {
             // ok
         } else {
