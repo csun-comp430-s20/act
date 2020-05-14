@@ -55,9 +55,9 @@ Run ```bash gen-coverage.sh``` from the project root. <br />
 Produces a report at coverage/report/index.html.
 
 ## Resources
+~ **For Comp430 Docs refer to docs folder** <br />
 ~ [catch2](https://github.com/catchorg/Catch2) <br />
 ~ [logging](https://www.drdobbs.com/cpp/logging-in-c/201804215)
-
 
 ## Acknowledgements
 Big thank you to the following github project: [dflat](https://github.com/csun-comp430-s19/dflat)
