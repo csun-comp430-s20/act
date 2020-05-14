@@ -1,6 +1,7 @@
 # Act
-The Act Language in the future will utilize the concept of an Actor Model paradigm. <br />
-Currently it is only planned to support a single actor that supports the creation of an HSM.
+The Act Language in the future will utilize the concept of an Actor Model paradigm.<br />
+Currently it is only planned to support a single actor that supports the creation of an HSM.<br />
+**For Comp430 Docs refer to docs folder**
 
 ## Grammar
 Program: DefEvent* DefState* State+ <br />
@@ -54,7 +55,6 @@ Run ```bash gen-coverage.sh``` from the project root. <br />
 Produces a report at coverage/report/index.html.
 
 ## Resources
-~ **For Comp430 Docs refer to docs folder** <br />
 ~ [catch2](https://github.com/catchorg/Catch2) <br />
 ~ [logging](https://www.drdobbs.com/cpp/logging-in-c/201804215)
 
