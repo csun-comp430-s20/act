@@ -16,17 +16,22 @@ enum class BinOp {
     opEqual
 };
 
+struct VarExpr;
 struct BinOpExpr;
 struct IntExpr;
 struct StrExpr;
 struct BoolExpr;
 using Expr = Variant<
+    VarExpr,
     BinOpExpr,
     IntExpr,
     StrExpr,
     BoolExpr
 >;
 
+struct VarExpr {
+    String name;
+};
 // The Expr members create a recursive type. This has to be broken by
 // making them dynamically allocated somehow.
 struct BinOpExpr {

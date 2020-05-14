@@ -17,15 +17,7 @@ int main(int argc, char** argv)
 
     // Modify the included Catch CLI parser
     auto cli = session.cli()
-        | Opt([&](bool) { config::logLevel = "error";
-                          char cwd[2048];
-                          getcwd(cwd, sizeof(cwd));
-                          config::logFileName = cwd + String("/../logs/logtest_error.txt"); 
-                          std::ofstream logFile (config::logFileName); })
-          ["--error"]
-          ("print error output")
-        
-        | Opt([&](bool) { config::logLevel = "debug";
+        | Opt([&](bool) { config::logLevel = "--debug";
                           char cwd[2048];
                           getcwd(cwd, sizeof(cwd));
                           config::logFileName = cwd + String("/../logs/logtest_debug.txt");
@@ -33,7 +25,7 @@ int main(int argc, char** argv)
           ["--debug"]
           ("print debug output")
         
-        | Opt([&](bool) { config::logLevel = "info";
+        | Opt([&](bool) { config::logLevel = "--info";
                           char cwd[2048];
                           getcwd(cwd, sizeof(cwd));
                           config::logFileName = cwd + String("/../logs/logtest_info.txt");

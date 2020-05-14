@@ -2,8 +2,7 @@
 #include "map.hpp"
 // #include <stdexcept>
 
-namespace act
-{
+namespace act {
 
 ValueType::ValueType(String const& name)
     : _name(name) {}

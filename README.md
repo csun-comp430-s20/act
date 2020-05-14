@@ -6,7 +6,8 @@ of an HSM.
 ## Grammar
 
 ## Assumptions
-~ Every state has a unique name for now.
+~ Every state has a unique name. <br />
+~ Every state is properly declared in on statements.
 
 ## Requirements
 ~ g++ version 7+ <br />
@@ -19,8 +20,8 @@ mkdir build
 cd build
 cmake ..
 make
-./act <input filename>
-./tests <--debug, --error, --info>
+./act <--debug, --info> <input filename: *.act> <log filename: *.txt>
+./tests <--debug, --info>
 ```
 
 ## Generate Coverage Report

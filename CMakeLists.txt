@@ -31,6 +31,9 @@ set(SRC_FILE
     parse.cpp parse.hpp ast.hpp
     parse_input.cpp parse_input.hpp parse_result.hpp
     type.cpp type.hpp
+    canonname.cpp canonname.hpp
+    typechecker_tools.cpp typechecker_tools.hpp
+    typechecker.cpp typechecker.hpp
     print.cpp print.hpp
     logger.hpp config.hpp)
 

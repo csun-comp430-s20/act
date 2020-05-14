@@ -1,16 +1,23 @@
+defevent TIRED {};
+defevent BORED {
+    int new_val = 1;
+};
+defevent AWAKE {};
+
 state life {
 
     int age = 0;
     int time = 10;
+    int stamina = 23;
 
     state work {
-        on TIRED(age, time) {
+        on TIRED {
             goif(time == 23) rest {
                 int stamina = 0;
             }
         }
 
-        on BORED(new_val) {
+        on BORED {
             goif(new_val == 1) fun {
                 string str = "bored";
             } goelif(new_val == 2) rest {
@@ -20,19 +27,19 @@ state life {
     }
 
     state fun {
-        on BORED(new_val) {
+        on BORED {
             goif(true) work {}
             goelif(new_val == 34) rest {}
             goelse fun {}
         }
 
-        on TIRED(myval, test) {
+        on TIRED {
             goif(true) rest {}
         }
     }
 
     state rest {
-        on AWAKE(time) {
+        on AWAKE {
             goif(time == 6) work {
                 stamina = 100;
             }

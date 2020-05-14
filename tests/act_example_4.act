@@ -1,12 +1,22 @@
+defevent TIRED {};
+defevent AWAKE {};
+
 state life {
 
     int age = 0;
     int time = 10;
+    int stamina = 0;
 
     state work {
-        on TIRED(age, time) {
-            goif(23 == 23) rest {
-                int stamina = 0;
+        on TIRED {
+            goif(23 == 23) rest {}
+        }
+    }
+
+    state rest {
+        on AWAKE {
+            goif(time == 6) work {
+                stamina = 100;
             }
         }
     }

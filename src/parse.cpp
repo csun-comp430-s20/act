@@ -1,13 +1,10 @@
 #include "parse.hpp"
 #include "print.hpp"
-#include "logger.hpp"
-#include "config.hpp"
 
 namespace act {
 
 // Program: Stmt*
 Parsed<Program> parse_program(Input& input) {
-    setLogger(config::logFileName, config::logLevel);
     Vector<DefEvent> events;
 
     while(!input.check_done<TokenState>()) {
@@ -18,17 +15,11 @@ Parsed<Program> parse_program(Input& input) {
     TRY(state, parse_statestmt(input));
 
     if(input.at_end()) {
-        Program prg = Program{
+        return Program{
             std::move(events),
             std::move(state)
         };
-
-        L_(ldebug) << print_program(prg);
-
-        return prg;
     } else {
-        L_(lerror) << "parse error (" << input.pos() << "): " <<
-                "Not at end of file" << "\n";
         return ParseError{ "Not at end of file" };
     }
 }
@@ -413,7 +404,7 @@ Parsed<Expr> parse_var(Input& input) {
     TRY(var, input.get<TokenName>());
 
     rollback.cancel();
-    return StrExpr{ var.value };
+    return VarExpr{ var.value };
 }
 Parsed<Expr> parse_str(Input& input) {
     auto rollback = input.mark_rollback();

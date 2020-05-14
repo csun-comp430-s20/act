@@ -180,7 +180,7 @@ inline String NowTime()
 inline void initLogger(const char * file, TLogLevel level)
 {
     FILELog::ReportingLevel() = level;
-    FILE* log_fd = fopen( file, "w" );
+    FILE* log_fd = fopen( file, "a" );
     Output2FILE::Stream() = log_fd;
 }
 
@@ -191,10 +191,8 @@ inline void endLogger()
 }
 
 inline void setLogger(String const file, String const level) {
-    if(level == String("debug")) {
+    if(level == String("--debug")) {
         initLogger(file.c_str(), ldebug);
-    } else if(level == String("error")) {
-        initLogger(file.c_str(), lerror);
     } else {
         initLogger(file.c_str(), linfo);
     }

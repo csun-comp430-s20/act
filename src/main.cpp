@@ -8,7 +8,7 @@
 #include "parse.hpp"
 #include "typechecker.hpp"
 #include "codegen.hpp"
-// #include "logger.hpp"
+#include "logger.hpp"
 #include "config.hpp"
 
 using namespace std;
@@ -21,22 +21,20 @@ int main(int argc, char* argv[]) {
     String logLevel;
     
     if(argc == 4) {
-        //read in a file name from command line:
-        actFileName = String("../tests/") + argv[1];
+        logLevel = argv[1];
+        actFileName = String("../tests/") + argv[2];
         char cwd[2048];
         getcwd(cwd, sizeof(cwd));
-        logFileName = cwd + String("/../logs/") + argv[2];
-        logLevel = argv[3];
+        logFileName = cwd + String("/../logs/") + argv[3];   
     }
     else {
         cerr << "Number of args input incorrect" << endl;
         return 1;
     }
 
-    std::ofstream logFile (logFileName); // Create log file
     config::logFileName = logFileName;
     config::logLevel = logLevel;
-    // setLogger(logFileName, logLevel);
+    setLogger(config::logFileName, config::logLevel);
 
     ifstream file(actFileName);
     stringstream buffer;
@@ -56,13 +54,12 @@ int main(int argc, char* argv[]) {
         Parsed<Program> program = parse_program(parse_input);
 
         if(program) {
-            // ok
+            TypeEnv typeEnv = type_check_program(program.value());
         }
         else {
+            L_(ldebug) << "parse error (" << program.error().what << ") " << "\n";
             return 1;
         }
-
-        // TypeEnv typeEnv = type_check_program(program.value());
 
         // String output = gen_code(program.value(), typeEnv);
         // cout << output << endl;

@@ -140,6 +140,10 @@ struct PrintStmt {
 };
 
 struct PrintExpr {
+    String operator()(VarExpr const& e) {
+        return "(" + e.name + ")";
+    }
+
     String operator()(BinOpExpr const& e) {
         return "("
             + print_expr(*e.left)

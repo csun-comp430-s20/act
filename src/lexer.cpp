@@ -163,7 +163,7 @@ LexerResult lexify(String const& input) {
     }
     else {
         LexerError e = result.error();
-        L_(lerror) << "Lexer Error: " << e.what << " at " << e.where << "\n";
+        L_(ldebug) << "Lexer Error: " << e.what << " at " << e.where << "\n";
         return e;
     }
 }

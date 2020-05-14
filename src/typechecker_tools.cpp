@@ -1,5 +1,4 @@
 #include "typechecker_tools.hpp"
-#include "ast.hpp"
 
 namespace act {
 
@@ -37,13 +36,19 @@ void TypeEnv::initialize()
     binopRule(BinOp::opEqual,   b, b, b);
 }
 
-void TypeEnv::declareLocal(String const& name, ValueType const& type)
-{
-    _scopes.declLocal(name, type);
+void TypeEnv::addVarType(String const& name, ValueType const& type) {
+    _vartypes.insert({name, type});
 }
 
-Typed<ValueType> TypeEnv::lookupRuleType(CanonName const& name) const
-{
+void TypeEnv::addEvent(String const& name, bool value) {
+    _events.insert({name, value});
+}
+
+void TypeEnv::addState(String const& name, bool value) {
+    _states.insert({name, value});
+}
+
+Typed<ValueType> TypeEnv::lookupRuleType(CanonName const& name) const {
     ValueType const* type = lookup(_rules, name);
 
     if (type) {
@@ -54,17 +59,36 @@ Typed<ValueType> TypeEnv::lookupRuleType(CanonName const& name) const
     }
 }
 
-Typed<ValueType> TypeEnv::lookupVarType(String const& varName) const
-{
-    Decl const* decl = _scopes.lookup(varName);
+Typed<ValueType> TypeEnv::lookupVarType(String const& varName) const {
+    ValueType const* v = lookup(_vartypes, varName);
 
-    if (decl && decl->declType == DeclType::local) {
-        ValueType varType = decl->type;
-
-        return varType;
+    if (v) {
+        return *v;
     }
     else {
         return TypeError{ " Var " + varName + " not declared" };
+    }
+}
+
+bool TypeEnv::lookupEvent(String const& eventName) const {
+    bool const* vt = lookup(_events, eventName);
+
+    if (vt) {
+        return *vt;
+    }
+    else {
+        return false;
+    }
+}
+
+bool TypeEnv::lookupState(String const& stateName) const {
+    bool const* vt = lookup(_states, stateName);
+
+    if (vt) {
+        return *vt;
+    }
+    else {
+        return false;
     }
 }
 
