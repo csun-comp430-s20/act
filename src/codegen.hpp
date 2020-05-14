@@ -2,7 +2,6 @@
 
 #include <sstream>
 #include "typechecker_tools.hpp"
-#include "ast.hpp"
 
 namespace act {
 
@@ -14,13 +13,13 @@ struct CodeTabIn {};
 struct CodeTabOut {};
 
 String gen_expr(Expr const&);
-String gen_stmt(Stmt const&);
+void gen_stmt(Stmt const&);
 
-String gen_code(Program const&, TypeEnv const&);
+String gen_code(Program const&);
 
 class GenEnv {
     public:
-        GenEnv(TypeEnv const&);
+        GenEnv();
 
         GenEnv& operator<<(CodeTabs const&);
         GenEnv& operator<<(CodeTabIn const&);
@@ -30,11 +29,6 @@ class GenEnv {
 
         String prolog() const;
         String epilog() const;
-        // String concat() const;
-
-        // void declareLocal(String const& name, ValueType const& type);
-        // ValueType const& getLocalType(String const& name) const;
-        // ValueType const* lookupLocalType(String const& name) const;
 
     private:
         std::stringstream& write();

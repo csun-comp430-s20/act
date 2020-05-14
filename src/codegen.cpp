@@ -5,6 +5,10 @@
 namespace act {
 
 struct genExpr {
+    String operator()(VarExpr const& e) {
+        return e.name;
+    }
+
     String operator()(BinOpExpr const& e) {
         return gen_expr(*e.left) +
                 opString(e.op) +
@@ -25,24 +29,38 @@ struct genExpr {
 };
 
 struct genStmt {
-    String operator()(DefEvent const& s) {
-        return "";
+    GenEnv env;
+
+    void operator()(WhileStmt const& s) {
+        env << "while(" <<
+            gen_expr(s.cond) <<
+            ") {\n";
+
+        env << CodeTabIn();
+        for(auto & stmt: s.block.stmts) {
+            gen_stmt(env, stmt);
+        }
+        env << CodeTabOut();
+    }
+
+    String operator()(IfStmt const& s) {
+
     }
     
     String operator()(DecStmt const& s) {
-        return s.type.toString() +
-                " " +
-                s.name +
-                " = " +
-                gen_expr(*s.exprs) +
+        env << s.type.toString() <<
+                " " <<
+                s.name <<
+                " = " <<
+                gen_expr(*s.exprs) <<
                 ";\n";
 
     }
 
     String operator()(AssignStmt const& s) {
-        return s.name +
-                " = " +
-                gen_expr(*s.exprs) +
+        env << s.name <<
+                " = " <<
+                gen_expr(*s.exprs) <<
                 ";\n";
     }
 };
@@ -50,8 +68,8 @@ struct genStmt {
 String gen_expr(Expr const& expr) {
     return std::visit(genExpr{}, expr);
 }
-String gen_stmt(Stmt const& stmt) {
-    return std::visit(genStmt{}, stmt);
+void gen_stmt(GenEnv const& env, Stmt const& stmt) {
+    std::visit(genStmt{ env }, stmt);
 }
 
 String gen_code(Program const& program, TypeEnv const& typeEnv) {
@@ -97,47 +115,6 @@ GenEnv& GenEnv::operator<<(Stmt const& s) {
     write() << gen_stmt(s);
     return *this;
 }
-
-// void GenEnv::declareLocal(String const& name, ValueType const& type)
-// {
-//     // if (!_curMethod)
-//     // {
-//     //     throw std::logic_error("declareLocal with no curMethod");
-//     // }
-
-//     _scopes.declLocal(name, type);
-// }
-
-// ValueType const& GenEnv::getLocalType(String const& name) const {
-//     Decl const* decl = _scopes.lookup(name);
-
-//     if (!decl)
-//     {
-//         throw std::logic_error("no local with name '" + name + "'");
-//     }
-
-//     if (decl->declType != DeclType::local)
-//     {
-//         throw std::logic_error("decl '" + name + "' is not a local");
-//     }
-
-//     return decl->type;
-// }
-// ValueType const* GenEnv::lookupLocalType(String const& name) const {
-//     Decl const* decl = _scopes.lookup(name);
-
-//     if (!decl)
-//     {
-//         return nullptr;
-//     }
-
-//     if (decl->declType != DeclType::local)
-//     {
-//         return nullptr;
-//     }
-
-//     return &decl->type;
-// }
 
 String GenEnv::prolog() const {
     String s = R"(

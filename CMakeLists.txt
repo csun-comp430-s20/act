@@ -9,31 +9,16 @@ project(act CXX)
 
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-#[[
 set(SRC_FILE 
     token.hpp lexer.cpp lexer.hpp
     lexercore.cpp lexercore.hpp
     parse.cpp parse.hpp ast.hpp
     parse_input.cpp parse_input.hpp parse_result.hpp
     type.cpp type.hpp
-    scopemeta.cpp scopemeta.hpp
     canonname.cpp canonname.hpp
     typechecker_tools.cpp typechecker_tools.hpp
     typechecker.cpp typechecker.hpp
     codegen.cpp codegen.hpp
-    print.cpp print.hpp
-    logger.hpp config.hpp)
-]]
-
-set(SRC_FILE 
-    token.hpp lexer.cpp lexer.hpp
-    lexercore.cpp lexercore.hpp
-    parse.cpp parse.hpp ast.hpp
-    parse_input.cpp parse_input.hpp parse_result.hpp
-    type.cpp type.hpp
-    canonname.cpp canonname.hpp
-    typechecker_tools.cpp typechecker_tools.hpp
-    typechecker.cpp typechecker.hpp
     print.cpp print.hpp
     logger.hpp config.hpp)
 
