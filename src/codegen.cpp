@@ -47,7 +47,7 @@ struct genStmt {
         if(s.conds.size() > 1) {
             if(s.has_else) {
                 bool first = true;
-                int ctr = 0;
+                unsigned ctr = 0;
                 for(auto & b: s.blocks) {
                     if(first) {
                         env << "if(" <<
@@ -81,13 +81,13 @@ struct genStmt {
                             for(auto & stmt: b.stmts) {
                                 gen_stmt(env, stmt);
                             }
-                            env << CodeTabOut() << CodeTabs() << "}\n"
+                            env << CodeTabOut() << CodeTabs() << "}\n";
                         }
                     }
                 }
             } else {
                 bool first = true;
-                int ctr = 0;
+                unsigned ctr = 0;
                 for(auto & b: s.blocks) {
                     if(first) {
                         env << "if(" <<
@@ -172,28 +172,31 @@ struct genStmt {
 String gen_expr(Expr const& expr) {
     return std::visit(genExpr{}, expr);
 }
-void gen_stmt(GenEnv const& env, Stmt const& stmt) {
-    std::visit(genStmt{ env }, stmt);
+void gen_stmt(GenEnv& env, Stmt const& stmt) {
+    std::visit(genStmt{ std::move(env) }, stmt);
 }
 
-String gen_code(Program const& program, TypeEnv const& typeEnv) {
-    GenEnv env(typeEnv);
+String gen_code(Program const& program) {
+    GenEnv env;
     
-    env << CodeTabIn();
-    for (Stmt const& stmt : program.stmts) {
-        env << CodeTabs() << stmt;
-    }
-    env << CodeTabOut();
+    // env << CodeTabIn();
+    // for (Stmt const& stmt : program.stmts) {
+    //     env << CodeTabs() << stmt;
+    // }
+    // env << CodeTabOut();
 
     return env.prolog() + "\n" + env.epilog();
 }
 
-GenEnv::GenEnv(TypeEnv const& typeEnv) {}
+GenEnv::GenEnv() {}
 
 std::stringstream& GenEnv::write() {
     return _codeDef;
 }
-
+GenEnv& GenEnv::operator<<(String const& str) {
+    write() << str;
+    return *this;
+}
 GenEnv& GenEnv::operator<<(CodeTabs const&) {
     write() << String(_tabs, '\t');
     return *this;
@@ -215,17 +218,12 @@ GenEnv& GenEnv::operator<<(Expr const& e) {
     write() << gen_expr(e);
     return *this;
 }
-GenEnv& GenEnv::operator<<(Stmt const& s) {
-    write() << gen_stmt(s);
-    return *this;
-}
 
 String GenEnv::prolog() const {
     String s = R"(
 #include <string>
 
 using namespace std;
-
 
 )";
 

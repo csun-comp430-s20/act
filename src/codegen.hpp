@@ -12,20 +12,15 @@ struct CodeTabs {};
 struct CodeTabIn {};
 struct CodeTabOut {};
 
-String gen_expr(Expr const&);
-void gen_stmt(Stmt const&);
-
-String gen_code(Program const&);
-
 class GenEnv {
     public:
         GenEnv();
 
+        GenEnv& operator<<(String const&);
         GenEnv& operator<<(CodeTabs const&);
         GenEnv& operator<<(CodeTabIn const&);
         GenEnv& operator<<(CodeTabOut const&);
         GenEnv& operator<<(Expr const&);
-        GenEnv& operator<<(Stmt const&);
 
         String prolog() const;
         String epilog() const;
@@ -38,5 +33,9 @@ class GenEnv {
 
         // ScopeMetaMan _scopes;
 };
+
+String gen_expr(Expr const&);
+void gen_stmt(GenEnv&, Stmt const&);
+String gen_code(Program const&);
 
 } // namespace act

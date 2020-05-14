@@ -1,33 +1,32 @@
 # Act
-The Act Language in the future will utilize the concept of an Actor Model paradigm.
-Currently it is only planned to support a single actor that supports the creation
-of an HSM.
+The Act Language in the future will utilize the concept of an Actor Model paradigm. <br />
+Currently it is only planned to support a single actor that supports the creation of an HSM.
 
 ## Grammar
-Program: DefEvent* DefState* State+
-State: state NAME '{' Stmt* OnStmt* State* '}'
-OnStmt: on NAME '{' GoIfStmt* '}'
-Stmt: IfStmt | WhileStmt | DecStmt | AssignStmt
-DefEvent: defevent NAME '{' DecStmt* '}' ';'
-DefState: defstate NAME ';'
-DecStmt: type NAME '=' Expr ';'
-type: 'int' | 'string' | 'bool'
-GoIfStmt: GoIf GoElIf* | GoIf GoElIf* GoElse
-GoIf: 'goif' '(' Expr ')' NAME '{' Stmt* '}'
-GoElIf: 'goelif' '(' Expr ')' NAME '{' Stmt* '}'
-GoElse: 'goelse' NAME '{' Stmt* '}'
-IfStmt: If ElIf* | If ElIf* Else
-If: 'if' '(' Expr ')' '{' Stmt* '}'
-ElIf: 'elif' '(' Expr ')' '{' Stmt* '}'
-Else: 'else' '{' Stmt* '}'
-WhileStmt: 'while' '(' Expr ')' '{' Stmt* '}'
-Expr: VarExpr | BinOpExpr | IntExpr | StrExpr | BoolExpr | ParenExpr
-BinOpExpr: ValExpr op Expr
-ParenExpr: '(' Expr ')'
-ValExpr: VarExpr | IntExpr | StrExpr | BoolExpr
-VarExpr: NAME
-IntExpr: NUMBER
-StrExpr: STRING
+Program: DefEvent* DefState* State+ <br />
+State: state NAME '{' Stmt* OnStmt* State* '}' <br />
+OnStmt: on NAME '{' GoIfStmt* '}' <br />
+Stmt: IfStmt | WhileStmt | DecStmt | AssignStmt <br />
+DefEvent: defevent NAME '{' DecStmt* '}' ';' <br />
+DefState: defstate NAME ';' <br />
+DecStmt: type NAME '=' Expr ';' <br />
+type: 'int' | 'string' | 'bool' <br />
+GoIfStmt: GoIf GoElIf* | GoIf GoElIf* GoElse <br />
+GoIf: 'goif' '(' Expr ')' NAME '{' Stmt* '}' <br />
+GoElIf: 'goelif' '(' Expr ')' NAME '{' Stmt* '}' <br />
+GoElse: 'goelse' NAME '{' Stmt* '}' <br />
+IfStmt: If ElIf* | If ElIf* Else <br />
+If: 'if' '(' Expr ')' '{' Stmt* '}' <br />
+ElIf: 'elif' '(' Expr ')' '{' Stmt* '}' <br />
+Else: 'else' '{' Stmt* '}' <br />
+WhileStmt: 'while' '(' Expr ')' '{' Stmt* '}' <br />
+Expr: VarExpr | BinOpExpr | IntExpr | StrExpr | BoolExpr | ParenExpr <br />
+BinOpExpr: ValExpr op Expr <br />
+ParenExpr: '(' Expr ')' <br />
+ValExpr: VarExpr | IntExpr | StrExpr | BoolExpr <br />
+VarExpr: NAME <br />
+IntExpr: NUMBER <br />
+StrExpr: STRING <br />
 BoolExpr: BOOL
 
 ## Assumptions
