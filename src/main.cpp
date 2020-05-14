@@ -59,9 +59,6 @@ int main(int argc, char* argv[]) {
             L_(ldebug) << "parse error (" << program.error().what << ") " << "\n";
             return 1;
         }
-
-        // String output = gen_code(program.value(), typeEnv);
-        // cout << output << endl;
     } else {
         return 1;
     }

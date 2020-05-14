@@ -36,11 +36,11 @@ struct genStmt {
             gen_expr(s.cond) <<
             ") {\n";
 
-        env << CodeTabIn() << CodeTabs();
+        env << CodeTabIn();
         for(auto & stmt: s.block.stmts) {
             gen_stmt(env, stmt);
         }
-        env << CodeTabOut() << CodeTabs() << "}";
+        env << CodeTabOut() << CodeTabs() << "}\n";
     }
 
     void operator()(IfStmt const& s) {
@@ -51,17 +51,73 @@ struct genStmt {
                 for(auto & b: s.blocks) {
                     if(first) {
                         env << "if(" <<
-                            gen_expr(s.conds[0]) <<
+                            gen_expr(s.conds[ctr]) <<
                             ") {\n";
                         
-                        env << CodeTabIn() << CodeTabs();
+                        env << CodeTabIn();
                         for(auto & stmt: b.stmts) {
+                            gen_stmt(env, stmt);
+                        }
+                        env << CodeTabOut() << CodeTabs() << "} ";
+
+                        first = false;
+                        ctr++;
+                    } else {
+                        if(ctr < s.blocks.size()-1) {
+                            env << "else if(" <<
+                                gen_expr(s.conds[ctr]) <<
+                                ") {\n";
                             
+                            env << CodeTabIn();
+                            for(auto & stmt: b.stmts) {
+                                gen_stmt(env, stmt);
+                            }
+                            env << CodeTabOut() << CodeTabs() << "} ";
+
+                            ctr++;
+                        } else {
+                            env << "else {\n";
+                            env << CodeTabIn() << CodeTabs();
+                            for(auto & stmt: b.stmts) {
+                                gen_stmt(env, stmt);
+                            }
+                            env << CodeTabOut() << CodeTabs() << "}\n"
                         }
                     }
                 }
             } else {
+                bool first = true;
+                int ctr = 0;
+                for(auto & b: s.blocks) {
+                    if(first) {
+                        env << "if(" <<
+                            gen_expr(s.conds[ctr]) <<
+                            ") {\n";
+                        
+                        env << CodeTabIn();
+                        for(auto & stmt: b.stmts) {
+                            gen_stmt(env, stmt);
+                        }
+                        env << CodeTabOut() << CodeTabs() << "} ";
 
+                        first = false;
+                        ctr++;
+                    } else {
+                        env << "else if(" <<
+                            gen_expr(s.conds[ctr]) <<
+                            ") {\n";
+                        
+                        env << CodeTabIn() << CodeTabs();
+                        for(auto & stmt: b.stmts) {
+                            gen_stmt(env, stmt);
+                        }
+                        env << CodeTabOut() << CodeTabs() << "}";
+
+                        ctr++;
+                    }
+                }
+
+                env << "\n";
             }
         } else {
             if(s.has_else) {
@@ -69,46 +125,46 @@ struct genStmt {
                     gen_expr(s.conds[0]) <<
                     ") {\n";
                 
-                env << CodeTabIn() << CodeTabs();
+                env << CodeTabIn();
                 for(auto & stmt: s.blocks[0].stmts) {
                     gen_stmt(env, stmt);
                 }
-                env << CodeTabOut() << CodeTabs() << "}";
+                env << CodeTabOut() << CodeTabs() << "} ";
                 
                 env << "else {\n";
-                env << CodeTabIn() << CodeTabs();
+                env << CodeTabIn();
                 for(auto & stmt: s.blocks[1].stmts) {
                     gen_stmt(env, stmt);
                 }
-                env << CodeTabOut() << CodeTabs() << "}";
+                env << CodeTabOut() << CodeTabs() << "}\n";
             } else {
                 env << "if(" <<
                     gen_expr(s.conds[0]) <<
                     ") {\n";
                 
-                env << CodeTabIn() << CodeTabs();
+                env << CodeTabIn();
                 for(auto & stmt: s.blocks[0].stmts) {
                     gen_stmt(env, stmt);
                 }
-                env << CodeTabOut() << CodeTabs() << "}";
+                env << CodeTabOut() << CodeTabs() << "}\n";
             }
         }
     }
     
-    String operator()(DecStmt const& s) {
-        env << s.type.toString() <<
+    void operator()(DecStmt const& s) {
+        env << CodeTabs() << s.type.toString() <<
                 " " <<
                 s.name <<
                 " = " <<
-                gen_expr(*s.exprs) <<
+                gen_expr(s.expr) <<
                 ";\n";
 
     }
 
-    String operator()(AssignStmt const& s) {
-        env << s.name <<
+    void operator()(AssignStmt const& s) {
+        env << CodeTabs() << s.name <<
                 " = " <<
-                gen_expr(*s.exprs) <<
+                gen_expr(s.expr) <<
                 ";\n";
     }
 };
@@ -169,6 +225,8 @@ String GenEnv::prolog() const {
 #include <string>
 
 using namespace std;
+
+
 )";
 
     return s;

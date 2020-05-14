@@ -1,25 +1,44 @@
 defstate life;
 defstate work;
 defstate rest;
+defstate exit;
 defevent TIRED {};
 defevent AWAKE {};
+defevent EXIT {};
 
 state life {
 
+    int time = 0;
     int age = 0;
-    int time = 10;
-    int stamina = 0;
+
+    on AWAKE {
+        goif(time == 0) work {}
+    }
 
     state work {
         on TIRED {
-            goif(23 == 23) rest {}
+            goif(time == 17) rest {}
+            goelse work {
+                time = time + 1;
+            }
         }
     }
 
     state rest {
         on AWAKE {
-            goif(time == 6) work {
-                stamina = 100;
+            goif(time == 24) work {
+                time = 0;
+                age = age + 1;
+            }  goelse rest {
+                time = time + 1;
+            }
+        }
+    }
+
+    state exit {
+        on EXIT {
+            goif(age == 10) exit {
+                exit()
             }
         }
     }

@@ -4,10 +4,36 @@ Currently it is only planned to support a single actor that supports the creatio
 of an HSM.
 
 ## Grammar
+Program: DefEvent* DefState* State+
+State: state NAME '{' Stmt* OnStmt* State* '}'
+OnStmt: on NAME '{' GoIfStmt* '}'
+Stmt: IfStmt | WhileStmt | DecStmt | AssignStmt
+DefEvent: defevent NAME '{' DecStmt* '}' ';'
+DefState: defstate NAME ';'
+DecStmt: type NAME '=' Expr ';'
+type: 'int' | 'string' | 'bool'
+GoIfStmt: GoIf GoElIf* | GoIf GoElIf* GoElse
+GoIf: 'goif' '(' Expr ')' NAME '{' Stmt* '}'
+GoElIf: 'goelif' '(' Expr ')' NAME '{' Stmt* '}'
+GoElse: 'goelse' NAME '{' Stmt* '}'
+IfStmt: If ElIf* | If ElIf* Else
+If: 'if' '(' Expr ')' '{' Stmt* '}'
+ElIf: 'elif' '(' Expr ')' '{' Stmt* '}'
+Else: 'else' '{' Stmt* '}'
+WhileStmt: 'while' '(' Expr ')' '{' Stmt* '}'
+Expr: VarExpr | BinOpExpr | IntExpr | StrExpr | BoolExpr | ParenExpr
+BinOpExpr: ValExpr op Expr
+ParenExpr: '(' Expr ')'
+ValExpr: VarExpr | IntExpr | StrExpr | BoolExpr
+VarExpr: NAME
+IntExpr: NUMBER
+StrExpr: STRING
+BoolExpr: BOOL
 
 ## Assumptions
 ~ Every state has a unique name. <br />
-~ Every state is properly declared in on statements.
+~ Every state must have a proper defstate. <br />
+~ Needs word mangling in future so unforseen errors do not occur.
 
 ## Requirements
 ~ g++ version 7+ <br />
