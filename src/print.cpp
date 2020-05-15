@@ -29,32 +29,30 @@ struct GetTokenStr {
 struct PrintStmt {
     String operator()(DecStmt const& s) {
         String str;
-        str = "("
-            + s.type.toString() 
-            + " (" 
-            + s.name
-            + ") (=) ";
-        
-        str += print_expr(s.expr);
-
-        return str + ")";
-    }
-
-    String operator()(AssignStmt const& s) {
-        String str;
-        str = "("
+        str = s.type.toString() 
+            + " " 
             + s.name
             + " = ";
         
         str += print_expr(s.expr);
 
-        return str + ")";
+        return str;
+    }
+
+    String operator()(AssignStmt const& s) {
+        String str;
+        str = "g_" + s.name
+            + " = ";
+        
+        str += print_expr(s.expr);
+
+        return str;
     }
 
     String operator()(IfStmt const& s) {
         String str;
 
-        str = "(if(";
+        str = "if(";
 
         bool first = true;
         unsigned cond_ctr = 0;
@@ -122,7 +120,7 @@ struct PrintStmt {
             }
         }
 
-        return str + ")";
+        return str;
     }
 
     String operator()(WhileStmt const& s) {
@@ -136,35 +134,33 @@ struct PrintStmt {
             str += print_stmt(stmt) + "\n";
         }
 
-        return str + "})";
+        return str + "}";
     }
 };
 
 struct PrintExpr {
     String operator()(VarExpr const& e) {
-        return "(" + e.name + ")";
+        return "g_" + e.name;
     }
 
     String operator()(BinOpExpr const& e) {
-        return "("
-            + print_expr(*e.left)
+        return print_expr(*e.left)
             + " "
             + print_op(e.op)
             + " "
-            + print_expr(*e.right)
-            + ")";
+            + print_expr(*e.right);
     }
 
     String operator()(IntExpr const& e) {
-        return "(" + to_string(e.value) + ")";
+        return to_string(e.value);
     }
 
     String operator()(StrExpr const& e) {
-        return "(" + e.value + ")";
+        return e.value;
     }
 
     String operator()(BoolExpr const& e) {
-        return "(" + to_string(e.value) + ")";
+        return to_string(e.value);
     }
 };
 
@@ -183,7 +179,7 @@ String print_op(BinOp const& op) {
         case BinOp::opAnd: str = "&&"; break;
     }
 
-    return "(" + str + ")";
+    return str;
 }
 
 String print_id(Id const& i) {
@@ -240,7 +236,7 @@ String print_defevent(DefEvent const& event) {
 String print_goifstmt(GoIfStmt const& s) {
     String str;
 
-    str = "(goif(";
+    str = "goif(";
 
     bool first = true;
     unsigned ctr = 0;
@@ -308,7 +304,7 @@ String print_goifstmt(GoIfStmt const& s) {
         }
     }
 
-    return str + ")";
+    return str;
 }
 
 String print_onstmt(OnStmt const& s) {
@@ -318,7 +314,7 @@ String print_onstmt(OnStmt const& s) {
 
     str += print_goifstmt(s.gostmt) + "\n}";
 
-    return str + ")";
+    return str;
 }
 
 String print_statestmt(StateStmt const& s) {

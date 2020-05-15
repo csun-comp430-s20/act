@@ -55,6 +55,7 @@ int main(int argc, char* argv[]) {
 
         if(program) {
             TypeEnv typeEnv = type_check_program(program.value());
+            L_(ldebug) << gen_code(typeEnv, program.value());
         } else {
             L_(ldebug) << "parse error (" << program.error().what << ") " << "\n";
             return 1;

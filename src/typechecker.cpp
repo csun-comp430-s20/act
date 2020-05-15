@@ -93,6 +93,7 @@ struct TypeCheckStmt {
         if(auto expr_type = type_check_expr(env, s.expr)) {
             if(expr_type.value() == s.type) {
                 env.addVarType(s.name, s.type);
+                env.varMap.insert({Variable(s.type, s.name), print_expr(s.expr)});
                 return s.type;
             } else {
                 return TypeError{ "Improperly declared var" };
@@ -141,6 +142,7 @@ Typed<ValueType> type_check_event_decstmt(TypeEnv& env, DecStmt const& dec) {
 }
 
 void add_defstate(TypeEnv& env, DefState const& defstate) {
+    env.states.push_back(std::move(defstate.name));
     env.addState(defstate.name);
 }
 

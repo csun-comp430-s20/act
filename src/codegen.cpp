@@ -6,7 +6,7 @@ namespace act {
 
 struct genExpr {
     String operator()(VarExpr const& e) {
-        return e.name;
+        return "g_" + e.name;
     }
 
     String operator()(BinOpExpr const& e) {
@@ -32,7 +32,7 @@ struct genStmt {
     GenEnv env;
 
     void operator()(WhileStmt const& s) {
-        env << "while(" <<
+        env << CodeTabs() << "while(" <<
             gen_expr(s.cond) <<
             ") {\n";
 
@@ -50,7 +50,7 @@ struct genStmt {
                 unsigned ctr = 0;
                 for(auto & b: s.blocks) {
                     if(first) {
-                        env << "if(" <<
+                        env << CodeTabs() << "if(" <<
                             gen_expr(s.conds[ctr]) <<
                             ") {\n";
                         
@@ -64,7 +64,7 @@ struct genStmt {
                         ctr++;
                     } else {
                         if(ctr < s.blocks.size()-1) {
-                            env << "else if(" <<
+                            env << CodeTabs() << "else if(" <<
                                 gen_expr(s.conds[ctr]) <<
                                 ") {\n";
                             
@@ -76,8 +76,8 @@ struct genStmt {
 
                             ctr++;
                         } else {
-                            env << "else {\n";
-                            env << CodeTabIn() << CodeTabs();
+                            env << CodeTabs() << "else {\n";
+                            env << CodeTabIn();
                             for(auto & stmt: b.stmts) {
                                 gen_stmt(env, stmt);
                             }
@@ -90,7 +90,7 @@ struct genStmt {
                 unsigned ctr = 0;
                 for(auto & b: s.blocks) {
                     if(first) {
-                        env << "if(" <<
+                        env << CodeTabs() << "if(" <<
                             gen_expr(s.conds[ctr]) <<
                             ") {\n";
                         
@@ -107,7 +107,7 @@ struct genStmt {
                             gen_expr(s.conds[ctr]) <<
                             ") {\n";
                         
-                        env << CodeTabIn() << CodeTabs();
+                        env << CodeTabIn();
                         for(auto & stmt: b.stmts) {
                             gen_stmt(env, stmt);
                         }
@@ -175,20 +175,123 @@ String gen_expr(Expr const& expr) {
 void gen_stmt(GenEnv& env, Stmt const& stmt) {
     std::visit(genStmt{ std::move(env) }, stmt);
 }
+void gen_goifstmt(GenEnv& env, GoIfStmt const& s) {
+    env << CodeTabs() << "if(";
 
-String gen_code(Program const& program) {
-    GenEnv env;
+    bool first = true;
+    unsigned ctr = 0;
+    if(!s.has_else) {
+        for(auto & b: s.blocks) {
+            if(first) { // print if statement
+                env << gen_expr(s.conds[ctr])
+                    << ") {\n";
+                
+                env << CodeTabIn();
+                for(auto & stmt: b.stmts) {
+                    gen_stmt(env, stmt);
+                }
+
+                env << CodeTabs() << "return make_unique<" <<
+                    s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
+
+                env << CodeTabOut() << CodeTabs() << "}";
+
+                first = false;
+                ctr++;
+            } else {
+                env << " else if("
+                    << gen_expr(s.conds[ctr])
+                    << ") {\n";
+                
+                env << CodeTabIn();
+                for(auto & stmt: b.stmts) {
+                    gen_stmt(env, stmt);
+                }
+
+                env << CodeTabs() << "return make_unique<" <<
+                    s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
+
+                env << CodeTabOut() << CodeTabs() << "}";
+                ctr++;
+            }
+        }
+    } else {
+        for(unsigned b_ctr = 0; b_ctr < s.blocks.size(); b_ctr++) {
+            if(b_ctr != s.blocks.size()-1) {
+                if(first) {
+                    env << gen_expr(s.conds[ctr])
+                        + ") {\n";
+                    
+                    env << CodeTabIn();
+                    for(auto & stmt: s.blocks[b_ctr].stmts) {
+                        gen_stmt(env, stmt);
+                    }
+
+                    env << CodeTabs() << "return make_unique<" <<
+                        s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
+
+                    env << CodeTabOut() << CodeTabs() << "}";
+                    first = false;
+                    ctr++;
+                } else {
+                    env << " else if("
+                        << gen_expr(s.conds[ctr])
+                        << ") {\n";
+                    
+                    env << CodeTabIn();
+                    for(auto & stmt: s.blocks[b_ctr].stmts) {
+                        gen_stmt(env, stmt);
+                    }
+
+                    env << CodeTabs() << "return make_unique<" <<
+                        s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
+
+                    env << CodeTabOut() << CodeTabs() << "}";
+                    ctr++;
+                }
+            } else { // print else statement
+                env << " else {\n";
+                
+                env << CodeTabIn();
+                for(auto & stmt: s.blocks[b_ctr].stmts) {
+                    gen_stmt(env, stmt);
+                }
+
+                env << CodeTabs() << "return make_unique<" <<
+                    s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
+
+                env << CodeTabOut() << CodeTabs() << "}";
+            }
+        }
+    }
+}
+void gen_onstmt(GenEnv& env, OnStmt const& stmt) {
+    gen_goifstmt(env, stmt.gostmt);
+}
+void gen_statestmt(GenEnv& env, StateStmt const& stmt) {
+    env << "unique_ptr<State> " << stmt.name <<
+        "::nextState() {\n";
     
-    // env << CodeTabIn();
-    // for (Stmt const& stmt : program.stmts) {
-    //     env << CodeTabs() << stmt;
-    // }
-    // env << CodeTabOut();
+    if(stmt.onstmts.size() != 1) {
+        throw std::logic_error("Each state should only have one on statement");
+    }
 
-    return env.prolog() + "\n" + env.epilog();
+    gen_onstmt(env, stmt.onstmts[0]);
+
+    env << "\n" << CodeTabOut() << CodeTabs() << "}";
 }
 
-GenEnv::GenEnv() {}
+String gen_code(TypeEnv const& typenv, Program const& program) {
+    GenEnv env(typenv);
+
+    gen_statestmt(env, program.main_state);
+
+    return env.prolog() + env.concat() + env.epilog();
+
+}
+
+GenEnv::GenEnv(TypeEnv const& typeEnv)
+    : _env(typeEnv) {}
 
 std::stringstream& GenEnv::write() {
     return _codeDef;
@@ -221,23 +324,61 @@ GenEnv& GenEnv::operator<<(Expr const& e) {
 
 String GenEnv::prolog() const {
     String s = R"(
+#include <iostream>
 #include <string>
+#include <memory>
 
 using namespace std;
+
+class State {
+    public:
+    virtual unique_ptr<State> nextState() {
+        return make_unique<State>(*this);
+    }
+};
 
 )";
 
     return s;
 }
-String GenEnv::epilog() const
-{
-    String s;
+String GenEnv::static_decs() const {
+    String s = "";
 
-    s = s
-      + "int main() {\n"
-      + _codeDef.str()
-      + "\n\treturn 0;\n"
-      + "}\n";
+    for(auto & state: _env.states) {
+        s += "class " + state + ": public State {\n" +
+            "\tpublic:\n\tunique_ptr<State> nextState();\n" +
+            "};\n";
+    }
+
+    s += "\n";
+
+    for(auto & state: _env.states) {
+        s += "static " + state + "o_" + state + ";\n";
+    }
+
+    for(auto const& x: _env.varMap) {
+        s += "static " + x.first.type.name() + " " +
+            "g_" + x.first.name + " = " + x.second + ";\n";
+    }
+
+    return s + "\n";
+}
+String GenEnv::concat() const {
+    return _codeDef.str();
+}
+String GenEnv::epilog() const {
+    String s = R"(
+int main() {
+    unique_ptr<State> state = make_unique<life>(o_life);
+
+    while(true) {
+        state = state->nextState();
+    }
+
+    return 0;
+}
+
+)";
 
     return s;
 }

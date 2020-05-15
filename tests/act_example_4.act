@@ -1,10 +1,9 @@
 defstate life;
 defstate work;
 defstate rest;
-defstate exit;
+
 defevent TIRED {};
 defevent AWAKE {};
-defevent EXIT {};
 
 state life {
 
@@ -17,7 +16,7 @@ state life {
 
     state work {
         on TIRED {
-            goif(age == 100) {
+            goif(age == 100) life {
                 exit(0);
             } goelif(time == 17) rest {
                 time = time + 1;

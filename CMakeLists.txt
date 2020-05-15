@@ -19,6 +19,7 @@ set(SRC_FILE
     typechecker_tools.cpp typechecker_tools.hpp
     typechecker.cpp typechecker.hpp
     codegen.cpp codegen.hpp
+    variable.cpp variable.hpp
     print.cpp print.hpp
     logger.hpp config.hpp)
 

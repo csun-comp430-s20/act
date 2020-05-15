@@ -99,6 +99,13 @@ struct TokenAnd {
     }
 };
 
+struct TokenExit {
+    Id tid = Id::keyword;
+
+    String to_string() const {
+        return "(Exit)"s;
+    }
+};
 struct TokenState {
     Id tid = Id::keyword;
 

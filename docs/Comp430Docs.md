@@ -76,9 +76,7 @@ state life {
 ```
 
 ## Known Limitations
-~ Every state needs to have a unique name. <br />
-~ Every state must have a proper defstate. <br />
-~ Needs word mangling in future so unforseen errors do not occur.
+Refer to Assumptions section in README.md
 
 ## What would I do differently?
 I would have used other code bases as an example earlier on. <br />

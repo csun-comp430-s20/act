@@ -36,6 +36,7 @@ const MapKeywords keywords {
     { "false",      TokenFalse() },
     { "defevent",   TokenDefEvent() },
     { "defstate",   TokenDefState() },
+    { "exit",       TokenExit() },
 };
 
 Token lookup_keyword(MapKeywords const&, String const&);
