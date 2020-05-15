@@ -267,6 +267,7 @@ using Token = Variant<
     TokenGreater,
     TokenAnd,
     TokenEqual,
+    TokenExit,
     TokenState,
     TokenOn,
     TokenGoIf,

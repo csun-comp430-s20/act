@@ -294,7 +294,20 @@ Parsed<Stmt> parse_whilestmt(Input& input) {
         Block{ std::move(stmts) }
     };
 }
-// DecStmt: Type Name '=' Expr* ';'
+Parsed<Stmt> parse_exitstmt(Input& input) {
+    auto rollback = input.mark_rollback();
+
+    TRY_(input.expect<TokenExit>());
+    TRY_(input.expect<TokenLPar>());
+    TRY(expr, parse_expr(input));
+    TRY_(input.expect<TokenRPar>());
+    TRY_(input.expect<TokenSemi>());
+
+    rollback.cancel();
+    return ExitStmt{
+        std::move(expr)
+    };
+}
 Parsed<Stmt> parse_decstmt(Input& input) {
     auto rollback = input.mark_rollback();
 

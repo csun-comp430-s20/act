@@ -118,6 +118,10 @@ struct TypeCheckStmt {
             return var_type.error();
         }
     }
+
+    Typed<ValueType> operator()(ExitStmt const& s) {
+        return type_check_expr(env, s.value);
+    }
 };
 
 Typed<ValueType> type_check_expr(TypeEnv& env, Expr const& expr) {

@@ -31,6 +31,11 @@ struct genExpr {
 struct genStmt {
     GenEnv env;
 
+    void operator()(ExitStmt const& s) {
+        env << CodeTabs() << "exit(" <<
+            gen_expr(s.value) << ");";
+    }
+
     void operator()(WhileStmt const& s) {
         env << CodeTabs() << "while(" <<
             gen_expr(s.cond) <<

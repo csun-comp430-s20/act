@@ -27,6 +27,13 @@ struct GetTokenStr {
 };
 
 struct PrintStmt {
+    String operator()(ExitStmt const& s) {
+        String str;
+        str = "exit(" + print_expr(s.value) + ");";
+
+        return str;
+    }
+
     String operator()(DecStmt const& s) {
         String str;
         str = s.type.toString() 

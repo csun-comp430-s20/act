@@ -58,15 +58,20 @@ struct AssignStmt;
 struct DefEvent;
 struct IfStmt;
 struct WhileStmt;
+struct ExitStmt;
 struct Block;
 
 using Stmt = Variant<
     DecStmt,
     AssignStmt,
     IfStmt,
-    WhileStmt
+    WhileStmt,
+    ExitStmt
 >;
 
+struct ExitStmt {
+    Expr value; // Has to be int val
+};
 struct DecStmt {
     ValueType type;
     String name;
