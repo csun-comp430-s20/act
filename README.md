@@ -4,12 +4,11 @@ Currently it is only planned to support a single actor that supports the creatio
 **For Comp430 Docs refer to docs folder**
 
 ## Grammar
-Program: DefEvent* DefState* State+ <br />
+Program: DefEvent* State+ <br />
 State: state NAME '{' Stmt* OnStmt* State* '}' <br />
 OnStmt: on NAME '{' GoIfStmt* '}' <br />
 Stmt: IfStmt | WhileStmt | DecStmt | AssignStmt <br />
 DefEvent: defevent NAME '{' DecStmt* '}' ';' <br />
-DefState: defstate NAME ';' <br />
 DecStmt: type NAME '=' Expr ';' <br />
 type: 'int' | 'string' | 'bool' <br />
 GoIfStmt: GoIf GoElIf* | GoIf GoElIf* GoElse <br />

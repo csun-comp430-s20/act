@@ -197,13 +197,6 @@ struct TokenDefEvent {
         return "(defevent)"s;
     }
 };
-struct TokenDefState {
-    Id tid = Id::keyword;
-
-    String to_string() const {
-        return "(defstate)"s;
-    }
-};
 
 struct TokenName { 
     String value;
@@ -281,7 +274,6 @@ using Token = Variant<
     TokenBoolType,
     TokenStringType,
     TokenDefEvent,
-    TokenDefState,
     TokenName,
     TokenIntVal,
     TokenStringVal,

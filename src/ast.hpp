@@ -94,9 +94,6 @@ struct WhileStmt {
     Block block;
 };
 
-struct DefState {
-    String name;
-};
 struct DefEvent {
     String name;
     Vector<DecStmt> decs;
@@ -120,7 +117,6 @@ struct StateStmt {
 
 // Program
 struct Program {
-    Vector <DefState> defstates;
     Vector<DefEvent> defevents;
     StateStmt main_state;
 };

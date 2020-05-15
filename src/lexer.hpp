@@ -35,7 +35,6 @@ const MapKeywords keywords {
     { "true",       TokenTrue() },
     { "false",      TokenFalse() },
     { "defevent",   TokenDefEvent() },
-    { "defstate",   TokenDefState() },
     { "exit",       TokenExit() },
 };
 

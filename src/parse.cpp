@@ -6,16 +6,10 @@ namespace act {
 // Program: Stmt*
 Parsed<Program> parse_program(Input& input) {
     Vector<DefEvent> defevents;
-    Vector<DefState> defstates;
 
     while(!input.check_done<TokenState>()) {
-        if(input.check_token<TokenDefEvent>()) {
-            TRY(defevent, parse_defevent(input));
-            defevents.push_back(std::move(defevent));
-        } else {
-            TRY(defstate, parse_defstate(input));
-            defstates.push_back(std::move(defstate));
-        }
+        TRY(defevent, parse_defevent(input));
+        defevents.push_back(std::move(defevent));
     }
 
     TRY(state, parse_statestmt(input));
@@ -157,18 +151,6 @@ Parsed<GoIfStmt> parse_goifstmt(Input& input) {
         has_else
     };
 }
-Parsed<DefState> parse_defstate(Input& input) {
-    auto rollback = input.mark_rollback();
-    
-    TRY_(input.expect<TokenDefState>());
-    TRY(name, input.get<TokenName>());
-    TRY_(input.expect<TokenSemi>());
-
-    rollback.cancel();
-    return DefState{
-        name.value
-    };
-}
 Parsed<DefEvent> parse_defevent(Input& input) {
     auto rollback = input.mark_rollback();
     Vector<DecStmt> decstmts;
@@ -213,7 +195,8 @@ Parsed<Stmt> parse_base_stmt(Input& input) {
         parse_decstmt,
         parse_assignstmt,
         parse_ifstmt,
-        parse_whilestmt
+        parse_whilestmt,
+        parse_exitstmt
     );
 }
 Parsed<Stmt> parse_ifstmt(Input& input) {

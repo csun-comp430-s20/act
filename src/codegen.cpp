@@ -196,7 +196,7 @@ void gen_goifstmt(GenEnv& env, GoIfStmt const& s) {
                     gen_stmt(env, stmt);
                 }
 
-                env << CodeTabs() << "return make_unique<" <<
+                env << CodeTabIn() << CodeTabs() << "return make_unique<" <<
                     s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
 
                 env << CodeTabOut() << CodeTabs() << "}";
@@ -213,7 +213,7 @@ void gen_goifstmt(GenEnv& env, GoIfStmt const& s) {
                     gen_stmt(env, stmt);
                 }
 
-                env << CodeTabs() << "return make_unique<" <<
+                env << CodeTabIn() << CodeTabs() << "return make_unique<" <<
                     s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
 
                 env << CodeTabOut() << CodeTabs() << "}";
@@ -232,7 +232,7 @@ void gen_goifstmt(GenEnv& env, GoIfStmt const& s) {
                         gen_stmt(env, stmt);
                     }
 
-                    env << CodeTabs() << "return make_unique<" <<
+                    env << CodeTabIn() << CodeTabs() << "return make_unique<" <<
                         s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
 
                     env << CodeTabOut() << CodeTabs() << "}";
@@ -248,7 +248,7 @@ void gen_goifstmt(GenEnv& env, GoIfStmt const& s) {
                         gen_stmt(env, stmt);
                     }
 
-                    env << CodeTabs() << "return make_unique<" <<
+                    env << CodeTabIn() << CodeTabs() << "return make_unique<" <<
                         s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
 
                     env << CodeTabOut() << CodeTabs() << "}";
@@ -262,7 +262,7 @@ void gen_goifstmt(GenEnv& env, GoIfStmt const& s) {
                     gen_stmt(env, stmt);
                 }
 
-                env << CodeTabs() << "return make_unique<" <<
+                env << CodeTabIn() << CodeTabs() << "return make_unique<" <<
                     s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
 
                 env << CodeTabOut() << CodeTabs() << "}";

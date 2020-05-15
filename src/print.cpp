@@ -222,9 +222,6 @@ String print_decstmt_only(DecStmt const& d) {
 
     return str + ")";
 }
-String print_defstate(DefState const& defstate) {
-    return "(" + defstate.name + ")";
-}
 String print_defevent(DefEvent const& event) {
     String str;
 

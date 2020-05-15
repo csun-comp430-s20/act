@@ -145,11 +145,6 @@ Typed<ValueType> type_check_event_decstmt(TypeEnv& env, DecStmt const& dec) {
     }
 }
 
-void add_defstate(TypeEnv& env, DefState const& defstate) {
-    env.states.push_back(std::move(defstate.name));
-    env.addState(defstate.name);
-}
-
 Typed<ValueType> type_check_defevent(TypeEnv& env, DefEvent const& event) {
     ValueType temp("");
     env.addEvent(event.name);
@@ -199,6 +194,13 @@ Typed<ValueType> type_check_onstmt(TypeEnv& env, OnStmt const& stmt) {
         return type_check_goifstmt(env, stmt.gostmt);
     else
         return TypeError{ "Event not declared" };
+}
+
+void traverse_state(TypeEnv& env, StateStmt const& stmt) {
+    env.states.push_back(std::move(stmt.name));
+    env.addState(stmt.name);
+
+
 }
 
 Typed<ValueType> type_check_statestmt(TypeEnv& env, StateStmt const& stmt) {
