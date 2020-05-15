@@ -10,6 +10,7 @@ String opString(BinOp const& op) {
         case BinOp::opLess: str = "<"; break;
         case BinOp::opGreater: str = ">"; break;
         case BinOp::opEqual: str = "=="; break;
+        case BinOp::opAnd: str = "&&"; break;
     }
 
     return str;
@@ -179,6 +180,7 @@ String print_op(BinOp const& op) {
         case BinOp::opLess: str = "<"; break;
         case BinOp::opGreater: str = ">"; break;
         case BinOp::opEqual: str = "=="; break;
+        case BinOp::opAnd: str = "&&"; break;
     }
 
     return "(" + str + ")";

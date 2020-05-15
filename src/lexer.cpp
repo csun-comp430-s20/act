@@ -117,7 +117,14 @@ LexerResult Lexer::run() {
                     return TokenEqual();
                 } else {
                     return TokenAssign();
-                }                    
+                }
+            case '&':
+                if(cur() == '&') {
+                    next();
+                    return TokenAnd();
+                } else {
+                    return LexerError{ pos(), "Incorrect And definition" };
+                }
             case '+':   return TokenPlus();
             case '<':   return TokenLess();
             case '>':   return TokenGreater();

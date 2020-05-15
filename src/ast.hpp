@@ -13,7 +13,8 @@ enum class BinOp {
     opPlus,
     opLess,
     opGreater,
-    opEqual
+    opEqual,
+    opAnd
 };
 
 struct VarExpr;

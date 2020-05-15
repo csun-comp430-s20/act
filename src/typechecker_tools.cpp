@@ -34,6 +34,7 @@ void TypeEnv::initialize()
     binopRule(BinOp::opEqual,   b, i, i);
     binopRule(BinOp::opEqual,   b, s, s);
     binopRule(BinOp::opEqual,   b, b, b);
+    binopRule(BinOp::opAnd,     b, b, b);
 }
 
 void TypeEnv::addVarType(String const& name, ValueType const& type) {

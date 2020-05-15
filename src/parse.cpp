@@ -362,21 +362,19 @@ Parsed<Expr> parse_binexpr(Input& input) {
         into_ptr<Expr>(right)
     };
 }
-// BinOp: '+' | '<' | '>' | '=='
+// BinOp: '+' | '<' | '>' | '==' | '&&'
 Parsed<BinOp> parse_binop(Input& input) {
     if (input.match<TokenPlus>()) {
         return BinOp::opPlus;
-    }
-    else if (input.match<TokenLess>()) {
+    } else if (input.match<TokenLess>()) {
         return BinOp::opLess;
-    }
-    else if (input.match<TokenGreater>()) {
+    } else if (input.match<TokenGreater>()) {
         return BinOp::opGreater;
-    }
-    else if (input.match<TokenEqual>()) {
+    } else if (input.match<TokenEqual>()) {
         return BinOp::opEqual;
-    }
-    else {
+    } else if(input.match<TokenAnd>()) {
+        return BinOp::opAnd;
+    } else {
         return ParseError{ "expected binop" };
     }
 }

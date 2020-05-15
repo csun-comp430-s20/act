@@ -91,6 +91,13 @@ struct TokenEqual {
         return "(Equal)"s;
     }
 };
+struct TokenAnd {
+    Id tid = Id::symbol;
+    
+    String to_string() const {
+        return "(And)"s;
+    }
+};
 
 struct TokenState {
     Id tid = Id::keyword;
@@ -251,6 +258,7 @@ using Token = Variant<
     TokenPlus,
     TokenLess,
     TokenGreater,
+    TokenAnd,
     TokenEqual,
     TokenState,
     TokenOn,
