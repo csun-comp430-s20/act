@@ -32,7 +32,6 @@ BoolExpr: BOOL
 
 ## Assumptions
 ~ Every state has a unique name. <br />
-~ Every state must have a proper defstate. <br />
 ~ Variable names are unique. <br />
 ~ States are considered static objects and variables are considered globally static.<br />
 ~ Every state must have exactly one on statement.<br />
