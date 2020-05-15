@@ -1,5 +1,4 @@
 #include <stdexcept>
-#include <iostream>
 #include "codegen.hpp"
 	
 
@@ -197,7 +196,7 @@ void gen_goifstmt(GenEnv& env, GoIfStmt const& s) {
                     gen_stmt(env, stmt);
                 }
 
-                env << CodeTabIn() << CodeTabs() << "return make_unique<" <<
+                env << "\n" << CodeTabs() << "return make_unique<" <<
                     s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
 
                 env << CodeTabOut() << CodeTabs() << "}";
@@ -214,7 +213,7 @@ void gen_goifstmt(GenEnv& env, GoIfStmt const& s) {
                     gen_stmt(env, stmt);
                 }
 
-                env << CodeTabIn() << CodeTabs() << "return make_unique<" <<
+                env << "\n" << CodeTabs() << "return make_unique<" <<
                     s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
 
                 env << CodeTabOut() << CodeTabs() << "}";
@@ -233,7 +232,7 @@ void gen_goifstmt(GenEnv& env, GoIfStmt const& s) {
                         gen_stmt(env, stmt);
                     }
 
-                    env << CodeTabIn() << CodeTabs() << "return make_unique<" <<
+                    env << "\n" << CodeTabs() << "return make_unique<" <<
                         s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
 
                     env << CodeTabOut() << CodeTabs() << "}";
@@ -249,7 +248,7 @@ void gen_goifstmt(GenEnv& env, GoIfStmt const& s) {
                         gen_stmt(env, stmt);
                     }
 
-                    env << CodeTabIn() << CodeTabs() << "return make_unique<" <<
+                    env << "\n" << CodeTabs() << "return make_unique<" <<
                         s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
 
                     env << CodeTabOut() << CodeTabs() << "}";
@@ -263,7 +262,7 @@ void gen_goifstmt(GenEnv& env, GoIfStmt const& s) {
                     gen_stmt(env, stmt);
                 }
 
-                env << CodeTabIn() << CodeTabs() << "return make_unique<" <<
+                env << "\n" << CodeTabs() << "return make_unique<" <<
                     s.names[ctr] << ">(o_" << s.names[ctr] << ");\n";
 
                 env << CodeTabOut() << CodeTabs() << "}";
