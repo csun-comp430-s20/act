@@ -23,6 +23,7 @@ Else: 'else' '{' Stmt* '}' <br />
 WhileStmt: 'while' '(' Expr ')' '{' Stmt* '}' <br />
 Expr: VarExpr | BinOpExpr | IntExpr | StrExpr | BoolExpr | ParenExpr <br />
 BinOpExpr: ValExpr op Expr <br />
+op: '+' | '<' | '>' | '==' | '&&' <br />
 ParenExpr: '(' Expr ')' <br />
 ValExpr: VarExpr | IntExpr | StrExpr | BoolExpr <br />
 VarExpr: NAME <br />

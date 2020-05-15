@@ -17,8 +17,11 @@ state life {
 
     state work {
         on TIRED {
-            goif(time == 17) rest {}
-            goelse work {
+            goif(age == 100) {
+                exit(0);
+            } goelif(time == 17) rest {
+                time = time + 1;
+            } goelse work {
                 time = time + 1;
             }
         }
@@ -31,14 +34,6 @@ state life {
                 age = age + 1;
             }  goelse rest {
                 time = time + 1;
-            }
-        }
-    }
-
-    state exit {
-        on EXIT {
-            goif(age == 10) exit {
-                exit()
             }
         }
     }
