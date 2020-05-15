@@ -159,7 +159,7 @@ struct genStmt {
     
     void operator()(DecStmt const& s) {
         env << CodeTabs() << s.type.toString() <<
-                " " <<
+                " g_" <<
                 s.name <<
                 " = " <<
                 gen_expr(s.expr) <<
@@ -168,7 +168,7 @@ struct genStmt {
     }
 
     void operator()(AssignStmt const& s) {
-        env << CodeTabs() << s.name <<
+        env << CodeTabs() << "g_" << s.name <<
                 " = " <<
                 gen_expr(s.expr) <<
                 ";\n";
@@ -304,6 +304,8 @@ String gen_code(TypeEnv const& typenv, Program const& program) {
 
 GenEnv::GenEnv(TypeEnv const& typeEnv)
     : _env(typeEnv) {}
+
+std::stringstream GenEnv::_codeDef;
 
 std::stringstream& GenEnv::write() {
     return _codeDef;

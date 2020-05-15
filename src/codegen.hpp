@@ -30,7 +30,7 @@ class GenEnv {
     private:
     TypeEnv _env;
     std::stringstream& write();
-    std::stringstream _codeDef;
+    static std::stringstream _codeDef;
     unsigned _tabs = 0;
 };
 
