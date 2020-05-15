@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <iostream>
 #include "codegen.hpp"
 	
 
@@ -269,8 +270,11 @@ void gen_goifstmt(GenEnv& env, GoIfStmt const& s) {
             }
         }
     }
+
+    env << "\n";
 }
 void gen_onstmt(GenEnv& env, OnStmt const& stmt) {
+    env << CodeTabIn();
     gen_goifstmt(env, stmt.gostmt);
 }
 void gen_statestmt(GenEnv& env, StateStmt const& stmt) {
@@ -283,7 +287,11 @@ void gen_statestmt(GenEnv& env, StateStmt const& stmt) {
 
     gen_onstmt(env, stmt.onstmts[0]);
 
-    env << "\n" << CodeTabOut() << CodeTabs() << "}";
+    env << CodeTabOut() << CodeTabs() << "}\n";
+
+    for(auto const& s: stmt.states) {
+        gen_statestmt(env, s);
+    }
 }
 
 String gen_code(TypeEnv const& typenv, Program const& program) {
@@ -291,8 +299,7 @@ String gen_code(TypeEnv const& typenv, Program const& program) {
 
     gen_statestmt(env, program.main_state);
 
-    return env.prolog() + env.concat() + env.epilog();
-
+    return env.prolog() + env.static_decs() + env.concat() + env.epilog();
 }
 
 GenEnv::GenEnv(TypeEnv const& typeEnv)
@@ -358,8 +365,10 @@ String GenEnv::static_decs() const {
     s += "\n";
 
     for(auto & state: _env.states) {
-        s += "static " + state + "o_" + state + ";\n";
+        s += "static " + state + " o_" + state + ";\n";
     }
+
+    s += "\n";
 
     for(auto const& x: _env.varMap) {
         s += "static " + x.first.type.name() + " " +

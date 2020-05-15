@@ -4,10 +4,16 @@
 
 namespace act {
 
+struct TraverseExpr;
+struct TraverseStmt;
+
 struct TypeCheckExpr;
 struct TypeCheckStmt;
 
 void traverse_state(TypeEnv&, StateStmt const&);
+void traverse_stmt(TypeEnv&, Stmt const&);
+String traverse_expr(Expr const&);
+
 Typed<ValueType> type_check_expr(TypeEnv&, Expr const&);
 Typed<ValueType> type_check_stmt(TypeEnv&, Stmt const&);
 Typed<ValueType> type_check_event_decstmt(TypeEnv&, DecStmt const&);

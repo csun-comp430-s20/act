@@ -7,6 +7,10 @@ TypeEnv::TypeEnv()
     initialize();
 }
 
+Map<Variable,String> TypeEnv::varMap;
+Vector<String> TypeEnv::states;
+Map<String,ValueType> TypeEnv::_vartypes;
+
 void TypeEnv::initialize() 
 {
     auto binopRule = [&](BinOp op, ValueType const& ret, 

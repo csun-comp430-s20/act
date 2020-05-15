@@ -13,8 +13,9 @@ class TypeEnv
     public:
     TypeEnv();
 
-    Map<Variable,String> varMap;
-    Vector<String> states;
+    static Map<Variable,String> varMap;
+    static Vector<String> states;
+    
     void addVarType(String const&, ValueType const&);
     void addEvent(String const&, bool = true);
     void addState(String const&, bool = true);
@@ -26,7 +27,7 @@ class TypeEnv
     private:
     void initialize();
 
-    Map<String,ValueType> _vartypes;
+    static Map<String,ValueType> _vartypes;
     Map<String,bool> _events;
     Map<String,bool> _states;
     Map<CanonName,ValueType> _rules;

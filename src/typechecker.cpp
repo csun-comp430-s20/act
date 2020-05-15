@@ -5,6 +5,68 @@
 
 namespace act {
 
+struct TraverseExpr {
+    String operator()(VarExpr const& e) {
+        return e.name;
+    }
+
+    String operator()(BinOpExpr const& e) {
+        return print_expr(*e.left)
+            + " "
+            + print_op(e.op)
+            + " "
+            + print_expr(*e.right);
+    }
+
+    String operator()(IntExpr const& e) {
+        return to_string(e.value);
+    }
+
+    String operator()(StrExpr const& e) {
+        return e.value;
+    }
+
+    String operator()(BoolExpr const& e) {
+        return to_string(e.value);
+    }
+};
+
+struct TraverseStmt {
+    TypeEnv env;
+
+    void operator()(ExitStmt const&) {}
+
+    void operator()(DecStmt const& s) {
+        env.addVarType(s.name, s.type);
+        env.varMap.insert({Variable(s.type, s.name), traverse_expr(s.expr)});
+    }
+
+    void operator()(AssignStmt const&) {}
+
+    void operator()(IfStmt const&) {}
+
+    void operator()(WhileStmt const&) {}
+};
+
+void traverse_state(TypeEnv& env, StateStmt const& state) {
+    env.addState(state.name);
+    env.states.push_back(state.name);
+
+    for(auto & stmt: state.stmts) {
+        traverse_stmt(env, stmt);
+    }
+
+    for(auto & s: state.states) {
+        traverse_state(env, s);
+    }
+}
+void traverse_stmt(TypeEnv& env, Stmt const& stmt) {
+    std::visit(TraverseStmt{ env }, stmt);
+}
+String traverse_expr(Expr const& expr) {
+    return std::visit(TraverseExpr{}, expr);
+}
+
 struct TypeCheckExpr {
     TypeEnv env;
 
@@ -92,8 +154,6 @@ struct TypeCheckStmt {
     Typed<ValueType> operator()(DecStmt const& s) {
         if(auto expr_type = type_check_expr(env, s.expr)) {
             if(expr_type.value() == s.type) {
-                env.addVarType(s.name, s.type);
-                env.varMap.insert({Variable(s.type, s.name), print_expr(s.expr)});
                 return s.type;
             } else {
                 return TypeError{ "Improperly declared var" };
@@ -196,13 +256,6 @@ Typed<ValueType> type_check_onstmt(TypeEnv& env, OnStmt const& stmt) {
         return TypeError{ "Event not declared" };
 }
 
-void traverse_state(TypeEnv& env, StateStmt const& stmt) {
-    env.states.push_back(std::move(stmt.name));
-    env.addState(stmt.name);
-
-
-}
-
 Typed<ValueType> type_check_statestmt(TypeEnv& env, StateStmt const& stmt) {
     ValueType temp("");
 
@@ -237,9 +290,7 @@ TypeEnv type_check_program(Program const& program) {
     TypeEnv env;
     setLogger(config::logFileName, config::logLevel);
 
-    for(auto & s: program.defstates) {
-        add_defstate(env, s);
-    }
+    traverse_state(env, program.main_state);
 
     for(auto & e: program.defevents) {
         if(auto event_temp = type_check_defevent(env, e)) {

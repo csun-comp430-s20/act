@@ -54,6 +54,7 @@ int main(int argc, char* argv[]) {
         Parsed<Program> program = parse_program(parse_input);
 
         if(program) {
+            // L_(ldebug) << print_program(program.value());
             TypeEnv typeEnv = type_check_program(program.value());
             L_(ldebug) << gen_code(typeEnv, program.value());
         } else {

@@ -16,7 +16,6 @@ Parsed<Program> parse_program(Input& input) {
 
     if(input.at_end()) {
         return Program{
-            std::move(defstates),
             std::move(defevents),
             std::move(state)
         };

@@ -48,7 +48,7 @@ struct PrintStmt {
 
     String operator()(AssignStmt const& s) {
         String str;
-        str = "g_" + s.name
+        str = s.name
             + " = ";
         
         str += print_expr(s.expr);
@@ -147,7 +147,7 @@ struct PrintStmt {
 
 struct PrintExpr {
     String operator()(VarExpr const& e) {
-        return "g_" + e.name;
+        return e.name;
     }
 
     String operator()(BinOpExpr const& e) {
@@ -342,10 +342,6 @@ String print_statestmt(StateStmt const& s) {
 
 String print_program(Program const& program) {
     String result = "";
-
-    for(auto & state: program.defstates) {
-        result += print_defstate(state) + "\n";
-    }
 
     for(auto & event: program.defevents) {
         result += print_defevent(event) + "\n";
